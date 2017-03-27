@@ -1,5 +1,11 @@
 <?php
-class restaurantC
+namespace App\Http\Controllers;
+
+use DB;
+use App\Http\Controllers\Controller;
+use Input;
+
+class restaurantC extends Controller
 {
     public function __construct()
     {
@@ -8,12 +14,20 @@ class restaurantC
     //餐廳選擇器顯示
     public function restChooseShow()
     {
+        $restKind = DB::table('restaurant_kind')
+            ->select('rest_kind')
+            ->get();
+        $todayopen=DB::table('restaurant')
+            ->select('rest_name')
+            ->where('rest_open', '==', 1)
+            ->get();
 
+        return view('restChooseV', ['restKind' => $restKind,'todayopen' =>$todayopen]);
     }
     //餐廳管理頁面顯示
     public function restManageShow()
     {
-
+        return view('restManageV', ['rest_kind_echo' => $rest_kind_echo,'rest_num_echo' =>$rest_num_echo]);
     }
     //餐廳資料修改
     public function restUpdate()

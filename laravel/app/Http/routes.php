@@ -1,34 +1,26 @@
 <?php
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//View routes
+Route::get('/','orderC@purchaseShow');
+//Route::get('/','OrderC@purchaseDetailShow');
+Route::get('purchaseManageV','orderC@purchaseManageShow');
+Route::get('purchaseUpdateV','orderC@purchaseUpdateShow');
+Route::get('orderManageV','orderC@orderManageShow');
 
+Route::get('menuV', 'menuC@menuShow');
+Route::get('menuUpdateV', 'menuC@menuUpdateShow');
 Route::get('restMenuInsert', 'menuC@restMenuInsertShow');
 
-Route::get('mypage', function () {
+Route::get('restChooseV', 'restaurantC@restChooseShow');
+Route::get('restManageV', 'restaurantC@restManageShow');
+Route::get('restKindManage', 'restKindC@restKindManageShow');
 
-    $data = array('var1' => '京城五','var2' => '王力宏','var3' => '周杰魂' );
+//Controller routes
+Route::post('action_rmInt', 'menuC@restMenuInsert');
+Route::post('action_rKInt', 'restKindC@restKindInsert');
+Route::post('action_rKUp', 'restKindC@restKindUpdate');
+Route::get('action_rKDel', 'restKindC@restKindDel');
 
-    return view('mypage',$data);
-});
+Route::get('action_pcDel', 'orderC@purchaseDelete');
 
-Route::get('con', 'testC@index');
-
-Route::get('/test', function()
-{
-    // 測試一：取得users資料表的全部資料
-//    $users = DB::table('restaurant')->get();
-//    return $users;
-
-    // 測試二：取得users資料表，id為1的資料
-//    $user = DB::table('restaurant')->find(1);
-////    dd($user);  // dd means: die(var_dump($user));
-//    return $user->username;
-
-//     測試三：用where條件式來取得相關資料
-//    $users = DB::table('restaurant')->where("rest_name", "!=", "快樂餐館")->get();
-    $users = DB::select('select * from restaurant');
-    return $users;
-});
 

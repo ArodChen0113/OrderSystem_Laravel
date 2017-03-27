@@ -10,7 +10,7 @@
             <td colspan="4" align="center" bgcolor="#ABFFFF">下單瀏覽＆修改</td>
         </tr>
         <tr>
-            <td colspan="4" align="center" bgcolor="#FFABAB">訂購者：<?php echo $selectname; ?></td>
+            <td colspan="4" align="center" bgcolor="#FFABAB">訂購者：<?php echo $orderName; ?></td>
         </tr>
         <tr>
             <td align="center" width="300px" bgcolor="#FFE1AB">菜單</td>
@@ -19,51 +19,39 @@
             <td align="center" width="300px" bgcolor="#DBABFF">刪除</td>
         </tr>
         <?php
-        $num=count($order_kind_echo);
+        $num=count($order_price);
         for($k=0;$k<=$num-1;$k++) {
+            $v=$order[$k];
+            $v2=$order_price[$k];
             ?>
             <tr>
-                <?php
-                foreach ($order_kind_echo[$k] as $i){ ?>
-                <td align="center"><?php echo $i; ?></td>
-                    <?php
-                }
-                foreach ($order_unitprice_echo[$k] as $i){ ?>
-                <td align="center"><?php echo $i; ?></td>
-                    <?php
-                }
-                foreach ($order_pic_echo[$k] as $i){ ?>
-                <td align="center"><img src="photo/<?php echo $i; ?>" width="150" height="150"></td>
-                    <?php
-                }
-                foreach ($order_num_echo[$k] as $i) { ?>
+                <td align="center"><?php echo $v->kind; ?></td>
+                <td align="center"><?php echo $v->unit_price; ?></td>
+                <td align="center"><img src="photo/<?php echo $v->menu_picture; ?>" width="150" height="150"></td>
                     <td align="center"><a
-                                href="controller/order_controller.php?action=delete&num=<?php echo $i; ?>"><img
+                                href="action_pcDel?action=delete&num=<?php echo $v->num; ?>"><img
                                     src="icon/x.jpeg" width="30" height="30"></a></td>
-                    <?php
-                }
-                ?>
             </tr>
             <?php
         }
         ?>
         <tr>
             <td align="center" bgcolor="#FFA1A1">總計</td>
-            <td colspan="2" align="center"><?php echo $sum; ?></td>
+            <td colspan="2" align="center"><?php
+                echo $v2->price; ?></td>
         </tr>
     </table>
     <br>
     <input type="submit" value="訂餐加購">
     <br>
-    <a href="index.php">新增菜單</a>
-    <a href="restaurant_index.php">餐廳管理</a>
-    <a href="rest_kind_index.php">餐廳分類管理</a>
+    <a href="restMenuInsert">新增菜單</a>
+    <a href="restManageV">餐廳管理</a>
+    <a href="restKindManage">餐廳分類管理</a>
     <br>
-    <a href="order_index.php">下單區</a>
-    <a href="order_overview_index.php">下單總覽</a>
+    <a href="/">下單區</a>
+    <a href="purchaseManageV">下單總覽</a>
     <br>
-    <a href="order_list_index.php">訂單總覽</a>
+    <a href="orderManageV">訂單總覽</a>
 </form>
-<?php include("openmeal_index.php"); ?>
 </body>
 </html>

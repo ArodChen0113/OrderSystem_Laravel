@@ -63,10 +63,13 @@ session_start();
     <input type="hidden" name="action" value="update">
     選擇好餐廳，按下開餐按鈕 >>>
     <input type="submit" value="確定開餐">  <font color="#FF0000">今日開餐: <?php
-        if($todayopen==NULL){
+        foreach ($todayopen as $result) {
+            $open=$result->rest_name;
+        }
+        if($open==NULL){
             echo "今日尚未開餐";
         }else{
-        echo $todayopen;
+        echo $open;
         }?>
     </font>
     <br>

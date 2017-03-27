@@ -7,7 +7,7 @@ include ("menu_js.js");
     <title>新增餐廳&菜單頁面</title>
 </head>
 <body>
-<form action="controller/menu_add.php" method="post" enctype="multipart/form-data">
+<form action="action_rmInsert" method="post" enctype="multipart/form-data">
     <table border="1">
         <tr>
             <td colspan="4" align="center" bgcolor="#FFABFF">新增餐廳Menu</td>
@@ -98,16 +98,17 @@ include ("menu_js.js");
 </table>
     <br>
     <input type="hidden" name="action" value="insert">
+    <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
     <input type="submit" value="新增菜單">
     <br>
-    <a href="index.php">新增菜單</a>
-    <a href="restaurant_index.php">餐廳管理</a>
-    <a href="rest_kind_index.php">餐廳分類管理</a>
+    <a href="restMenuInsert">新增菜單</a>
+    <a href="restManageV">餐廳管理</a>
+    <a href="restKindManage">餐廳分類管理</a>
     <br>
-    <a href="order_index.php">下單區</a>
-    <a href="order_overview_index.php">下單總覽</a>
+    <a href="/">下單區</a>
+    <a href="purchaseManageV">下單總覽</a>
     <br>
-    <a href="order_list_index.php">訂單總覽</a>
+    <a href="orderManageV">訂單總覽</a>
 </form>
 </body>
 </html>

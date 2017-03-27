@@ -16,26 +16,17 @@
         </tr>
 
         <?php
-        if($check!=NULL){
-        $num=count($order_name_echo);
+        if($order_name!=NULL){
+        $num=count($order_name);
         for($k=0;$k<=$num-1;$k++) {
+            $v=$order_name[$k];
+            $v2=$order_price[$k];
             ?>
             <tr>
-            <?php
-            foreach ($order_name_echo[$k] as $i){ ?>
-                <td align="center"><?php echo $i; ?></td>
-                <?php
-            }
-            foreach ($order_price_echo[$k] as $i){ ?>
-                <td align="center"><?php echo $i; ?></td>
-                <?php
-            }
-            foreach ($order_name_echo[$k] as $i) { ?>
-                <td align="center"><a href="order_update_index.php?postname=<?php echo $i; ?>"><img
+                <td align="center"><?php echo $v->name; ?></td>
+                <td align="center"><?php echo $v2->price; ?></td>
+                <td align="center"><a href="purchaseUpdateV?postname=<?php echo $v->name; ?>"><img
                                 src="icon/eye.jpeg" width="30" height="30"></a></td>
-                <?php
-            }
-                ?>
             </tr>
             <?php
         }
@@ -47,19 +38,17 @@
             <?php
         }
         ?>
-
     </table>
     <br>
     <br>
-    <a href="index.php">新增菜單</a>
-    <a href="restaurant_index.php">餐廳管理</a>
-    <a href="rest_kind_index.php">餐廳分類管理</a>
+    <a href="restMenuInsert">新增菜單</a>
+    <a href="restManageV">餐廳管理</a>
+    <a href="restKindManage">餐廳分類管理</a>
     <br>
-    <a href="order_index.php">下單區</a>
-    <a href="order_overview_index.php">下單總覽</a>
+    <a href="/">下單區</a>
+    <a href="purchaseManageV">下單總覽</a>
     <br>
-    <a href="order_list_index.php">訂單總覽</a>
+    <a href="orderManageV">訂單總覽</a>
 </form>
-<?php include("openmeal_index.php"); ?>
 </body>
 </html>

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\Http\Controllers\Controller;
+use Input;
 
 class menuC extends Controller
 {
@@ -30,18 +31,25 @@ class menuC extends Controller
 
     }
     //餐廳&菜單資料新增
-    public function restMenuInsert($rest_kind,$rest_name,$rest_tel,$restpic_tmpname,$restpic_name,$kind,$price,$menu_tmpname,$menu_name,$action)
+    public function restMenuInsert()
     {
-        if ($action != NULL && $action == 'insert')      //判斷值是否由欄位輸入
+        $input = Input::all();
+        $rest_kind = $input['restkind'];
+        $kind = $input['kind'];
+        $price = $input['price'];
+//        $menu_tmpname= Input::file('menu_picture')->getRealPath();
+//        $menu_name = Input::file('menu_picture')->getClientOriginalName();
+        $restpic_name = Input::file('rest_picture')->getClientOriginalName();
+//        $restpic_tmpname = Input::file('rest_picture')->getRealPath();
+        $rest_tel = $input['rest_tel'];
+        $rest_name = $input['restaurant_name'];
+
+        if ($input['action'] != NULL && $input['action'] == 'insert')      //判斷值是否由欄位輸入
         {
-            if (!move_uploaded_file($restpic_tmpname, "../photo/".$restpic_name)) {        //執行菜單圖片上傳
-                echo "Upload false!";
-            } else {
+//            $destinationPath = base_path() . '../photo';
+//            Input::file('photo')->move($destinationPath, $restpic_name);
                 DB::table('restaurant')->insert(array(
-                    array('rest_name' => $rest_name, 'votes' => 0),
-                    array('rest_kind' => $rest_kind, 'votes' => 0),
-                    array('rest_tel' => $rest_tel, 'votes' => 0),
-                    array('rest_picture' => $restpic_name, 'votes' => 0)
+                    array('rest_name' => $rest_name,'rest_kind' => $rest_kind,'rest_tel' => $rest_tel, 'rest_picture' => $restpic_name)
                 ));
             }
             $k=0;
@@ -49,22 +57,17 @@ class menuC extends Controller
             $num=count($kind);
             echo $num;
             for ($i=1;$i<=$num;$i++) {
-                if (!move_uploaded_file($menu_tmpname[$k], "../photo/".$menu_name[$k])) {  //執行菜單圖片上傳
-                    echo "Upload false!";
-                } else {
+//                if (!move_uploaded_file($menu_tmpname[$k], "../photo/".$menu_name[$k])) {  //執行菜單圖片上傳
+//                    echo "Upload false!";
+//                } else {
                     DB::table('menu')->insert(array(
-                        array('rest_name' => $rest_name, 'votes' => 0),
-                        array('kind' => $kind[$k], 'votes' => 0),
-                        array('unit_price' => $price[$k], 'votes' => 0),
-                        array('menu_picture' => $menu_name[$k], 'votes' => 0),
-                        array('date' => NOW(), 'votes' => 0)
+                        array('rest_name' => $rest_name,'kind' => $kind[$k],'unit_price' => $price[$k])
                     ));
                     $k++;
                 }
-            }
-            header("Location:../restaurant_index.php");
+            header("Location:restMenuInsert");
         }
-    }
+
     //菜單資料修改
     public function menuUpdate()
     {
