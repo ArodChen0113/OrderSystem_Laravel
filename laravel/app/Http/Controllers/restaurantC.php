@@ -14,15 +14,15 @@ class restaurantC extends Controller
     //餐廳選擇器顯示
     public function restChooseShow()
     {
-        $restKind = DB::table('restaurant_kind')
-            ->select('rest_kind')
+        $rest_kind_echo = DB::table('restaurant_kind')
+            ->select(DB::raw('rest_kind'))
             ->get();
         $todayopen=DB::table('restaurant')
             ->select('rest_name')
             ->where('rest_open', '==', 1)
             ->get();
 
-        return view('restChooseV', ['restKind' => $restKind,'todayopen' =>$todayopen]);
+        return view('restChooseV', ['rest_kind_echo' => $rest_kind_echo,'todayopen' =>$todayopen]);
     }
     //餐廳管理頁面顯示
     public function restManageShow()

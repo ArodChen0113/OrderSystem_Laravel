@@ -20,6 +20,8 @@ Route::post('action_rmInt', 'menuC@restMenuInsert');
 Route::post('action_rKInt', 'restKindC@restKindInsert');
 Route::post('action_rKUp', 'restKindC@restKindUpdate');
 Route::get('action_rKDel', 'restKindC@restKindDel');
+Route::get('action_rKControl1', 'restKindC@restKindControl1');
+Route::get('action_rKControl2', 'restKindC@restKindControl2');
 
 Route::get('action_pcDel', 'orderC@purchaseDelete');
 

@@ -26,7 +26,29 @@ class restKindC extends Controller
     //餐廳分類下拉選單控制1
     public function restKindControl1()
     {
+        $input = Input::all();
+        $restKind_name = DB::table('restaurant')
+            ->select('rest_name')
+            ->where('rest_kind', $input['select1'])
+            ->get();
+        foreach ($restKind_name as $result) {
+            $rKname=$result->rest_name;
+        }
 
+        session_start();
+        $_SESSION['rest_name']=$rKname;
+
+//        $restKind_name2 = DB::table('restaurant')
+//            ->select(DB::raw('rest_name'))
+//            ->where('rest_kind', $input['rest1'])
+//            ->get();
+//        foreach ($restKind_name2 as $result2) {
+//            $rKname2=$result2->rest_name;
+//        }
+//        $_SESSION['rest_name2']=$rKname2;
+        $select1=$input['select1'];
+//        $rest1=$input['rest11'];
+        header("Location:restChooseV?select1=$select1");
     }
     //餐廳分類下拉選單控制2
     public function restKindControl2()

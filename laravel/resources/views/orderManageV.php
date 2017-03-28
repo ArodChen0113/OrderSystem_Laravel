@@ -21,45 +21,38 @@
         <?php
         $num=count($order_data);
         for($k=0;$k<=$num-1;$k++) {
+        $v = $order_data[$k];
+        ?>
+        <tr>
+            <?php
+            echo "<td align=\"center\"><b>" . $v->name . "</<b></td>";
+            echo "<td align=\"center\"><b>" . $v->price . "</<b></td>";
             ?>
-            <tr>
+            <td align="center">
                 <?php
-                foreach ($order_data[$k] as $i) {
-                    echo "<td align=\"center\"><b>" . $i . "</<b></td>";
-                }
-                foreach ($order_unitprice[$k] as $i) {
-                    echo "<td align=\"center\"><b>" . $i . "</<b></td>";
-                }
-                foreach ($order_pay[$k] as $i) {
-                ?>
-                <td align="center">
-                    <?php
-                if($i==0){
+                if ($v->pay == 0) {
                     ?>
                     <font color="#FF0000">尚未繳費</font>
-                <?php }else if($i==1){
+                <?php } else if ($v->pay == 1) {
                     ?>
                     已繳費
-                <?php }
-                foreach ($order_name[$k] as $i) {
-                    $payname = $i;
-                    ?>
-                    <a href="controller/order_controller.php?action=pay&payname=<?php echo $payname; ?>"><img
-                                src="icon/th.jpeg" width="30" height="30"></a>
-                <?php } ?>
-                </td>
                     <?php
-                }
+                    ?>
+                    <a href="controller/order_controller.php?action=pay&payname=<?php echo $v->name; ?>"><img
+                                src="icon/th.jpeg" width="30" height="30"></a>
+            </td>
+            <?php
+            }
                 ?>
             </tr>
             <?php
         }
         ?>
         <tr>
-            <td align="center">訂餐人數</td><td align="center" colspan="2"><?php echo $order_people; ?></td>
+            <td align="center">訂餐人數</td><td align="center" colspan="2"><?php echo count($order_people); ?></td>
         </tr>
         <tr>
-            <td align="center">餐點數量</td><td align="center" colspan="2"><?php echo $orderCount; ?>
+            <td align="center">餐點數量</td><td align="center" colspan="2"><?php echo count($orderCount); ?>
             </td>
         </tr>
         <tr>
@@ -69,14 +62,14 @@
     </table>
 
     <br>
-    <a href="index.php">新增菜單</a>
-    <a href="restaurant_index.php">餐廳管理</a>
-    <a href="rest_kind_index.php">餐廳分類管理</a>
+    <a href="restMenuInsert">新增菜單</a>
+    <a href="restManageV">餐廳管理</a>
+    <a href="restKindManage">餐廳分類管理</a>
     <br>
-    <a href="order_index.php">下單區</a>
-    <a href="order_overview_index.php">下單總覽</a>
+    <a href="/">下單區</a>
+    <a href="purchaseManageV">下單總覽</a>
     <br>
-    <a href="order_list_index.php">訂單總覽</a>
+    <a href="orderManageV">訂單總覽</a>
 </form>
 <br>
 <form action="" method="post" enctype="multipart/form-data">
@@ -94,32 +87,28 @@
         <?php
         $num=count($order_menu);
         for($k=0;$k<=$num-1;$k++) {
+            $v2=$order_menu[$k];
             ?>
             <tr>
                 <?php
-                foreach ($order_menu[$k] as $i) {
-                    echo "<td align=\"center\"><b>" . $i . "</<b></td>";
-                }
-                foreach ($order_pic[$k] as $i) {
+                    echo "<td align=\"center\"><b>" . $v2->kind . "</<b></td>";
                     ?>
-                <td align="center"><img src="photo/<?php echo $i; ?>" width="150" height="150"></td>
+                <td align="center"><img src="photo/<?php echo $order_pic[$k] ; ?>" width="150" height="150"></td>
                 <?php
-                }
-                foreach ($order_count_num[$k] as $i) {
-                    echo "<td align=\"center\"><b>" . $i . "</<b></td>";
-                }
-                foreach ($order_price[$k] as $i) {
-                    echo "<td align=\"center\"><b>" . $i . "</<b></td>";
-                }
-                foreach ($order_count_name[$k] as $i) {
-                    echo "<td align=\"center\"><b>" . $i . "</<b></td>";
-                }
-                ?>
+                    echo "<td align=\"center\"><b>" . $kindCount[$k] . "</<b></td>";
+                    echo "<td align=\"center\"><b>" . $order_unitPrice[$k] . "</<b></td>";
+?>
+                <td align="center"><b>
+                        <?php
+                        foreach ($kindOrderName[$k] as $i) {
+                            echo $i->name." ";
+                        }
+                        ?>
+                    </<b></td>
             </tr>
             <?php
         }
         ?>
-
     </table>
 </form>
 </body>
