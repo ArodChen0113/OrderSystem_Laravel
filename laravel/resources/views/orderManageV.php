@@ -33,13 +33,13 @@
                 if ($v->pay == 0) {
                     ?>
                     <font color="#FF0000">尚未繳費</font>
+                    <a href="action_orPay?action=pay&payname=<?php echo $v->name; ?>"><img
+                                src="th.jpeg" width="30" height="30"></a>
                 <?php } else if ($v->pay == 1) {
                     ?>
                     已繳費
                     <?php
                     ?>
-                    <a href="controller/order_controller.php?action=pay&payname=<?php echo $v->name; ?>"><img
-                                src="icon/th.jpeg" width="30" height="30"></a>
             </td>
             <?php
             }
@@ -63,7 +63,7 @@
 
     <br>
     <a href="restMenuInsert">新增菜單</a>
-    <a href="restManageV">餐廳管理</a>
+    <a href="restChooseV">餐廳管理</a>
     <a href="restKindManage">餐廳分類管理</a>
     <br>
     <a href="/">下單區</a>

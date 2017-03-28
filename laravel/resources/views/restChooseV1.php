@@ -7,7 +7,7 @@ session_start();
     <title>餐廳選擇器</title>
 </head>
 <body>
-<form name="rest_management" action="" method="post" enctype="multipart/form-data">
+<form name="rest_management" action="123" method="post" enctype="multipart/form-data">
 <table border="1">
     <tr>
         <td colspan="3" align="center" bgcolor="#DBABFF">餐廳管理</td>
@@ -20,7 +20,7 @@ session_start();
     <tr>
         <td>請選擇欲瀏覽餐廳：</td>
         <td><select style="width:240px" name="restc1" onchange="window.location='action_rKControl1?action=control1&select1='+this.value">
-                <option value="">請選擇</option>
+                <option value="<?php echo $choosekind; ?>"><?php echo $choosekind; ?></option>
                 <?php
                 $num=count($rest_kind_echo);
                 for ($k=0;$k<=$num-1;$k++){
@@ -29,6 +29,18 @@ session_start();
                         <option value="<?php echo $v->rest_kind; ?>"><?php echo $v->rest_kind; ?></option>
                         <?php
                     }
+                ?>
+            </select></td>
+        <td><select style="width:240px" name="restc2" onchange="window.location='action_rKControl2?select1=<?php echo $choosekind; ?>&select2='+this.value">
+                <option value="">請選擇</option>
+                <?php
+                $num=count($restKind_name);
+                for ($k=0;$k<=$num-1;$k++){
+                    $v=$restKind_name[$k];
+                    ?>
+                    <option value="<?php echo $v->rest_name; ?>"><?php echo $v->rest_name; ?></option>
+                    <?php
+                }
                 ?>
             </select></td>
     </tr>

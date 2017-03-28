@@ -21,31 +21,19 @@
         </tr>
 
         <?php
-        $num=count($menu_kind_echo);
+        $num=count($rest_num);
         for($k=0;$k<=$num-1;$k++) {
+            $v=$rest_kind[$k];
+            $v2=$rest_price[$k];
+            $v3=$rest_pic[$k];
+            $v4=$rest_num[$k];
             ?>
             <tr>
-                <?php
-                foreach ($menu_kind_echo[$k] as $i){ ?>
-                <td align="center"><?php echo $i; ?></td>
-                    <?php
-                }
-                foreach ($menu_unitprice_echo[$k] as $i){ ?>
-                <td align="center"><?php echo $i; ?></td>
-                    <?php
-                }
-                foreach ($menu_pic_echo[$k] as $i){ ?>
-                <td align="center"><img src="photo/<?php echo $i; ?>" width="150" height="150"></td>
-                    <?php
-                }
-                foreach ($menu_num_echo[$k] as $i){ ?>
-                <td align="center"><a href="menu_update_index.php?num1=<?php echo $i; ?>&restname1=<?php echo $restname; ?>"><img src="icon/pencil.jpeg" width="30" height="30"></a></td>
-                    <?php
-                }
-                foreach ($menu_num_echo[$k] as $i){ ?>
-                <td align="center"><a href="controller/menu_controller.php?action=delete&restname=<?php echo $restname; ?>&num1=<?php echo $i; ?>"><img src="icon/x.jpeg" width="30" height="30"></a></td>
-                    <?php
-                } ?>
+                <td align="center"><?php echo $v->kind; ?></td>
+                <td align="center"><?php echo $v2->unit_price; ?></td>
+                <td align="center"><img src="photo/<?php echo $v3->menu_picture; ?>" width="150" height="150"></td>
+                <td align="center"><a href="menuUpdateV?num1=<?php echo $v4->m_num; ?>&restname1=<?php echo $restname; ?>"><img src="icon/pencil.jpeg" width="30" height="30"></a></td>
+                <td align="center"><a href="action_meDel?action=delete&restname=<?php echo $restname; ?>&num1=<?php echo $v4->m_num; ?>"><img src="icon/x.jpeg" width="30" height="30"></a></td>
             </tr>
             <?php
         }
@@ -53,16 +41,16 @@
 
     </table>
     <br>
-    <input type="button" value="返回餐廳管理" onclick="self.location.href='restaurant_index.php'"/>
+    <input type="button" value="返回餐廳管理" onclick="self.location.href='restChooseV'"/>
     <br>
-    <a href="index.php">新增菜單</a>
-    <a href="restaurant_index.php">餐廳管理</a>
-    <a href="rest_kind_index.php">餐廳分類管理</a>
+    <a href="restMenuInsert">新增菜單</a>
+    <a href="restChooseV">餐廳管理</a>
+    <a href="restKindManage">餐廳分類管理</a>
     <br>
-    <a href="order_index.php">下單區</a>
-    <a href="order_overview_index.php">下單總覽</a>
+    <a href="/">下單區</a>
+    <a href="purchaseManageV">下單總覽</a>
     <br>
-    <a href="order_list_index.php">訂單總覽</a>
+    <a href="orderManageV">訂單總覽</a>
 </form>
 </body>
 </html>

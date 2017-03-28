@@ -7,7 +7,7 @@ include ("menu_js.js");
     <title>訂購單頁面</title>
 </head>
 <body>
-<form action="controller/order_controller.php" method="post" enctype="multipart/form-data">
+<form action="action_pcInt" method="post" enctype="multipart/form-data">
     <table border="1">
         <tr>
             <td colspan="4" align="center" bgcolor="#ABFFFF">下單區</td>
@@ -20,7 +20,7 @@ include ("menu_js.js");
         </tr>
         <tr>  <!--選單一-->
             <td><select style="width:240px" name="kind1" onchange="window.location='1?select1='+this.value">
-
+                    <option value="<?php echo $kind; ?>"><?php echo $kind; ?></option>
                     <?php
                     $num=count($rest_kind);
                     for ($k=0;$k<=$num-1;$k++) {
@@ -31,18 +31,23 @@ include ("menu_js.js");
                     }
                     ?>
                 </select></td>
-            <td width="10%" align="center"></td>
-            <td align="center"></td>
+            <td width="10%" align="center"><?php echo $price;?></td>
+            <td align="center">
+                    <img src="photo/<?php echo $pic; ?>" width="150" height="150">
+            </td>
             <td><input type="text" name="orderName" value="請填入訂購者姓名" onfocus="cleartext(this)" onblur="resettext(this)"></td>
         </tr>
-
-
         <tr>
             <td align="center" bgcolor="#FFA1A1">總計</td>
-            <td colspan="2" align="center"><?php echo 0 ; ?></td>
+            <td colspan="2" align="center"><?php echo $price; ?></td>
         </tr>
     </table>
     <br>
+    <input type="hidden" name="kind_p1" value="<?php echo $kind; ?>">
+    <input type="hidden" name="sum" value="<?php echo $price; ?>">
+    <input type="hidden" name="restname" value="<?php echo $openN; ?>">
+    <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+    <input type="hidden" name="action" value="insert">
     <input type="submit" value="送出訂單">
     <br>
     <a href="restMenuInsert">新增菜單</a>

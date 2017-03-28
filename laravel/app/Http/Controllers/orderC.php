@@ -15,13 +15,49 @@ class orderC extends Controller
     //訂購單頁面顯示
     public function purchaseShow()
     {
+        $rest_openName = DB::table('restaurant')
+            ->select('rest_name')
+            ->where('rest_open', 1)
+            ->get();
+        foreach ($rest_openName as $result) {
+            $openN=$result->rest_name;
+        }
+        $rest_kind = DB::table('menu')
+            ->select('kind')
+            ->where('rest_name', $openN)
+            ->get();
 
+        return view('purchaseV', ['rest_kind' => $rest_kind]);
     }
-    //訂購單細節控制顯示
-    public function purchaseDetailShow()
+    //訂購單頁面顯示2
+    public function purchaseShow1()
     {
+        $input = Input::all();
+        $rest_openName = DB::table('restaurant')
+            ->select('rest_name')
+            ->where('rest_open', 1)
+            ->get();
+        foreach ($rest_openName as $result) {
+            $openN=$result->rest_name;
+        }
+        $rest_kind = DB::table('menu')
+            ->select('kind')
+            ->where('rest_name', $openN)
+            ->get();
 
+        $result1 = DB::table('menu')
+            ->select('kind','unit_price','menu_picture')
+            ->where('kind', $input['select1'])
+            ->get();
+        foreach ($result1 as $i)
+        {
+            $kind=$i->kind;
+            $price=$i->unit_price;
+            $pic=$i->menu_picture;
+        }
+        return view('purchaseV1', ['rest_kind' => $rest_kind,'kind' => $kind,'price'=>$price,'pic'=>$pic,'openN'=>$openN]);
     }
+
     //訂購單管理頁面顯示
     public function purchaseManageShow()
     {
@@ -37,6 +73,7 @@ class orderC extends Controller
             ->get();
         return view('purchaseManageV', ['order_name' => $order_name,'order_price' =>$order_price]);
     }
+
     //訂購單修改頁面顯示
     public function purchaseUpdateShow()
     {
@@ -59,7 +96,28 @@ class orderC extends Controller
     //訂購單資料新增
     public function purchaseInsert()
     {
-
+        $input = Input::all();
+        if ($input['action'] != NULL && $input['action'] == 'insert')      //判斷值是否由欄位輸入
+        {
+            $last_price = DB::table('menu_order')//查詢之前訂購總額
+            ->select('price')
+                ->where('name', $input['orderName'])
+                ->Where('pay', '!=', 9)
+                ->get();
+            foreach ($last_price as $i) {
+                $lastPrice = $i->price;
+            }
+            DB::table('menu_order')->insert(array(
+                array('name' => $input['orderName'], 'rest_name' => $input['restname'], 'kind' => $input['kind_p1'], 'price' => $input['sum'])//新增至資料庫
+            ));
+            $add=$lastPrice;
+            $totalPrice = $add + $input['sum']; //加總新舊訂購總額
+            DB::table('menu_order')
+                ->where('name', $input['orderName'])
+                ->Where('pay', '!=', 9)
+                ->update(['price' => $totalPrice]);
+            header("Location:purchaseManageV");
+        }
     }
     //訂購單資料刪除
     public function purchaseDelete()
@@ -179,7 +237,15 @@ class orderC extends Controller
     //訂餐付款控制
     public function orderPay()
     {
+        $input = Input::all();
+        if ($input['action'] != NULL && $input['action'] == 'pay'){
+        DB::table('menu_order') //修改成已繳費
+            ->where('name', $input['payname'])
+            ->where('pay', '!=', 9)
+            ->update(['pay' => 1]);
 
+        header("Location:orderManageV");
+        }
     }
 
 }

@@ -7,7 +7,7 @@ session_start();
     <title>餐廳選擇器</title>
 </head>
 <body>
-<form name="rest_management" action="" method="post" enctype="multipart/form-data">
+<form name="rest_management" action="restManageV" method="post" enctype="multipart/form-data">
 <table border="1">
     <tr>
         <td colspan="3" align="center" bgcolor="#DBABFF">餐廳管理</td>
@@ -19,8 +19,8 @@ session_start();
     </tr>
     <tr>
         <td>請選擇欲瀏覽餐廳：</td>
-        <td><select style="width:240px" name="restc1" onchange="window.location='action_rKControl1?action=control1&select1='+this.value">
-                <option value="">請選擇</option>
+        <td><select style="width:240px" name="restc1" onchange="window.location='action_rKControl1?select1='+this.value">
+                <option value="<?php echo $choosekind; ?>"><?php echo $choosekind; ?></option>
                 <?php
                 $num=count($rest_kind_echo);
                 for ($k=0;$k<=$num-1;$k++){
@@ -31,10 +31,23 @@ session_start();
                     }
                 ?>
             </select></td>
+        <td><select style="width:240px" name="restc2" onchange="window.location='action_rKControl2?select1=<?php echo $choosekind; ?>&select2='+this.value">
+                <option value="<?php echo $choosename; ?>"><?php echo $choosename; ?></option>
+                <?php
+                $num=count($restKind_name);
+                for ($k=0;$k<=$num-1;$k++){
+                    $v=$restKind_name[$k];
+                    ?>
+                    <option value="<?php echo $v->rest_name; ?>"><?php echo $v->rest_name; ?></option>
+                    <?php
+                }
+                ?>
+            </select></td>
     </tr>
 </table>
 <br>
-<input type="hidden" name="select_restName" value="">
+<input type="hidden" name="select_restName" value="<?php echo $choosename; ?>">
+    <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
 選擇好餐廳，按下搜尋按鈕 >>>
 <input type="submit" value="瀏覽菜單">
 
@@ -47,6 +60,6 @@ session_start();
     <a href="purchaseManageV">下單總覽</a>
     <br>
     <a href="orderManageV">訂單總覽</a>
-
+</form>
 </body>
 </html>
