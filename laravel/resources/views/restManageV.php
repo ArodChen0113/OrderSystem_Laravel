@@ -39,9 +39,9 @@
     如欲<font color="#FF0000">刪除</font>這間餐廳，按下刪除按鈕 >>>
     <a href="action_reDel?action=delete&restname=<?php echo $restname; ?>"><img src="icon/x.jpeg" width="30" height="30"></a>
     <br>
-    <a href="restMenuInsert">新增菜單</a>
+    <a href="restMenuInsertV">新增菜單</a>
     <a href="restChooseV">餐廳管理</a>
-    <a href="restKindManage">餐廳分類管理</a>
+    <a href="restKindManageV">餐廳分類管理</a>
     <br>
     <a href="/">下單區</a>
     <a href="purchaseManageV">下單總覽</a>

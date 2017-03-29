@@ -39,9 +39,9 @@
     <input type="submit" value="確定修改">
     <input type="button" value="返回菜單瀏覽" onclick="self.location.href='menuV?restname=<?php echo $restname; ?>'"/>
     <br>
-    <a href="restMenuInsert">新增菜單</a>
+    <a href="restMenuInsertV">新增菜單</a>
     <a href="restChooseV">餐廳管理</a>
-    <a href="restKindManage">餐廳分類管理</a>
+    <a href="restKindManageV">餐廳分類管理</a>
     <br>
     <a href="/">下單區</a>
     <a href="purchaseManageV">下單總覽</a>

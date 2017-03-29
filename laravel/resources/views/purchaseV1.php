@@ -50,9 +50,9 @@ include ("menu_js.js");
     <input type="hidden" name="action" value="insert">
     <input type="submit" value="送出訂單">
     <br>
-    <a href="restMenuInsert">新增菜單</a>
+    <a href="restMenuInsertV">新增菜單</a>
     <a href="restChooseV">餐廳管理</a>
-    <a href="restKindManage">餐廳分類管理</a>
+    <a href="restKindManageV">餐廳分類管理</a>
     <br>
     <a href="/">下單區</a>
     <a href="purchaseManageV">下單總覽</a>

@@ -62,9 +62,9 @@
     </table>
 
     <br>
-    <a href="restMenuInsert">新增菜單</a>
+    <a href="restMenuInsertV">新增菜單</a>
     <a href="restChooseV">餐廳管理</a>
-    <a href="restKindManage">餐廳分類管理</a>
+    <a href="restKindManageV">餐廳分類管理</a>
     <br>
     <a href="/">下單區</a>
     <a href="purchaseManageV">下單總覽</a>
