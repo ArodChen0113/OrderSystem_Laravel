@@ -27,7 +27,7 @@
             <tr>
                 <td align="center"><?php echo $v->kind; ?></td>
                 <td align="center"><?php echo $v->unit_price; ?></td>
-                <td align="center"><img src="photo/<?php echo $v->menu_picture; ?>" width="150" height="150"></td>
+                <td align="center"><img src="/userUpload/<?php echo $v->menu_picture; ?>" width="150" height="150"></td>
                     <td align="center"><a
                                 href="action_pcDel?action=delete&num=<?php echo $v->num; ?>"><img
                                     src="icon/x.jpeg" width="30" height="30"></a></td>
@@ -35,11 +35,7 @@
             <?php
         }
         ?>
-        <tr>
-            <td align="center" bgcolor="#FFA1A1">總計</td>
-            <td colspan="2" align="center"><?php
-                echo $v2->price; ?></td>
-        </tr>
+
     </table>
     <br>
     <input type="submit" value="訂餐加購">

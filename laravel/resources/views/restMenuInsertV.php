@@ -7,7 +7,7 @@ include ("menu_js.js");
     <title>新增餐廳&菜單頁面</title>
 </head>
 <body>
-<form action="action_rmInsert" method="post" enctype="multipart/form-data">
+<form action="action_rmInt" method="post" enctype="multipart/form-data">
     <table border="1">
         <tr>
             <td colspan="4" align="center" bgcolor="#FFABFF">新增餐廳Menu</td>

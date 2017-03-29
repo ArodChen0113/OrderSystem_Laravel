@@ -31,7 +31,7 @@
             <tr>
                 <td align="center"><?php echo $v->kind; ?></td>
                 <td align="center"><?php echo $v2->unit_price; ?></td>
-                <td align="center"><img src="photo/<?php echo $v3->menu_picture; ?>" width="150" height="150"></td>
+                <td align="center"><img src="/userUpload/<?php echo $v3->menu_picture; ?>" width="150" height="150"></td>
                 <td align="center"><a href="menuUpdateV?num1=<?php echo $v4->m_num; ?>&restname1=<?php echo $restname; ?>"><img src="icon/pencil.jpeg" width="30" height="30"></a></td>
                 <td align="center"><a href="action_meDel?action=delete&restname=<?php echo $restname; ?>&num1=<?php echo $v4->m_num; ?>"><img src="icon/x.jpeg" width="30" height="30"></a></td>
             </tr>

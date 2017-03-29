@@ -33,7 +33,7 @@ include ("menu_js.js");
                 </select></td>
             <td width="10%" align="center"><?php echo $price;?></td>
             <td align="center">
-                    <img src="photo/<?php echo $pic; ?>" width="150" height="150">
+                    <img src="/userUpload/<?php echo $pic; ?>" width="150" height="150">
             </td>
             <td><input type="text" name="orderName" value="請填入訂購者姓名" onfocus="cleartext(this)" onblur="resettext(this)"></td>
         </tr>

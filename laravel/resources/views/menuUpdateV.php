@@ -26,7 +26,7 @@
             <tr>
                 <td><input type="text" name="kind" value="<?php echo $v->kind; ?>"></td>
                 <td><input type="text" name="price" value="<?php echo $v2->unit_price; ?>"></td>
-                    <td align="center"><img src="photo/<?php echo $v3->menu_picture; ?>" width="150"
+                    <td align="center"><img src="/userUpload/<?php echo $v3->menu_picture; ?>" width="150"
                                             height="150"></td>
                     <input type="hidden" name="num" value="<?php echo $v4->m_num; ?>">
                 <td><input type="file" name="menu_picture"></td>

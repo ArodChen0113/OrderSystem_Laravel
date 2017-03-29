@@ -26,7 +26,6 @@ class orderC extends Controller
             ->select('kind')
             ->where('rest_name', $openN)
             ->get();
-
         return view('purchaseV', ['rest_kind' => $rest_kind]);
     }
     //訂購單頁面顯示2

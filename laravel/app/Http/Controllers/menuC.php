@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Http\Controllers\Controller;
 use Input;
+use Illuminate\Http\UploadedFile;
 
 class menuC extends Controller
 {
@@ -77,37 +78,46 @@ class menuC extends Controller
         $rest_kind = $input['restkind'];
         $kind = $input['kind'];
         $price = $input['price'];
-//        $menu_tmpname= Input::file('menu_picture')->getRealPath();
-//        $menu_name = Input::file('menu_picture')->getClientOriginalName();
-        $restpic_name = Input::file('rest_picture')->getClientOriginalName();
-//        $restpic_tmpname = Input::file('rest_picture')->getRealPath();
         $rest_tel = $input['rest_tel'];
         $rest_name = $input['restaurant_name'];
 
-        if ($input['action'] != NULL && $input['action'] == 'insert')      //判斷值是否由欄位輸入
+        if ($input['action'] != NULL && $input['action'] == 'insert')         //判斷值是否由欄位輸入
         {
-//            $destinationPath = base_path() . '../photo';
-//            Input::file('photo')->move($destinationPath, $restpic_name);
-                DB::table('restaurant')->insert(array(
-                    array('rest_name' => $rest_name,'rest_kind' => $rest_kind,'rest_tel' => $rest_tel, 'rest_picture' => $restpic_name)
-                ));
-            }
-            $k=0;
-            $kind = array_filter($kind);
-            $num=count($kind);
-            echo $num;
-            for ($i=1;$i<=$num;$i++) {
-//                if (!move_uploaded_file($menu_tmpname[$k], "../photo/".$menu_name[$k])) {  //執行菜單圖片上傳
-//                    echo "Upload false!";
-//                } else {
-                    DB::table('menu')->insert(array(
-                        array('rest_name' => $rest_name,'kind' => $kind[$k],'unit_price' => $price[$k])
-                    ));
-                    $k++;
-                }
-            header("Location:restMenuInsert");
-        }
+            $file = Input::file('rest_picture');                              //取得檔案資訊
+            $extension = $file->getClientOriginalExtension();                 //取得檔案副檔名
+            $file_name = strval(time()) . str_random(5) . '.' . $extension;   //定義檔案名稱
+            $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
 
+            if (Input::hasFile('rest_picture')) {
+                $upload_success = $file->move($destination_path, $file_name); //移動至指定資料夾
+                DB::table('restaurant')->insert(array(                        //新增餐廳資料
+                    array('rest_name' => $rest_name, 'rest_kind' => $rest_kind, 'rest_tel' => $rest_tel, 'rest_picture' => $file_name)
+                ));
+            } else {
+                echo "restaurant_img upload failed!";
+            }
+
+            $row_file = Input::file('menu_picture');
+            $row_file = array_filter($row_file);
+            $kind = array_filter($kind);
+            $num = count($kind);
+            for ($i = 0; $i <= $num - 1; $i++) {
+                $file2=$row_file[$i];
+                $extension2 = $file2->getClientOriginalExtension();
+                $file_name2 = strval(time()) . str_random(5) . '.' . $extension2;
+                $destination_path2 = public_path() . '/userUpload/';
+                if (Input::hasFile('menu_picture')) {
+                    $upload_success2 = $file2->move($destination_path2, $file_name2);
+                    DB::table('menu')->insert(array(                           //新增菜單資料
+                        array('rest_name' => $rest_name, 'kind' => $kind[$i], 'unit_price' => $price[$i],'menu_picture'=> $file_name2)
+                    ));
+                } else {
+                    echo "menu_img upload failed!";
+                }
+            }
+            header("Location:restChooseV");
+        }
+    }
     //菜單資料修改
     public function menuUpdate()
     {
@@ -121,6 +131,20 @@ class menuC extends Controller
             DB::table('menu')
                 ->where('m_num', $input['num'])
                 ->update(['unit_price' => $input['price']]);
+
+            $file = Input::file('menu_picture');                              //取得檔案資訊
+            $extension = $file->getClientOriginalExtension();                 //取得檔案副檔名
+            $file_name = strval(time()) . str_random(5) . '.' . $extension;   //定義檔案名稱
+            $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
+
+            if (Input::hasFile('menu_picture')) {
+                $upload_success = $file->move($destination_path, $file_name); //移動至指定資料夾
+                DB::table('menu')
+                    ->where('m_num', $input['num'])
+                    ->update(['menu_picture' => $file_name]);
+            } else {
+                echo "menu_img upload failed!";
+            }
         }
         $restname=$input['restName'];
         header("Location:menuV?restname=$restname");

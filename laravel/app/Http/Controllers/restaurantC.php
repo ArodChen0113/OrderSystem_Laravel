@@ -46,7 +46,6 @@ class restaurantC extends Controller
     public function restUpdate()
     {
         $input = Input::all();
-//        $restpic_name = Input::file('rest_picture')->getClientOriginalName();
         if ($input['action'] != NULL && $input['action'] == 'update')      //判斷值是否由欄位輸入
         {
             DB::table('restaurant')
@@ -58,9 +57,20 @@ class restaurantC extends Controller
             DB::table('restaurant')
                 ->where('num', $input['num'])
                 ->update(['rest_tel' => $input['rest_tel']]);
-//            DB::table('restaurant')
-//                ->where('num', $input['num'])
-//                ->update(['rest_picture' => $restpic_name]);
+
+            $file = Input::file('rest_picture');                              //取得檔案資訊
+            $extension = $file->getClientOriginalExtension();                 //取得檔案副檔名
+            $file_name = strval(time()) . str_random(5) . '.' . $extension;   //定義檔案名稱
+            $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
+
+            if (Input::hasFile('rest_picture')) {
+                $upload_success = $file->move($destination_path, $file_name); //移動至指定資料夾
+                DB::table('restaurant')
+                    ->where('num', $input['num'])
+                    ->update(['rest_picture' => $file_name]);
+            } else {
+                echo "restaurant_img upload failed!";
+            }
         }
         header("Location:restChooseV");
     }

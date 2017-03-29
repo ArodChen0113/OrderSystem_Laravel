@@ -24,7 +24,7 @@
             <td align="center" bgcolor="#DBABFF">上傳欲修改菜單圖片</td>
         </tr>
         <tr>
-            <td colspan="2"><img src="photo/<?php echo $restpic; ?>" width="800" height="600"></td>
+            <td colspan="2"><img src="/userUpload/<?php echo $restpic; ?>" width="800" height="600"></td>
             <td><input type="file" name="rest_picture" size="30"></td>
         </tr>
     </table>

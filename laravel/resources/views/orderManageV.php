@@ -34,7 +34,7 @@
                     ?>
                     <font color="#FF0000">尚未繳費</font>
                     <a href="action_orPay?action=pay&payname=<?php echo $v->name; ?>"><img
-                                src="th.jpeg" width="30" height="30"></a>
+                                src="icon/th.jpeg" width="30" height="30"></a>
                 <?php } else if ($v->pay == 1) {
                     ?>
                     已繳費
@@ -93,7 +93,7 @@
                 <?php
                     echo "<td align=\"center\"><b>" . $v2->kind . "</<b></td>";
                     ?>
-                <td align="center"><img src="photo/<?php echo $order_pic[$k] ; ?>" width="150" height="150"></td>
+                <td align="center"><img src="/userUpload/<?php echo $order_pic[$k] ; ?>" width="150" height="150"></td>
                 <?php
                     echo "<td align=\"center\"><b>" . $kindCount[$k] . "</<b></td>";
                     echo "<td align=\"center\"><b>" . $order_unitPrice[$k] . "</<b></td>";
