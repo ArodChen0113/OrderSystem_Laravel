@@ -45,7 +45,7 @@ include ("menu_js.js");
     <br>
     <input type="hidden" name="kind_p1" value="<?php echo $kind; ?>">
     <input type="hidden" name="sum" value="<?php echo $price; ?>">
-    <input type="hidden" name="restname" value="<?php echo $openN; ?>">
+    <input type="hidden" name="restname" value="<?php echo $restname; ?>">
     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
     <input type="hidden" name="action" value="insert">
     <input type="submit" value="送出訂單">
@@ -60,5 +60,13 @@ include ("menu_js.js");
     <a href="orderManageV">訂單總覽</a>
 
 </form>
+<table border="1">
+    <tr>
+        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restname; ?></td>
+    </tr>
+    <tr>
+        <td><img src="/userUpload/<?php echo $restpic; ?>" width="800" height="600"></td>
+    </tr>
+</table>
 </body>
 </html>

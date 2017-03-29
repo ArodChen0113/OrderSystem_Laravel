@@ -17,26 +17,13 @@ class menuC extends Controller
     public function menuShow()
     {
         $input = Input::all();
-        $rest_kind=DB::table('menu')
-            ->select('kind')
+        $rest_data=DB::table('menu')
+            ->select('kind','m_num','menu_picture','unit_price')
             ->where('rest_name', $input['restname'])
             ->get();
-        $rest_num=DB::table('menu')
-            ->select('m_num')
-            ->where('rest_name', $input['restname'])
-            ->get();
-        $rest_pic=DB::table('menu')
-            ->select('menu_picture')
-            ->where('rest_name', $input['restname'])
-            ->get();
-        $rest_price=DB::table('menu')
-            ->select('unit_price')
-            ->where('rest_name', $input['restname'])
-            ->get();
-
         $restname=$input['restname'];
 
-        return view('menuV', [ 'rest_kind' => $rest_kind,'rest_num' => $rest_num,'rest_pic' => $rest_pic,'rest_price' => $rest_price,'restname' => $restname]);
+        return view('menuV', [ 'rest_data' => $rest_data,'restname' => $restname]);
     }
     //新增餐廳&菜單頁面顯示
     public function restMenuInsertShow()
@@ -44,32 +31,20 @@ class menuC extends Controller
         $result = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
+
         return view('restMenuInsertV', ['result' => $result]);
     }
     //菜單修改頁面顯示
     public function menuUpdateShow()
     {
         $input = Input::all();
-        $rest_kind=DB::table('menu')
-            ->select('kind')
+        $rest_data=DB::table('menu')
+            ->select('kind','m_num','menu_picture','unit_price')
             ->where('m_num', $input['num1'])
             ->get();
-        $rest_num=DB::table('menu')
-            ->select('m_num')
-            ->where('m_num', $input['num1'])
-            ->get();
-        $rest_pic=DB::table('menu')
-            ->select('menu_picture')
-            ->where('m_num', $input['num1'])
-            ->get();
-        $rest_price=DB::table('menu')
-            ->select('unit_price')
-            ->where('m_num', $input['num1'])
-            ->get();
-
         $restname=$input['restname1'];
 
-        return view('menuUpdateV', [ 'rest_kind' => $rest_kind,'rest_num' => $rest_num,'rest_pic' => $rest_pic,'rest_price' => $rest_price,'restname' => $restname]);
+        return view('menuUpdateV', [ 'rest_data' => $rest_data,'restname' => $restname]);
     }
     //餐廳&菜單資料新增
     public function restMenuInsert()
@@ -83,14 +58,13 @@ class menuC extends Controller
 
         if ($input['action'] != NULL && $input['action'] == 'insert')         //判斷值是否由欄位輸入
         {
-            $file = Input::file('rest_picture');                              //取得檔案資訊
-            $extension = $file->getClientOriginalExtension();                 //取得檔案副檔名
-            $file_name = strval(time()) . str_random(5) . '.' . $extension;   //定義檔案名稱
-            $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
-
             if (Input::hasFile('rest_picture')) {
-                $upload_success = $file->move($destination_path, $file_name); //移動至指定資料夾
-                DB::table('restaurant')->insert(array(                        //新增餐廳資料
+                $file = Input::file('rest_picture');                              //取得檔案資訊
+                $extension = $file->getClientOriginalExtension();                 //取得檔案副檔名
+                $file_name = strval(time()) . str_random(5) . '.' . $extension;   //定義檔案名稱
+                $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
+                $upload_success = $file->move($destination_path, $file_name);     //移動至指定資料夾
+                DB::table('restaurant')->insert(array(                            //新增餐廳資料
                     array('rest_name' => $rest_name, 'rest_kind' => $rest_kind, 'rest_tel' => $rest_tel, 'rest_picture' => $file_name)
                 ));
             } else {
@@ -103,10 +77,10 @@ class menuC extends Controller
             $num = count($kind);
             for ($i = 0; $i <= $num - 1; $i++) {
                 $file2=$row_file[$i];
-                $extension2 = $file2->getClientOriginalExtension();
-                $file_name2 = strval(time()) . str_random(5) . '.' . $extension2;
-                $destination_path2 = public_path() . '/userUpload/';
                 if (Input::hasFile('menu_picture')) {
+                    $extension2 = $file2->getClientOriginalExtension();
+                    $file_name2 = strval(time()) . str_random(5) . '.' . $extension2;
+                    $destination_path2 = public_path() . '/userUpload/';
                     $upload_success2 = $file2->move($destination_path2, $file_name2);
                     DB::table('menu')->insert(array(                           //新增菜單資料
                         array('rest_name' => $rest_name, 'kind' => $kind[$i], 'unit_price' => $price[$i],'menu_picture'=> $file_name2)
@@ -121,24 +95,19 @@ class menuC extends Controller
     //菜單資料修改
     public function menuUpdate()
     {
-
         $input = Input::all();
         if ($input['action'] != NULL && $input['action'] == 'update')      //判斷值是否由欄位輸入
         {
             DB::table('menu')
                 ->where('m_num', $input['num'])
-                ->update(['kind' => $input['kind']]);
-            DB::table('menu')
-                ->where('m_num', $input['num'])
-                ->update(['unit_price' => $input['price']]);
-
-            $file = Input::file('menu_picture');                              //取得檔案資訊
-            $extension = $file->getClientOriginalExtension();                 //取得檔案副檔名
-            $file_name = strval(time()) . str_random(5) . '.' . $extension;   //定義檔案名稱
-            $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
+                ->update(['kind' => $input['kind'],'unit_price' => $input['price']]);
 
             if (Input::hasFile('menu_picture')) {
-                $upload_success = $file->move($destination_path, $file_name); //移動至指定資料夾
+                $file = Input::file('menu_picture');                              //取得檔案資訊
+                $extension = $file->getClientOriginalExtension();                 //取得檔案副檔名
+                $file_name = strval(time()) . str_random(5) . '.' . $extension;   //定義檔案名稱
+                $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
+                $upload_success = $file->move($destination_path, $file_name);     //移動至指定資料夾
                 DB::table('menu')
                     ->where('m_num', $input['num'])
                     ->update(['menu_picture' => $file_name]);

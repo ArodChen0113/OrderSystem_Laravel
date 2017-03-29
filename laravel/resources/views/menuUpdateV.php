@@ -16,19 +16,16 @@
             <td align="center" width="300px" bgcolor="#FFABAB">如要修改圖片，請重新上傳</td>
         </tr>
         <?php
-        $num=count($rest_num);
+        $num=count($rest_data);
         for($k=0;$k<=$num-1;$k++) {
-            $v=$rest_kind[$k];
-            $v2=$rest_price[$k];
-            $v3=$rest_pic[$k];
-            $v4=$rest_num[$k];
+            $v=$rest_data[$k];
         ?>
             <tr>
                 <td><input type="text" name="kind" value="<?php echo $v->kind; ?>"></td>
-                <td><input type="text" name="price" value="<?php echo $v2->unit_price; ?>"></td>
-                    <td align="center"><img src="/userUpload/<?php echo $v3->menu_picture; ?>" width="150"
+                <td><input type="text" name="price" value="<?php echo $v->unit_price; ?>"></td>
+                    <td align="center"><img src="/userUpload/<?php echo $v->menu_picture; ?>" width="150"
                                             height="150"></td>
-                    <input type="hidden" name="num" value="<?php echo $v4->m_num; ?>">
+                    <input type="hidden" name="num" value="<?php echo $v->m_num; ?>">
                 <td><input type="file" name="menu_picture"></td>
             </tr>
             <?php

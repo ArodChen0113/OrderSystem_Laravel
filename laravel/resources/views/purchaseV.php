@@ -55,5 +55,13 @@ include ("menu_js.js");
     <a href="orderManageV">訂單總覽</a>
 
 </form>
+<table border="1">
+    <tr>
+        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restname; ?></td>
+    </tr>
+    <tr>
+        <td><img src="/userUpload/<?php echo $restpic; ?>" width="800" height="600"></td>
+    </tr>
+</table>
 </body>
 </html>

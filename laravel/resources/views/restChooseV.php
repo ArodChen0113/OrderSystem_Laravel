@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -33,11 +30,12 @@ session_start();
             </select></td>
     </tr>
 </table>
-<br>
-<input type="hidden" name="select_restName" value="">
-選擇好餐廳，按下搜尋按鈕 >>>
-<input type="submit" value="瀏覽菜單">
-
+    <br>
+    <input type="hidden" name="select_restName" value="">
+    選擇好餐廳，按下搜尋按鈕 >>>
+    <input type="submit" value="瀏覽菜單">
+    如欲<font color="#FF0000">更換今日開餐</font>，按下開餐按鈕 >>>
+    <input type="button" value="開餐" onclick="self.location.href='openMealV'"/>
     <br>
     <a href="restMenuInsert">新增菜單</a>
     <a href="restChooseV">餐廳管理</a>

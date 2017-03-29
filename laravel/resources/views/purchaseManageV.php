@@ -16,15 +16,14 @@
         </tr>
 
         <?php
-        if($order_name!=NULL){
-        $num=count($order_name);
+        if($order_data!=NULL){
+        $num=count($order_data);
         for($k=0;$k<=$num-1;$k++) {
-            $v=$order_name[$k];
-            $v2=$order_price[$k];
+            $v=$order_data[$k];
             ?>
             <tr>
                 <td align="center"><?php echo $v->name; ?></td>
-                <td align="center"><?php echo $v2->price; ?></td>
+                <td align="center"><?php echo $v->price; ?></td>
                 <td align="center"><a href="purchaseUpdateV?postname=<?php echo $v->name; ?>"><img
                                 src="icon/eye.jpeg" width="30" height="30"></a></td>
             </tr>
@@ -50,5 +49,13 @@
     <br>
     <a href="orderManageV">訂單總覽</a>
 </form>
+<table border="1">
+    <tr>
+        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restname; ?></td>
+    </tr>
+    <tr>
+        <td><img src="/userUpload/<?php echo $restpic; ?>" width="800" height="600"></td>
+    </tr>
+</table>
 </body>
 </html>

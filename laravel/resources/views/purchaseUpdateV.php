@@ -19,10 +19,9 @@
             <td align="center" width="300px" bgcolor="#DBABFF">刪除</td>
         </tr>
         <?php
-        $num=count($order_price);
+        $num=count($order);
         for($k=0;$k<=$num-1;$k++) {
             $v=$order[$k];
-            $v2=$order_price[$k];
             ?>
             <tr>
                 <td align="center"><?php echo $v->kind; ?></td>
@@ -35,7 +34,10 @@
             <?php
         }
         ?>
-
+        <tr>
+            <td colspan="1" align="center" bgcolor="#FFABAB">總價</td>
+            <td colspan="3" align="center" ><font color="blue"><?php echo $sumPrice;?></font></td>
+        </tr>
     </table>
     <br>
     <input type="submit" value="訂餐加購">

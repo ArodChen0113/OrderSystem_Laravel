@@ -16,32 +16,35 @@ class orderC extends Controller
     public function purchaseShow()
     {
         $rest_openName = DB::table('restaurant')
-            ->select('rest_name')
+            ->select('rest_name','rest_picture')
             ->where('rest_open', 1)
             ->get();
         foreach ($rest_openName as $result) {
-            $openN=$result->rest_name;
+            $restname=$result->rest_name;
+            $restpic=$result->rest_picture;
         }
         $rest_kind = DB::table('menu')
             ->select('kind')
-            ->where('rest_name', $openN)
+            ->where('rest_name', $restname)
             ->get();
-        return view('purchaseV', ['rest_kind' => $rest_kind]);
+
+        return view('purchaseV', ['rest_kind' => $rest_kind,'restname' => $restname,'restpic' => $restpic]);
     }
     //訂購單頁面顯示2
     public function purchaseShow1()
     {
         $input = Input::all();
         $rest_openName = DB::table('restaurant')
-            ->select('rest_name')
+            ->select('rest_name','rest_picture')
             ->where('rest_open', 1)
             ->get();
         foreach ($rest_openName as $result) {
-            $openN=$result->rest_name;
+            $restname=$result->rest_name;
+            $restpic=$result->rest_picture;
         }
         $rest_kind = DB::table('menu')
             ->select('kind')
-            ->where('rest_name', $openN)
+            ->where('rest_name', $restname)
             ->get();
 
         $result1 = DB::table('menu')
@@ -54,23 +57,29 @@ class orderC extends Controller
             $price=$i->unit_price;
             $pic=$i->menu_picture;
         }
-        return view('purchaseV1', ['rest_kind' => $rest_kind,'kind' => $kind,'price'=>$price,'pic'=>$pic,'openN'=>$openN]);
+
+        return view('purchaseV1', ['rest_kind' => $rest_kind,'kind' => $kind,'price'=>$price,'pic'=>$pic,'restname' => $restname,'restpic' => $restpic]);
     }
 
     //訂購單管理頁面顯示
     public function purchaseManageShow()
     {
-        $order_name = DB::table('menu_order')
+        $order_data = DB::table('menu_order')
             ->select('name', 'price')
             ->where('pay', '!=', 9)
             ->groupBy('name')
             ->get();
-        $order_price = DB::table('menu_order')
-            ->select('price')
-            ->where('pay', '!=', 9)
-            ->groupBy('name')
+        $rest_data=DB::table('restaurant')
+            ->select('rest_name','rest_picture')
+            ->where('rest_open', 1)
             ->get();
-        return view('purchaseManageV', ['order_name' => $order_name,'order_price' =>$order_price]);
+        foreach ($rest_data as $i)
+        {
+            $restname=$i->rest_name;
+            $restpic=$i->rest_picture;
+        }
+
+        return view('purchaseManageV', ['order_data' => $order_data,'restname' => $restname,'restpic' => $restpic]);
     }
 
     //訂購單修改頁面顯示
@@ -82,15 +91,12 @@ class orderC extends Controller
             ->where('name', $input['postname'])
             ->Where('pay', '!=', 9)
             ->get();
-
-        $order_price = DB::table('menu_order')
-            ->select('price')
-            ->where('name', $input['postname'])
-            ->Where('pay', '!=', 9)
-            ->get();
+        foreach ($order as $i){
+            $sumPrice=$i->price;
+        }
         $orderName=$input['postname'];
 
-        return view('purchaseUpdateV', ['order' => $order,'order_price' =>$order_price,'orderName'=>$orderName]);
+        return view('purchaseUpdateV', ['order' => $order,'sumPrice' =>$sumPrice,'orderName'=>$orderName]);
     }
     //訂購單資料新增
     public function purchaseInsert()
@@ -142,11 +148,11 @@ class orderC extends Controller
             }
             $updateprice=$OrderP-$unitprice;
 
-            DB::table('menu_order')
+            DB::table('menu_order')            //修改訂購金額
                 ->where('name', $OrderN)
                 ->update(['price' => $updateprice]);
 
-            DB::table('menu_order')->where('num', '=', $input['num'])->delete();
+            DB::table('menu_order')->where('num', '=', $input['num'])->delete(); //刪除訂購項目
         }
         header("Location:purchaseUpdateV?postname=$OrderN");
     }
@@ -168,12 +174,6 @@ class orderC extends Controller
             ->groupBy('name')
             ->get();
 
-        $order_people = DB::table('menu_order') //訂餐人數
-        ->select('name')
-            ->where('pay', '!=', 9)
-            ->distinct()
-            ->get();
-
         $orderCount = DB::table('menu_order') //餐點數量
         ->select('name')
             ->where('pay', '!=', 9)
@@ -185,7 +185,7 @@ class orderC extends Controller
          $totalPrice = $totalPrice + $row_ordersum;
      }
 
-        $order_menu = DB::table('menu_order') //餐點數量
+        $order_menu = DB::table('menu_order') //菜單明細顯示
         ->select('kind')
             ->where('pay', '!=', 9)
             ->groupBy('kind')
@@ -231,7 +231,7 @@ class orderC extends Controller
             }
         }
 
-        return view('orderManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'order_data' =>$order_data,'order_people' =>$order_people,'orderCount' =>$orderCount,'totalPrice' =>$totalPrice,'order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName]);
+        return view('orderManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'order_data' =>$order_data,'orderCount' =>$orderCount,'totalPrice' =>$totalPrice,'order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName]);
     }
     //訂餐付款控制
     public function orderPay()

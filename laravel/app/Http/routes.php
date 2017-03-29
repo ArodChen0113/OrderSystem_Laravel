@@ -18,6 +18,9 @@ Route::get('restChooseV', 'restaurantC@restChooseShow');
 Route::post('restManageV', 'restaurantC@restManageShow');
 Route::get('restKindManage', 'restKindC@restKindManageShow');
 
+Route::get('openMealV', 'restaurantC@openMealShow');
+Route::get('openMealV2', 'restaurantC@openMealShow2');
+
 //Controller routes
 Route::post('action_rmInt', 'menuC@restMenuInsert');
 Route::post('action_rKInt', 'restKindC@restKindInsert');
@@ -28,6 +31,7 @@ Route::get('action_rKControl2', 'restKindC@restKindControl2');
 
 Route::post('action_reUp', 'restaurantC@restUpdate');
 Route::get('action_reDel', 'restaurantC@restDel');
+Route::get('action_openMeal', 'restaurantC@openMealUp');
 
 Route::post('action_meUp', 'menuC@menuUpdate');
 Route::get('action_meDel', 'menuC@menuDel');
@@ -35,5 +39,7 @@ Route::get('action_meDel', 'menuC@menuDel');
 Route::post('action_pcInt', 'orderC@purchaseInsert');
 Route::get('action_pcDel', 'orderC@purchaseDelete');
 Route::get('action_orPay', 'orderC@orderPay');
+
+
 
 

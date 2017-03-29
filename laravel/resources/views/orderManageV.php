@@ -49,7 +49,7 @@
         }
         ?>
         <tr>
-            <td align="center">訂餐人數</td><td align="center" colspan="2"><?php echo count($order_people); ?></td>
+            <td align="center">訂餐人數</td><td align="center" colspan="2"><?php echo count($order_data); ?></td>
         </tr>
         <tr>
             <td align="center">餐點數量</td><td align="center" colspan="2"><?php echo count($orderCount); ?>
