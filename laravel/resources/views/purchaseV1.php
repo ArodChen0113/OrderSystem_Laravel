@@ -19,14 +19,14 @@ include ("menu_js.js");
             <td align="center" width="30px" bgcolor="#FFABAB">訂購人</td>
         </tr>
         <tr>  <!--選單一-->
-            <td><select style="width:240px" name="kind1" onchange="window.location='1?select1='+this.value">
+            <td><select style="width:240px" name="menuKind" onchange="window.location='1?restKind='+this.value">
                     <option value="<?php echo $kind; ?>"><?php echo $kind; ?></option>
                     <?php
-                    $num=count($rest_kind);
+                    $num=count($restKind);
                     for ($k=0;$k<=$num-1;$k++) {
-                        $v = $rest_kind[$k];
+                        $value = $restKind[$k];
                         ?>
-                        <option value="<?php echo $v->kind; ?>"><?php echo $v->kind; ?></option>
+                        <option value="<?php echo $value->kind; ?>"><?php echo $value->kind; ?></option>
                         <?php
                     }
                     ?>
@@ -45,7 +45,7 @@ include ("menu_js.js");
     <br>
     <input type="hidden" name="kind_p1" value="<?php echo $kind; ?>">
     <input type="hidden" name="sum" value="<?php echo $price; ?>">
-    <input type="hidden" name="restname" value="<?php echo $restname; ?>">
+    <input type="hidden" name="restName" value="<?php echo $restName; ?>">
     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
     <input type="hidden" name="action" value="insert">
     <input type="submit" value="送出訂單">
@@ -62,10 +62,10 @@ include ("menu_js.js");
 </form>
 <table border="1">
     <tr>
-        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restname; ?></td>
+        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restName; ?></td>
     </tr>
     <tr>
-        <td><img src="/userUpload/<?php echo $restpic; ?>" width="800" height="600"></td>
+        <td><img src="/userUpload/<?php echo $restPic; ?>" width="800" height="600"></td>
     </tr>
 </table>
 </body>

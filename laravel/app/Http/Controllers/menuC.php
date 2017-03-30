@@ -17,22 +17,22 @@ class menuC extends Controller
     public function menuShow()
     {
         $input = Input::all();
-        $rest_data=DB::table('menu')
+        $restData=DB::table('menu')
             ->select('kind','m_num','menu_picture','unit_price')
-            ->where('rest_name', $input['restname'])
+            ->where('rest_name', $input['restName'])
             ->get();
-        $restname=$input['restname'];
+        $restName=$input['restName'];
 
-        return view('menuV', [ 'rest_data' => $rest_data,'restname' => $restname]);
+        return view('menuV', [ 'restData' => $restData , 'restName' => $restName]);
     }
     //新增餐廳&菜單頁面顯示
     public function restMenuInsertShow()
     {
-        $result = DB::table('restaurant_kind')
+        $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
 
-        return view('restMenuInsertV', ['result' => $result]);
+        return view('restMenuInsertV', ['restKind' => $restKind]);
     }
     //菜單修改頁面顯示
     public function menuUpdateShow()
@@ -40,21 +40,21 @@ class menuC extends Controller
         $input = Input::all();
         $rest_data=DB::table('menu')
             ->select('kind','m_num','menu_picture','unit_price')
-            ->where('m_num', $input['num1'])
+            ->where('m_num', $input['num'])
             ->get();
-        $restname=$input['restname1'];
+        $restName=$input['restName'];
 
-        return view('menuUpdateV', [ 'rest_data' => $rest_data,'restname' => $restname]);
+        return view('menuUpdateV', [ 'rest_data' => $rest_data,'restName' => $restName]);
     }
     //餐廳&菜單資料新增
     public function restMenuInsert()
     {
         $input = Input::all();
-        $rest_kind = $input['restkind'];
+        $restKind = $input['restKind'];
         $kind = $input['kind'];
         $price = $input['price'];
-        $rest_tel = $input['rest_tel'];
-        $rest_name = $input['restaurant_name'];
+        $restTel = $input['restTel'];
+        $restName = $input['restName'];
 
         if ($input['action'] != NULL && $input['action'] == 'insert')         //判斷值是否由欄位輸入
         {
@@ -65,7 +65,7 @@ class menuC extends Controller
                 $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
                 $upload_success = $file->move($destination_path, $file_name);     //移動至指定資料夾
                 DB::table('restaurant')->insert(array(                            //新增餐廳資料
-                    array('rest_name' => $rest_name, 'rest_kind' => $rest_kind, 'rest_tel' => $rest_tel, 'rest_picture' => $file_name)
+                    array('rest_name' => $restName, 'rest_kind' => $restKind, 'rest_tel' => $restTel, 'rest_picture' => $file_name)
                 ));
             } else {
                 echo "restaurant_img upload failed!";
@@ -83,7 +83,7 @@ class menuC extends Controller
                     $destination_path2 = public_path() . '/userUpload/';
                     $upload_success2 = $file2->move($destination_path2, $file_name2);
                     DB::table('menu')->insert(array(                           //新增菜單資料
-                        array('rest_name' => $rest_name, 'kind' => $kind[$i], 'unit_price' => $price[$i],'menu_picture'=> $file_name2)
+                        array('rest_name' => $restName, 'kind' => $kind[$i], 'unit_price' => $price[$i],'menu_picture'=> $file_name2)
                     ));
                 } else {
                     echo "menu_img upload failed!";
@@ -115,8 +115,8 @@ class menuC extends Controller
                 echo "menu_img upload failed!";
             }
         }
-        $restname=$input['restName'];
-        header("Location:menuV?restname=$restname");
+        $restName=$input['restName'];
+        header("Location:menuV?restName=$restName");
 
     }
     //菜單資料刪除
@@ -125,10 +125,10 @@ class menuC extends Controller
         $input = Input::all();
         if ($input['action'] != NULL && $input['action'] == 'delete')      //判斷值是否由欄位輸入
         {
-            DB::table('menu')->where('m_num', '=', $input['num1'])->delete();
+            DB::table('menu')->where('m_num', '=', $input['num'])->delete();
         }
-        $restname=$input['restname'];
-        header("Location:restChooseV?restname=$restname");
+        $restName=$input['restName'];
+        header("Location:restChooseV?restName=$restName");
     }
 
 }

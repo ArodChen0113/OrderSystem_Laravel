@@ -19,16 +19,16 @@ class orderC extends Controller
             ->select('rest_name','rest_picture')
             ->where('rest_open', 1)
             ->get();
-        foreach ($rest_openName as $result) {
-            $restname=$result->rest_name;
-            $restpic=$result->rest_picture;
+        foreach ($rest_openName as $value) {
+            $restName=$value->rest_name;
+            $restPic=$value->rest_picture;
         }
-        $rest_kind = DB::table('menu')
+        $restKind = DB::table('menu')
             ->select('kind')
-            ->where('rest_name', $restname)
+            ->where('rest_name', $restName)
             ->get();
 
-        return view('purchaseV', ['rest_kind' => $rest_kind,'restname' => $restname,'restpic' => $restpic]);
+        return view('purchaseV', ['restKind' => $restKind,'restName' => $restName,'restPic' => $restPic]);
     }
     //訂購單頁面顯示2
     public function purchaseShow1()
@@ -38,33 +38,32 @@ class orderC extends Controller
             ->select('rest_name','rest_picture')
             ->where('rest_open', 1)
             ->get();
-        foreach ($rest_openName as $result) {
-            $restname=$result->rest_name;
-            $restpic=$result->rest_picture;
+        foreach ($rest_openName as $value) {
+            $restName=$value->rest_name;
+            $restPic=$value->rest_picture;
         }
-        $rest_kind = DB::table('menu')
+        $restKind = DB::table('menu')
             ->select('kind')
-            ->where('rest_name', $restname)
+            ->where('rest_name', $restName)
             ->get();
-
-        $result1 = DB::table('menu')
+        $menu_data = DB::table('menu')
             ->select('kind','unit_price','menu_picture')
-            ->where('kind', $input['select1'])
+            ->where('kind', $input['restKind'])
             ->get();
-        foreach ($result1 as $i)
+        foreach ($menu_data as $value2)
         {
-            $kind=$i->kind;
-            $price=$i->unit_price;
-            $pic=$i->menu_picture;
+            $kind=$value2->kind;
+            $price=$value2->unit_price;
+            $pic=$value2->menu_picture;
         }
 
-        return view('purchaseV1', ['rest_kind' => $rest_kind,'kind' => $kind,'price'=>$price,'pic'=>$pic,'restname' => $restname,'restpic' => $restpic]);
+        return view('purchaseV1', ['restKind' => $restKind,'kind' => $kind,'price'=>$price,'pic'=>$pic,'restName' => $restName,'restPic' => $restPic]);
     }
 
     //訂購單管理頁面顯示
     public function purchaseManageShow()
     {
-        $order_data = DB::table('menu_order')
+        $orderData = DB::table('menu_order')
             ->select('name', 'price')
             ->where('pay', '!=', 9)
             ->groupBy('name')
@@ -73,13 +72,13 @@ class orderC extends Controller
             ->select('rest_name','rest_picture')
             ->where('rest_open', 1)
             ->get();
-        foreach ($rest_data as $i)
+        foreach ($rest_data as $value)
         {
-            $restname=$i->rest_name;
-            $restpic=$i->rest_picture;
+            $restName=$value->rest_name;
+            $restPic=$value->rest_picture;
         }
 
-        return view('purchaseManageV', ['order_data' => $order_data,'restname' => $restname,'restpic' => $restpic]);
+        return view('purchaseManageV', ['orderData' => $orderData,'restName' => $restName,'restPic' => $restPic]);
     }
 
     //訂購單修改頁面顯示
@@ -88,13 +87,13 @@ class orderC extends Controller
         $input = Input::all();
         $order = DB::table('menu_order')
             ->join('menu', 'menu_order.kind', '=', 'menu.kind')
-            ->where('name', $input['postname'])
+            ->where('name', $input['orderName'])
             ->Where('pay', '!=', 9)
             ->get();
         foreach ($order as $i){
             $sumPrice=$i->price;
         }
-        $orderName=$input['postname'];
+        $orderName=$input['orderName'];
 
         return view('purchaseUpdateV', ['order' => $order,'sumPrice' =>$sumPrice,'orderName'=>$orderName]);
     }
@@ -109,11 +108,13 @@ class orderC extends Controller
                 ->where('name', $input['orderName'])
                 ->Where('pay', '!=', 9)
                 ->get();
-            foreach ($last_price as $i) {
-                $lastPrice = $i->price;
+            foreach ($last_price as $value) {
+                $lastPrice = $value->price;
             }
+            date_default_timezone_set("Asia/Taipei"); //目前時間
+            $date=date("Y-m-d h:i:s");
             DB::table('menu_order')->insert(array(
-                array('name' => $input['orderName'], 'rest_name' => $input['restname'], 'kind' => $input['kind_p1'], 'price' => $input['sum'])//新增至資料庫
+                array('name' => $input['orderName'], 'rest_Name' => $input['restName'], 'kind' => $input['kind_p1'], 'price' => $input['sum'],'date' => $date)//新增至資料庫
             ));
             $add=$lastPrice;
             $totalPrice = $add + $input['sum']; //加總新舊訂購總額
@@ -134,27 +135,27 @@ class orderC extends Controller
                 ->select('price','kind','name')
                 ->where('num', $input['num'])
                 ->get();
-            foreach ($order_price as $result) {
-                $OrderP=$result->price;
-                $OrderK=$result->kind;
-                $OrderN=$result->name;
+            foreach ($order_price as $value) {
+                $orderPrice=$value->price;
+                $orderKind=$value->kind;
+                $orderName=$value->name;
             }
             $last_price = DB::table('menu')
                 ->select('unit_price')
-                ->where('kind', $OrderK)
+                ->where('kind', $orderKind)
                 ->get();
-            foreach ($last_price as $result2) {
-                $unitprice=$result2->unit_price;
+            foreach ($last_price as $value2) {
+                $unitPrice=$value2->unit_price;
             }
-            $updateprice=$OrderP-$unitprice;
+            $updatePrice=$orderPrice-$unitPrice;
 
             DB::table('menu_order')            //修改訂購金額
-                ->where('name', $OrderN)
-                ->update(['price' => $updateprice]);
+                ->where('name', $orderName)
+                ->update(['price' => $updatePrice]);
 
             DB::table('menu_order')->where('num', '=', $input['num'])->delete(); //刪除訂購項目
         }
-        header("Location:purchaseUpdateV?postname=$OrderN");
+        header("Location:purchaseUpdateV?orderName=$orderName");
     }
     //訂單管理頁面顯示
     public function orderManageShow()
@@ -163,12 +164,12 @@ class orderC extends Controller
             ->select('rest_name','rest_tel')
             ->where('rest_open', 1)
             ->get();
-        foreach ($today as $result) {
-            $open_restName=$result->rest_name;
-            $open_restTel=$result->rest_tel;
+        foreach ($today as $value) {
+            $open_restName=$value->rest_name;
+            $open_restTel=$value->rest_tel;
         }
 
-        $order_data = DB::table('menu_order') //訂購名單&單價&是否繳費
+        $orderData = DB::table('menu_order') //訂購名單&單價&是否繳費
             ->select('price','name','pay')
             ->where('pay', '!=', 9)
             ->groupBy('name')
@@ -179,10 +180,10 @@ class orderC extends Controller
             ->where('pay', '!=', 9)
             ->get();
         $totalPrice=0;
-     foreach ($order_data as $result2) //金額總計
+     foreach ($orderData as $value2) //金額總計
      {
-         $row_ordersum = $result2->price;
-         $totalPrice = $totalPrice + $row_ordersum;
+         $row_orderSum = $value2->price;
+         $totalPrice = $totalPrice + $row_orderSum;
      }
 
         $order_menu = DB::table('menu_order') //菜單明細顯示
@@ -231,7 +232,7 @@ class orderC extends Controller
             }
         }
 
-        return view('orderManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'order_data' =>$order_data,'orderCount' =>$orderCount,'totalPrice' =>$totalPrice,'order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName]);
+        return view('orderManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'orderData' =>$orderData,'orderCount' =>$orderCount,'totalPrice' =>$totalPrice,'order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName]);
     }
     //訂餐付款控制
     public function orderPay()
@@ -239,7 +240,7 @@ class orderC extends Controller
         $input = Input::all();
         if ($input['action'] != NULL && $input['action'] == 'pay'){
         DB::table('menu_order') //修改成已繳費
-            ->where('name', $input['payname'])
+            ->where('name', $input['payName'])
             ->where('pay', '!=', 9)
             ->update(['pay' => 1]);
 

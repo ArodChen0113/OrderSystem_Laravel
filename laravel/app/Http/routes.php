@@ -38,6 +38,6 @@ Route::post('action_pcInt', 'orderC@purchaseInsert');
 Route::get('action_pcDel', 'orderC@purchaseDelete');
 Route::get('action_orPay', 'orderC@orderPay');
 
+Route::auth();
 
-
-
+Route::get('home', 'HomeController@index');

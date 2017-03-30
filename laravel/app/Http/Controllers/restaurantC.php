@@ -14,33 +14,33 @@ class restaurantC extends Controller
     //餐廳選擇器顯示
     public function restChooseShow()
     {
-        $rest_kind_echo = DB::table('restaurant_kind')
+        $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
-        $todayopen=DB::table('restaurant')
+        $todayOpen=DB::table('restaurant')
             ->select('rest_name')
             ->where('rest_open', '==', 1)
             ->get();
 
-        return view('restChooseV', ['rest_kind_echo' => $rest_kind_echo,'todayopen' =>$todayopen]);
+        return view('restChooseV', ['restKind' => $restKind,'todayOpen' =>$todayOpen]);
     }
     //餐廳管理頁面顯示
     public function restManageShow()
     {
         $input = Input::all();
         $rest_data=DB::table('restaurant')
-            ->where('rest_name', $input['select_restName'])
+            ->where('rest_name', $input['restName'])
             ->get();
-        foreach ($rest_data as $i)
+        foreach ($rest_data as $value)
         {
-            $restname=$i->rest_name;
-            $restkind=$i->rest_kind;
-            $resttel=$i->rest_tel;
-            $restpic=$i->rest_picture;
-            $restnum=$i->num;
+            $restName=$value->rest_name;
+            $restKind=$value->rest_kind;
+            $restTel=$value->rest_tel;
+            $restPic=$value->rest_picture;
+            $restNum=$value->num;
         }
 
-        return view('restManageV', ['restname' => $restname,'restkind' => $restkind,'resttel' => $resttel,'restpic' => $restpic,'restnum' => $restnum]);
+        return view('restManageV', ['restName' => $restName,'restKind' => $restKind,'restTel' => $restTel,'restPic' => $restPic,'restNum' => $restNum]);
     }
     //今日開餐頁面顯示
     public function openMealShow()
@@ -62,13 +62,13 @@ class restaurantC extends Controller
             ->select('rest_picture')
             ->where('rest_name', $input['select1'])
             ->get();
-        foreach ($openPic as $i)
+        foreach ($openPic as $value)
         {
-            $restpic=$i->rest_picture;
+            $restPic=$value->rest_picture;
         }
-        $rest_name=$input['select1'];
+        $restName=$input['restName'];
 
-        return view('openMealV2', ['openMeal' => $openMeal,'restpic' => $restpic, 'rest_name' => $rest_name]);
+        return view('openMealV2', ['openMeal' => $openMeal,'restPic' => $restPic, 'restName' => $restName]);
     }
     //今日開餐功能執行
     public function openMealUp()
@@ -90,9 +90,20 @@ class restaurantC extends Controller
         $input = Input::all();
         if ($input['action'] != NULL && $input['action'] == 'update')      //判斷值是否由欄位輸入
         {
+            $restName=DB::table('restaurant')
+                ->select('rest_name')
+                ->where('num', $input['num'])
+                ->get();
+            foreach ($restName as $value){
+                $lastRestName=$value->rest_name;
+            }
+            DB::table('menu')
+                ->where('rest_name', $lastRestName)
+                ->update(['rest_name' => $input['restName']]);//修改菜單(餐廳名稱)
+
             DB::table('restaurant')
                 ->where('num', $input['num'])
-                ->update(['rest_name' => $input['rest_name'],'rest_kind' => $input['rest_kind'],'rest_tel' => $input['rest_tel']]);
+                ->update(['rest_name' => $input['restName'],'rest_kind' => $input['restKind'],'rest_tel' => $input['restTel']]);//修改餐廳資料
 
             if (Input::hasFile('rest_picture')) {
                 $file = Input::file('rest_picture');                              //取得檔案資訊
@@ -115,9 +126,9 @@ class restaurantC extends Controller
         $input = Input::all();
         if ($input['action'] != NULL && $input['action'] == 'delete')      //判斷值是否由欄位輸入
         {
-            DB::table('menu_order')->where('rest_name', '=', $input['restname'])->delete();
-            DB::table('menu')->where('rest_name', '=', $input['restname'])->delete();
-            DB::table('restaurant')->where('rest_name', '=', $input['restname'])->delete();
+            DB::table('menu_order')->where('rest_name', '=', $input['restName'])->delete();
+            DB::table('menu')->where('rest_name', '=', $input['restName'])->delete();
+            DB::table('restaurant')->where('rest_name', '=', $input['restName'])->delete();
         }
         header("Location:restChooseV");
     }

@@ -22,12 +22,12 @@ include ("menu_js.js");
             <td align="center" bgcolor="#ABFFAB">上傳菜單圖片</td>
         </tr>
         <tr>
-            <td><input type="text" name="restaurant_name" value="請填入餐廳名稱" onfocus="cleartext(this)" onblur="resettext(this)"></td>
-            <td><input type="text" name="rest_tel"></td>
-            <td><select name="restkind">
+            <td><input type="text" name="restName" value="請填入餐廳名稱" onfocus="cleartext(this)" onblur="resettext(this)"></td>
+            <td><input type="text" name="restTel"></td>
+            <td><select name="restKind">
                     <?php
-                    foreach ($result as $i){ ?>　
-                        <option value="<?php echo $i->rest_kind; ?>"><?php echo $i->rest_kind; ?></option>
+                    foreach ($restKind as $value){ ?>　
+                        <option value="<?php echo $value->rest_kind; ?>"><?php echo $value->rest_kind; ?></option>
                         <?php
                     }
                     ?>

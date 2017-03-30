@@ -15,14 +15,14 @@
         </tr>
         <tr>
             <td>請選擇今日開餐：</td>
-            <td><select style="width:240px" name="restc1" onchange="window.location='openMealV2?select1='+this.value">
-                    <option value=""><?php echo $rest_name;?></option>
+            <td><select style="width:240px" name="restChoose" onchange="window.location='openMealV2?select1='+this.value">
+                    <option value=""><?php echo $restName;?></option>
                     <?php
                     $num=count($openMeal);
                     for ($k=0;$k<=$num-1;$k++){
-                        $v=$openMeal[$k];
+                        $value=$openMeal[$k];
                         ?>
-                        <option value="<?php echo $v->rest_name; ?>"><?php echo $v->rest_name; ?></option>
+                        <option value="<?php echo $value->rest_name; ?>"><?php echo $value->rest_name; ?></option>
                         <?php
                     }
                     ?>
@@ -31,15 +31,15 @@
     </table>
     <table border="1">
         <tr>
-            <td align="center" bgcolor="#ABFFFF">所選餐廳: <?php echo $rest_name; ?></td>
+            <td align="center" bgcolor="#ABFFFF">所選餐廳: <?php echo $restName; ?></td>
         </tr>
         <tr>
-            <td><img src="/userUpload/<?php echo $restpic; ?>" width="800" height="600"></td>
+            <td><img src="/userUpload/<?php echo $restPic; ?>" width="800" height="600"></td>
         </tr>
     </table>
     <br>
     <input type="hidden" name="action" value="update">
-    <input type="hidden" name="restName" value="<?php echo $rest_name; ?>">
+    <input type="hidden" name="restName" value="<?php echo $restName; ?>">
     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
     選擇好餐廳，按下<font color="#FF0000">開餐</font>按鈕 >>>
     <input type="submit" value="確定開餐">

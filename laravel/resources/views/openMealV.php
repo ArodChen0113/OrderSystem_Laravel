@@ -15,14 +15,14 @@
         </tr>
         <tr>
             <td>請選擇今日開餐：</td>
-            <td><select style="width:240px" name="restc1" onchange="window.location='openMealV2?select1='+this.value">
+            <td><select style="width:240px" name="restChoose" onchange="window.location='openMealV2?select1='+this.value">
                     <option value="">請選擇</option>
                     <?php
                     $num=count($openMeal);
                     for ($k=0;$k<=$num-1;$k++){
-                        $v=$openMeal[$k];
+                        $value=$openMeal[$k];
                         ?>
-                        <option value="<?php echo $v->rest_name; ?>"><?php echo $v->rest_name; ?></option>
+                        <option value="<?php echo $value->rest_name; ?>"><?php echo $value->rest_name; ?></option>
                         <?php
                     }
                     ?>

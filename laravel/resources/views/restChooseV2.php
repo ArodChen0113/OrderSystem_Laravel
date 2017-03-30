@@ -19,26 +19,26 @@ session_start();
     </tr>
     <tr>
         <td>請選擇欲瀏覽餐廳：</td>
-        <td><select style="width:240px" name="restc1" onchange="window.location='action_rKControl1?select1='+this.value">
-                <option value="<?php echo $choosekind; ?>"><?php echo $choosekind; ?></option>
+        <td><select style="width:240px" name="restKind" onchange="window.location='action_rKControl1?restKind='+this.value">
+                <option value="<?php echo $chooseKind; ?>"><?php echo $chooseKind; ?></option>
                 <?php
-                $num=count($rest_kind_echo);
+                $num=count($restKind);
                 for ($k=0;$k<=$num-1;$k++){
-                    $v=$rest_kind_echo[$k];
+                    $value=$restKind[$k];
                     ?>
-                        <option value="<?php echo $v->rest_kind; ?>"><?php echo $v->rest_kind; ?></option>
+                        <option value="<?php echo $value->rest_kind; ?>"><?php echo $value->rest_kind; ?></option>
                         <?php
                     }
                 ?>
             </select></td>
-        <td><select style="width:240px" name="restc2" onchange="window.location='action_rKControl2?select1=<?php echo $choosekind; ?>&select2='+this.value">
-                <option value="<?php echo $choosename; ?>"><?php echo $choosename; ?></option>
+        <td><select style="width:240px" name="restName" onchange="window.location='action_rKControl2?restKind=<?php echo $chooseKind; ?>&restName='+this.value">
+                <option value="<?php echo $chooseName; ?>"><?php echo $chooseName; ?></option>
                 <?php
-                $num=count($restKind_name);
+                $num=count($restName);
                 for ($k=0;$k<=$num-1;$k++){
-                    $v=$restKind_name[$k];
+                    $value=$restName[$k];
                     ?>
-                    <option value="<?php echo $v->rest_name; ?>"><?php echo $v->rest_name; ?></option>
+                    <option value="<?php echo $value->rest_name; ?>"><?php echo $value->rest_name; ?></option>
                     <?php
                 }
                 ?>
@@ -46,7 +46,7 @@ session_start();
     </tr>
 </table>
 <br>
-<input type="hidden" name="select_restName" value="<?php echo $choosename; ?>">
+<input type="hidden" name="restName" value="<?php echo $chooseName; ?>">
     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
 選擇好餐廳，按下搜尋按鈕 >>>
 <input type="submit" value="瀏覽菜單">

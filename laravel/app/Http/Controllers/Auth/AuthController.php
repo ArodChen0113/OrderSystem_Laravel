@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use DB;
 use App\User;
+use Illuminate\Support\Facades\Input;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -29,6 +31,7 @@ class AuthController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
+    protected $redirectAfterLogout = '/login';
 
     /**
      * Create a new authentication controller instance.
@@ -50,7 +53,7 @@ class AuthController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:member',
             'password' => 'required|min:6|confirmed',
         ]);
     }
@@ -69,4 +72,34 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+//    protected function login(){
+//        $input = Input::all();
+//        $pPw=0;
+//        $u_ac = DB::table('member')//查詢之前訂購總額
+//        ->select('account','password')
+//            ->where('account', $input['email'])
+//            ->get();
+//        foreach ($u_ac as $i){
+//            $pAc=$i->account;
+//            $pPw=$i->password;
+//        }
+//        if($pPw==$input['password']&&$pPw!=0){
+//            header("Location:/");
+//        }else{
+//            $errors="帳號或密碼錯誤！";
+//            return view('/home', ['errors' => $errors]);
+//        }
+//
+//    }
+//
+//    protected function register(){
+//        $input = Input::all();
+//        date_default_timezone_set("Asia/Taipei"); //目前時間
+//        $date=date("Y-m-d h:i:s");
+//        DB::table('member')->insert(array(                            //新增餐廳資料
+//            array('account' => $input['email'], 'password' => $input['password'], 'u_name' => $input['name'],'date' => $date)
+//        ));
+//        header("Location:/home");
+//    }
 }

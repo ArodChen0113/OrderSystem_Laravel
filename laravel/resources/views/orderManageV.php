@@ -19,23 +19,23 @@
             <td align="center" width="300px" bgcolor="#FFABAB">繳費</td>
         </tr>
         <?php
-        $num=count($order_data);
+        $num=count($orderData);
         for($k=0;$k<=$num-1;$k++) {
-        $v = $order_data[$k];
+            $value = $orderData[$k];
         ?>
         <tr>
             <?php
-            echo "<td align=\"center\"><b>" . $v->name . "</<b></td>";
-            echo "<td align=\"center\"><b>" . $v->price . "</<b></td>";
+            echo "<td align=\"center\"><b>" . $value->name . "</<b></td>";
+            echo "<td align=\"center\"><b>" . $value->price . "</<b></td>";
             ?>
             <td align="center">
                 <?php
-                if ($v->pay == 0) {
+                if ($value->pay == 0) {
                     ?>
                     <font color="#FF0000">尚未繳費</font>
-                    <a href="action_orPay?action=pay&payname=<?php echo $v->name; ?>"><img
+                    <a href="action_orPay?action=pay&payName=<?php echo $value->name; ?>"><img
                                 src="icon/th.jpeg" width="30" height="30"></a>
-                <?php } else if ($v->pay == 1) {
+                <?php } else if ($value->pay == 1) {
                     ?>
                     已繳費
                     <?php
@@ -49,7 +49,7 @@
         }
         ?>
         <tr>
-            <td align="center">訂餐人數</td><td align="center" colspan="2"><?php echo count($order_data); ?></td>
+            <td align="center">訂餐人數</td><td align="center" colspan="2"><?php echo count($orderData); ?></td>
         </tr>
         <tr>
             <td align="center">餐點數量</td><td align="center" colspan="2"><?php echo count($orderCount); ?>
@@ -87,11 +87,11 @@
         <?php
         $num=count($order_menu);
         for($k=0;$k<=$num-1;$k++) {
-            $v2=$order_menu[$k];
+            $value2=$order_menu[$k];
             ?>
             <tr>
                 <?php
-                    echo "<td align=\"center\"><b>" . $v2->kind . "</<b></td>";
+                    echo "<td align=\"center\"><b>" . $value2->kind . "</<b></td>";
                     ?>
                 <td align="center"><img src="/userUpload/<?php echo $order_pic[$k] ; ?>" width="150" height="150"></td>
                 <?php
@@ -100,8 +100,8 @@
 ?>
                 <td align="center"><b>
                         <?php
-                        foreach ($kindOrderName[$k] as $i) {
-                            echo $i->name." ";
+                        foreach ($kindOrderName[$k] as $value3) {
+                            echo $value3->name." ";
                         }
                         ?>
                     </<b></td>

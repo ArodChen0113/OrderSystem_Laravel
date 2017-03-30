@@ -16,15 +16,15 @@
         </tr>
 
         <?php
-        if($order_data!=NULL){
-        $num=count($order_data);
+        if($orderData!=NULL){
+        $num=count($orderData);
         for($k=0;$k<=$num-1;$k++) {
-            $v=$order_data[$k];
+            $value=$orderData[$k];
             ?>
             <tr>
-                <td align="center"><?php echo $v->name; ?></td>
-                <td align="center"><?php echo $v->price; ?></td>
-                <td align="center"><a href="purchaseUpdateV?postname=<?php echo $v->name; ?>"><img
+                <td align="center"><?php echo $value->name; ?></td>
+                <td align="center"><?php echo $value->price; ?></td>
+                <td align="center"><a href="purchaseUpdateV?orderName=<?php echo $value->name; ?>"><img
                                 src="icon/eye.jpeg" width="30" height="30"></a></td>
             </tr>
             <?php
@@ -51,10 +51,10 @@
 </form>
 <table border="1">
     <tr>
-        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restname; ?></td>
+        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restName; ?></td>
     </tr>
     <tr>
-        <td><img src="/userUpload/<?php echo $restpic; ?>" width="800" height="600"></td>
+        <td><img src="/userUpload/<?php echo $restPic; ?>" width="800" height="600"></td>
     </tr>
 </table>
 </body>

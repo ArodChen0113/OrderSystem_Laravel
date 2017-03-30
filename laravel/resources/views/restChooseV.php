@@ -16,14 +16,14 @@
     </tr>
     <tr>
         <td>請選擇欲瀏覽餐廳：</td>
-        <td><select style="width:240px" name="restc1" onchange="window.location='action_rKControl1?action=control1&select1='+this.value">
+        <td><select style="width:240px" name="restKind" onchange="window.location='action_rKControl1?action=control1&restKind='+this.value">
                 <option value="">請選擇</option>
                 <?php
-                $num=count($rest_kind_echo);
+                $num=count($restKind);
                 for ($k=0;$k<=$num-1;$k++){
-                    $v=$rest_kind_echo[$k];
+                    $value=$restKind[$k];
                     ?>
-                        <option value="<?php echo $v->rest_kind; ?>"><?php echo $v->rest_kind; ?></option>
+                        <option value="<?php echo $value->rest_kind; ?>"><?php echo $value->rest_kind; ?></option>
                         <?php
                     }
                 ?>
@@ -31,7 +31,6 @@
     </tr>
 </table>
     <br>
-    <input type="hidden" name="select_restName" value="">
     選擇好餐廳，按下搜尋按鈕 >>>
     <input type="submit" value="瀏覽菜單">
     如欲<font color="#FF0000">更換今日開餐</font>，按下開餐按鈕 >>>

@@ -7,7 +7,7 @@ include ("menu_js.js");
     <title>訂購單頁面</title>
 </head>
 <body>
-<form action="controller/order_controller.php" method="post" enctype="multipart/form-data">
+<form action="" method="post" enctype="multipart/form-data">
     <table border="1">
         <tr>
             <td colspan="4" align="center" bgcolor="#ABFFFF">下單區</td>
@@ -19,14 +19,14 @@ include ("menu_js.js");
             <td align="center" width="30px" bgcolor="#FFABAB">訂購人</td>
         </tr>
         <tr>  <!--選單一-->
-            <td><select style="width:240px" name="kind1" onchange="window.location='1?select1='+this.value">
+            <td><select style="width:240px" name="menuKind" onchange="window.location='1?restKind='+this.value">
 
                     <?php
-                    $num=count($rest_kind);
+                    $num=count($restKind);
                     for ($k=0;$k<=$num-1;$k++) {
-                        $v = $rest_kind[$k];
+                        $value = $restKind[$k];
                         ?>
-                        <option value="<?php echo $v->kind; ?>"><?php echo $v->kind; ?></option>
+                        <option value="<?php echo $value->kind; ?>"><?php echo $value->kind; ?></option>
                         <?php
                     }
                     ?>
@@ -53,14 +53,15 @@ include ("menu_js.js");
     <a href="purchaseManageV">下單總覽</a>
     <br>
     <a href="orderManageV">訂單總覽</a>
-
+    <br>
+    <a href="logout">登出</a>
 </form>
 <table border="1">
     <tr>
-        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restname; ?></td>
+        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restName; ?></td>
     </tr>
     <tr>
-        <td><img src="/userUpload/<?php echo $restpic; ?>" width="800" height="600"></td>
+        <td><img src="/userUpload/<?php echo $restPic; ?>" width="800" height="600"></td>
     </tr>
 </table>
 </body>

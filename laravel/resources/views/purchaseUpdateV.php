@@ -21,14 +21,14 @@
         <?php
         $num=count($order);
         for($k=0;$k<=$num-1;$k++) {
-            $v=$order[$k];
+            $value=$order[$k];
             ?>
             <tr>
-                <td align="center"><?php echo $v->kind; ?></td>
-                <td align="center"><?php echo $v->unit_price; ?></td>
-                <td align="center"><img src="/userUpload/<?php echo $v->menu_picture; ?>" width="150" height="150"></td>
+                <td align="center"><?php echo $value->kind; ?></td>
+                <td align="center"><?php echo $value->unit_price; ?></td>
+                <td align="center"><img src="/userUpload/<?php echo $value->menu_picture; ?>" width="150" height="150"></td>
                     <td align="center"><a
-                                href="action_pcDel?action=delete&num=<?php echo $v->num; ?>"><img
+                                href="action_pcDel?action=delete&num=<?php echo $value->num; ?>"><img
                                     src="icon/x.jpeg" width="30" height="30"></a></td>
             </tr>
             <?php

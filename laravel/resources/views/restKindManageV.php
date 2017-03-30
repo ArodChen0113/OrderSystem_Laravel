@@ -14,14 +14,14 @@
             <td align="center" bgcolor="#FFE5B5">刪除</td>
         </tr>
         <?php
-        $num=count($rest_data);
+        $num=count($restData);
         for($k=0;$k<=$num-1;$k++) {
-            $v=$rest_data[$k];
+            $value=$restData[$k];
 ?>
         <tr>
-            <td><input type="text" name="rest_kind[]" value="<?php echo $v->rest_kind; ?>"></td>
-            <input type="hidden" name="num[]" value="<?php echo $v->num ;?>">
-            <td align="center"><a href="action_rKDel?action=delete&num2=<?php echo $v->num ?>"><img src="icon/x.jpeg" width="30" height="30"></a></td>
+            <td><input type="text" name="restKind[]" value="<?php echo $value->rest_kind; ?>"></td>
+            <input type="hidden" name="num[]" value="<?php echo $value->num ;?>">
+            <td align="center"><a href="action_rKDel?action=delete&num=<?php echo $value->num ?>"><img src="icon/x.jpeg" width="30" height="30"></a></td>
         </tr>
             <?php
         }?>
@@ -36,7 +36,7 @@
 <table border="1">
         <tr>
             <td align="center" bgcolor="#FFABAB">新增分類</td>
-            <td align="center"><input type="text" name="rest_kind_inster"></td>
+            <td align="center"><input type="text" name="restKind"></td>
         </tr>
     </table>
     <br>

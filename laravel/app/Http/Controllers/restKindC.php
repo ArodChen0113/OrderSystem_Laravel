@@ -15,42 +15,42 @@ class restKindC extends Controller
     //餐廳分類管理頁面顯示
     public function restKindManageShow()
     {
-        $rest_data = DB::table('restaurant_kind')
+        $restData = DB::table('restaurant_kind')
             ->select('rest_kind','num')
             ->get();
 
-        return view('restKindManageV', ['rest_data' => $rest_data]);
+        return view('restKindManageV', ['restData' => $restData]);
     }
     //餐廳分類下拉選單控制1
     public function restKindControl1()
     {
         $input = Input::all();
-        $rest_kind_echo = DB::table('restaurant_kind')
+        $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
-        $restKind_name = DB::table('restaurant')
+        $restName = DB::table('restaurant')
             ->select('rest_name')
-            ->where('rest_kind', $input['select1'])
+            ->where('rest_kind', $input['restKind'])
             ->get();
-        $choosekind=$input['select1'];
+        $chooseKind=$input['restKind'];
 
-        return view('restChooseV1', ['rest_kind_echo' => $rest_kind_echo,'choosekind' =>$choosekind,'restKind_name' =>$restKind_name]);
+        return view('restChooseV1', ['restKind' => $restKind,'chooseKind' =>$chooseKind,'restName' =>$restName]);
     }
     //餐廳分類下拉選單控制2
     public function restKindControl2()
     {
         $input = Input::all();
-        $rest_kind_echo = DB::table('restaurant_kind')
+        $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
-        $restKind_name = DB::table('restaurant')
+        $restName = DB::table('restaurant')
             ->select('rest_name')
-            ->where('rest_kind', $input['select1'])
+            ->where('rest_kind', $input['restKind'])
             ->get();
-        $choosekind=$input['select1'];
-        $choosename=$input['select2'];
+        $chooseKind=$input['restKind'];
+        $chooseName=$input['restName'];
 
-        return view('restChooseV2', ['rest_kind_echo' => $rest_kind_echo,'choosekind' =>$choosekind,'choosename' =>$choosename,'restKind_name' =>$restKind_name]);
+        return view('restChooseV2', ['restKind' => $restKind,'chooseKind' =>$chooseKind,'chooseName' =>$chooseName,'restName' =>$restName]);
     }
     //餐廳分類資料新增
     public function restKindInsert()
@@ -59,10 +59,10 @@ class restKindC extends Controller
         if ($input['action'] != NULL && $input['action'] == 'insert')      //判斷值是否由欄位輸入
         {
             DB::table('restaurant_kind')->insert(array(
-                array('rest_kind' => $input['rest_kind_inster'])
+                array('rest_kind' => $input['restKind'])
             ));
         }
-        header("Location:restKindManage");
+        header("Location:restKindManageV");
     }
     //餐廳分類資料修改
     public function restKindUpdate()
@@ -75,11 +75,11 @@ class restKindC extends Controller
             for($i=1;$i<=$count_kind;$i++) {
                 DB::table('restaurant_kind')
                     ->where('num', $input['num'][$k])
-                    ->update(['rest_kind' => $input['rest_kind'][$k]]);
+                    ->update(['rest_kind' => $input['restKind'][$k]]);
                 $k++;
             }
         }
-        header("Location:restKindManage");
+        header("Location:restKindManageV");
     }
     //餐廳分類資料刪除
     public function restKindDel()
@@ -87,8 +87,8 @@ class restKindC extends Controller
         $input = Input::all();
         if ($input['action'] != NULL && $input['action'] == 'delete')      //判斷值是否由欄位輸入
         {
-            DB::table('restaurant_kind')->where('num', '=', $input['num2'])->delete();
+            DB::table('restaurant_kind')->where('num', '=', $input['num'])->delete();
         }
-        header("Location:restKindManage");
+        header("Location:restKindManageV");
     }
 }
