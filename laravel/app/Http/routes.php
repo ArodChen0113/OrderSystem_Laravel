@@ -2,7 +2,6 @@
 
 //View routes
 Route::get('/','orderC@purchaseShow');
-Route::get('/1','orderC@purchaseShow1');
 
 Route::get('purchaseManageV','orderC@purchaseManageShow');
 Route::get('purchaseUpdateV','orderC@purchaseUpdateShow');
@@ -17,15 +16,12 @@ Route::post('restManageV', 'restaurantC@restManageShow');
 Route::get('restKindManageV', 'restKindC@restKindManageShow');
 
 Route::get('openMealV', 'restaurantC@openMealShow');
-Route::get('openMealV2', 'restaurantC@openMealShow2');
 
 //Controller routes
 Route::post('action_rmInt', 'menuC@restMenuInsert');
 Route::post('action_rKInt', 'restKindC@restKindInsert');
 Route::post('action_rKUp', 'restKindC@restKindUpdate');
 Route::get('action_rKDel', 'restKindC@restKindDel');
-Route::get('action_rKControl1', 'restKindC@restKindControl1');
-Route::get('action_rKControl2', 'restKindC@restKindControl2');
 
 Route::post('action_reUp', 'restaurantC@restUpdate');
 Route::get('action_reDel', 'restaurantC@restDel');
@@ -41,3 +37,9 @@ Route::get('action_orPay', 'orderC@orderPay');
 Route::auth();
 
 Route::get('home', 'HomeController@index');
+
+Route::get('testAJAX_php', 'testC@testShow');
+Route::get('testAJAX', 'testC@testShow2');
+
+
+

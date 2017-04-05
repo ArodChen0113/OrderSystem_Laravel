@@ -11,7 +11,7 @@ class menuC extends Controller
 
     public function __construct()
     {
-
+        $this->middleware('auth'); //驗證使用者是否登入
     }
     //菜單瀏覽頁面顯示
     public function menuShow()

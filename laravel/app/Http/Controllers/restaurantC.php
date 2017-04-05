@@ -4,32 +4,51 @@ namespace App\Http\Controllers;
 use DB;
 use App\Http\Controllers\Controller;
 use Input;
+use Illuminate\Http\Request;
 
 class restaurantC extends Controller
 {
     public function __construct()
     {
-
+        $this->middleware('auth'); //驗證使用者是否登入
     }
     //餐廳選擇器顯示
     public function restChooseShow()
     {
+        $input = Input::all();
+        $control = input::get('control','0');
         $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
-        $todayOpen=DB::table('restaurant')
-            ->select('rest_name')
-            ->where('rest_open', '==', 1)
-            ->get();
+        if($control==0){
+            $chooseKind='';
+            $chooseName='';
+            $restName='';
+        return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName, 'restName' => $restName, 'control'=> $control]);
+        }else if($control==1) {
+            $restName = DB::table('restaurant')
+                ->select('rest_name')
+                ->where('rest_kind', $input['restKind'])
+                ->get();
+            $chooseKind = $input['restKind'];
+            $chooseName = '';
+            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName, 'restName' => $restName, 'control'=> $control]);
+        }else if($control==2) {
+            $restName = DB::table('restaurant')
+                ->select('rest_name')
+                ->where('rest_kind', $input['restKind'])
+                ->get();
+            $chooseKind = $input['restKind'];
+            $chooseName = $input['restName'];
 
-        return view('restChooseV', ['restKind' => $restKind,'todayOpen' =>$todayOpen]);
+            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName, 'restName' => $restName, 'control'=> $control]);
+        }
     }
     //餐廳管理頁面顯示
     public function restManageShow()
     {
-        $input = Input::all();
         $rest_data=DB::table('restaurant')
-            ->where('rest_name', $input['restName'])
+            ->where('rest_name', Input::get('restName',''))
             ->get();
         foreach ($rest_data as $value)
         {
@@ -39,36 +58,32 @@ class restaurantC extends Controller
             $restPic=$value->rest_picture;
             $restNum=$value->num;
         }
-
         return view('restManageV', ['restName' => $restName,'restKind' => $restKind,'restTel' => $restTel,'restPic' => $restPic,'restNum' => $restNum]);
     }
     //今日開餐頁面顯示
     public function openMealShow()
     {
-        $openMeal=DB::table('restaurant')
-            ->select('rest_name')
-            ->get();
-
-        return view('openMealV', ['openMeal' => $openMeal]);
-    }
-    //今日開餐頁面顯示2
-    public function openMealShow2()
-    {
         $input = Input::all();
+        $control = input::get('restName','');
         $openMeal=DB::table('restaurant')
             ->select('rest_name')
             ->get();
-        $openPic=DB::table('restaurant')
-            ->select('rest_picture')
-            ->where('rest_name', $input['select1'])
-            ->get();
-        foreach ($openPic as $value)
-        {
-            $restPic=$value->rest_picture;
+        if($control==NULL){
+            $restPic='';
+            $restName='';
+        }else{
+            $openPic=DB::table('restaurant')
+                ->select('rest_picture')
+                ->where('rest_name', $input['restName'])
+                ->get();
+            foreach ($openPic as $value)
+            {
+                $restPic=$value->rest_picture;
+            }
+            $restName=$input['restName'];
         }
-        $restName=$input['restName'];
 
-        return view('openMealV2', ['openMeal' => $openMeal,'restPic' => $restPic, 'restName' => $restName]);
+        return view('openMealV', ['openMeal' => $openMeal,'restPic' => $restPic, 'restName' => $restName]);
     }
     //今日開餐功能執行
     public function openMealUp()

@@ -2,62 +2,57 @@
 namespace App\Http\Controllers;
 
 use DB;
-use App\Http\Controllers\Controller;
 use Input;
+use Gate;
+use App\User;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Requests;
+use App\Post;
 
 class orderC extends Controller
 {
 
     public function __construct()
     {
+        $this->middleware('auth'); //驗證使用者是否登入
 
     }
     //訂購單頁面顯示
     public function purchaseShow()
     {
-        $rest_openName = DB::table('restaurant')
-            ->select('rest_name','rest_picture')
-            ->where('rest_open', 1)
-            ->get();
-        foreach ($rest_openName as $value) {
-            $restName=$value->rest_name;
-            $restPic=$value->rest_picture;
-        }
-        $restKind = DB::table('menu')
-            ->select('kind')
-            ->where('rest_name', $restName)
-            ->get();
-
-        return view('purchaseV', ['restKind' => $restKind,'restName' => $restName,'restPic' => $restPic]);
-    }
-    //訂購單頁面顯示2
-    public function purchaseShow1()
-    {
         $input = Input::all();
         $rest_openName = DB::table('restaurant')
-            ->select('rest_name','rest_picture')
+            ->select('rest_name', 'rest_picture')
             ->where('rest_open', 1)
             ->get();
         foreach ($rest_openName as $value) {
-            $restName=$value->rest_name;
-            $restPic=$value->rest_picture;
+            $restName = $value->rest_name;
+            $restPic = $value->rest_picture;
         }
         $restKind = DB::table('menu')
             ->select('kind')
             ->where('rest_name', $restName)
             ->get();
-        $menu_data = DB::table('menu')
-            ->select('kind','unit_price','menu_picture')
-            ->where('kind', $input['restKind'])
-            ->get();
-        foreach ($menu_data as $value2)
-        {
-            $kind=$value2->kind;
-            $price=$value2->unit_price;
-            $pic=$value2->menu_picture;
-        }
 
-        return view('purchaseV1', ['restKind' => $restKind,'kind' => $kind,'price'=>$price,'pic'=>$pic,'restName' => $restName,'restPic' => $restPic]);
+        $control = input::get('restKind', '');
+        if ($input == NULL) {
+            $kind='';
+            $price='';
+            $pic='';
+        }else{
+            $menu_data = DB::table('menu')
+                ->select('kind','unit_price','menu_picture')
+                ->where('kind', $input['restKind'])
+                ->get();
+            foreach ($menu_data as $value2)
+            {
+                $kind=$value2->kind;
+                $price=$value2->unit_price;
+                $pic=$value2->menu_picture;
+            }
+        }
+            return view('purchaseV', ['restKind' => $restKind,'restName' => $restName,'kind' => $kind,'price'=>$price,'pic'=>$pic,'restPic' => $restPic,'control'=> $control]);
     }
 
     //訂購單管理頁面顯示
@@ -77,7 +72,6 @@ class orderC extends Controller
             $restName=$value->rest_name;
             $restPic=$value->rest_picture;
         }
-
         return view('purchaseManageV', ['orderData' => $orderData,'restName' => $restName,'restPic' => $restPic]);
     }
 
@@ -231,7 +225,6 @@ class orderC extends Controller
                     $kindOrderName[$i] = $save_data;
             }
         }
-
         return view('orderManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'orderData' =>$orderData,'orderCount' =>$orderCount,'totalPrice' =>$totalPrice,'order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName]);
     }
     //訂餐付款控制
@@ -247,5 +240,4 @@ class orderC extends Controller
         header("Location:orderManageV");
         }
     }
-
 }

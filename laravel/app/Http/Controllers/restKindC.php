@@ -10,7 +10,7 @@ class restKindC extends Controller
 
     public function __construct()
     {
-
+        $this->middleware('auth'); //驗證使用者是否登入
     }
     //餐廳分類管理頁面顯示
     public function restKindManageShow()
@@ -20,37 +20,6 @@ class restKindC extends Controller
             ->get();
 
         return view('restKindManageV', ['restData' => $restData]);
-    }
-    //餐廳分類下拉選單控制1
-    public function restKindControl1()
-    {
-        $input = Input::all();
-        $restKind = DB::table('restaurant_kind')
-            ->select(DB::raw('rest_kind'))
-            ->get();
-        $restName = DB::table('restaurant')
-            ->select('rest_name')
-            ->where('rest_kind', $input['restKind'])
-            ->get();
-        $chooseKind=$input['restKind'];
-
-        return view('restChooseV1', ['restKind' => $restKind,'chooseKind' =>$chooseKind,'restName' =>$restName]);
-    }
-    //餐廳分類下拉選單控制2
-    public function restKindControl2()
-    {
-        $input = Input::all();
-        $restKind = DB::table('restaurant_kind')
-            ->select(DB::raw('rest_kind'))
-            ->get();
-        $restName = DB::table('restaurant')
-            ->select('rest_name')
-            ->where('rest_kind', $input['restKind'])
-            ->get();
-        $chooseKind=$input['restKind'];
-        $chooseName=$input['restName'];
-
-        return view('restChooseV2', ['restKind' => $restKind,'chooseKind' =>$chooseKind,'chooseName' =>$chooseName,'restName' =>$restName]);
     }
     //餐廳分類資料新增
     public function restKindInsert()
