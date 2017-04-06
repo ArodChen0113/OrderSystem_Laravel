@@ -30,7 +30,7 @@ Route::post('action_openMeal', 'restaurantC@openMealUp');
 Route::post('action_meUp', 'menuC@menuUpdate');
 Route::get('action_meDel', 'menuC@menuDel');
 
-Route::post('action_pcInt', 'orderC@purchaseInsert');
+Route::get('action_pcInt', 'orderC@purchaseInsert');
 Route::get('action_pcDel', 'orderC@purchaseDelete');
 Route::get('action_orPay', 'orderC@orderPay');
 
@@ -40,6 +40,8 @@ Route::get('home', 'HomeController@index');
 
 Route::get('testAJAX_php', 'testC@testShow');
 Route::get('testAJAX', 'testC@testShow2');
+
+Route::get('testHTML', 'orderC@purchaseShow');
 
 
 

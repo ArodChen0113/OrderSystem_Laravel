@@ -72,7 +72,10 @@ class menuC extends Controller
             }
 
             $row_file = Input::file('menu_picture');
+            var_dump($row_file);
             $row_file = array_filter($row_file);
+            echo "||";
+            var_dump($row_file);
             $kind = array_filter($kind);
             $num = count($kind);
             for ($i = 0; $i <= $num - 1; $i++) {

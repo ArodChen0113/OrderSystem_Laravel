@@ -25,7 +25,9 @@ class restaurantC extends Controller
             $chooseName='';
             $restName='';
         return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName, 'restName' => $restName, 'control'=> $control]);
-        }else if($control==1) {
+        }
+
+        if($control==1) {
             $restName = DB::table('restaurant')
                 ->select('rest_name')
                 ->where('rest_kind', $input['restKind'])
@@ -33,7 +35,9 @@ class restaurantC extends Controller
             $chooseKind = $input['restKind'];
             $chooseName = '';
             return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName, 'restName' => $restName, 'control'=> $control]);
-        }else if($control==2) {
+        }
+
+        if($control==2) {
             $restName = DB::table('restaurant')
                 ->select('rest_name')
                 ->where('rest_kind', $input['restKind'])
@@ -50,14 +54,12 @@ class restaurantC extends Controller
         $rest_data=DB::table('restaurant')
             ->where('rest_name', Input::get('restName',''))
             ->get();
-        foreach ($rest_data as $value)
-        {
-            $restName=$value->rest_name;
-            $restKind=$value->rest_kind;
-            $restTel=$value->rest_tel;
-            $restPic=$value->rest_picture;
-            $restNum=$value->num;
-        }
+            $restName=$rest_data[0]->rest_name;
+            $restKind=$rest_data[0]->rest_kind;
+            $restTel=$rest_data[0]->rest_tel;
+            $restPic=$rest_data[0]->rest_picture;
+            $restNum=$rest_data[0]->num;
+
         return view('restManageV', ['restName' => $restName,'restKind' => $restKind,'restTel' => $restTel,'restPic' => $restPic,'restNum' => $restNum]);
     }
     //今日開餐頁面顯示
@@ -76,11 +78,8 @@ class restaurantC extends Controller
                 ->select('rest_picture')
                 ->where('rest_name', $input['restName'])
                 ->get();
-            foreach ($openPic as $value)
-            {
-                $restPic=$value->rest_picture;
-            }
-            $restName=$input['restName'];
+                $restPic=$openPic[0]->rest_picture;
+                $restName=$input['restName'];
         }
 
         return view('openMealV', ['openMeal' => $openMeal,'restPic' => $restPic, 'restName' => $restName]);
