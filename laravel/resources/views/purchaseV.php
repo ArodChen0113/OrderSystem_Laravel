@@ -5,18 +5,10 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>訂餐系統</title>
-    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i%7CPontano+Sans&amp;subset=latin-ext" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/vendors/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/vendors/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/vendors/owl.carousel.min.css">
-    <link rel="stylesheet" href="assets/css/vendors/animate.min.css">
-    <link rel="stylesheet" href="assets/css/vendors/slicknav.min.css">
-    <link rel="stylesheet" href="assets/css/vendors/prettyPhoto.css">
-    <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce-layout.css">
-    <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce-smallscreen.css">
-    <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce.css">
-    <link rel="stylesheet" href="assets/css/common/slider-banner.css">
-    <link rel="stylesheet" href="assets/css/common/style.css">
+    <link rel="stylesheet" href="assets/css/vendors/bootstrap.min.css"> <!--logout-->
+    <link rel="stylesheet" href="assets/css/vendors/font-awesome.min.css"> <!--選單-->
+    <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce.css"> <!--文字-->
+    <link rel="stylesheet" href="assets/css/common/style.css"> <!--版面-->
 </head>
 <body class="woocommerce woocommerce-page">
 <div class="wrap-main wrap-main-01">
@@ -45,32 +37,37 @@
                         <span></span>
                         <span></span>
                     </div>
-                    <div class="logo hidden-lg hidden-md">
-                        <a href="index.html"><img src="http://placehold.it/159x26" alt="logo mobile"></a>
-                    </div>
                 </div>
                 <nav class="main-nav">
                     <ul class="main-menu">
                         <li class="menu-item-has-children tp-activated">
-                            <a href="testHTML">訂購系統</a>
+                            <a href="/">訂購系統</a>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="">我的訂餐</a>
+                            <a href="purchaseManageV">我的訂餐</a>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="">訂餐總覽</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="orderNameManageV">以訂購者排序</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="orderMenuManageV">以菜單名排序</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="">餐廳管理</a>
                             <ul class="sub-menu">
                                 <li class="menu-item-has-children">
-                                    <a href="">新增餐廳&菜單</a>
+                                    <a href="restMenuInsertV">新增餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
                                     <a href="">編輯餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
-                                    <a href="">餐廳分類管理</a>
+                                    <a href="restKindManageV">餐廳分類管理</a>
                                 </li>
                             </ul>
                         </li>
@@ -136,7 +133,7 @@
                                     </div>
                                     <?php } ?>
                                 </div>
-                                <div class="explore-more"><a class="tp-button" href="shop-left-sidebar-grid.html">我 的 訂 餐</a></div>
+                                <div class="explore-more"><a class="tp-button" href="purchaseManageV">我 的 訂 餐</a></div>
                             </div>
                             <!--飯類-->
                             <div role="tabpanel" class="tab-pane" id="rice">
@@ -170,7 +167,7 @@
 												</span>
                                                     </div>
                                                 </div>
-                                                <a href="#" class="button add_to_cart_button">我要訂購</a>
+                                                <a href="action_pcInt?action=insert&num=<?php echo $value->m_num;?>" class="button add_to_cart_button">我要訂購</a>
                                             </div>
                                         </div>
                                     <?php }
@@ -181,7 +178,7 @@
                                         <?php
                                     }?>
                                 </div>
-                                <div class="explore-more"><a class="tp-button" href="shop-left-sidebar-grid.html">我 的 訂 餐</a></div>
+                                <div class="explore-more"><a class="tp-button" href="purchaseManageV">我 的 訂 餐</a></div>
                             </div>
                             <!--麵類-->
                             <div role="tabpanel" class="tab-pane" id="noodle">
@@ -215,7 +212,7 @@
 												</span>
                                                     </div>
                                                 </div>
-                                                <a href="#" class="button add_to_cart_button">我要訂購</a>
+                                                <a href="action_pcInt?action=insert&num=<?php echo $value->m_num;?>" class="button add_to_cart_button">我要訂購</a>
                                             </div>
                                         </div>
                                     <?php }
@@ -226,7 +223,7 @@
                                     <?php
                                     }?>
                                 </div>
-                                <div class="explore-more"><a class="tp-button" href="shop-left-sidebar-grid.html">我 的 訂 餐</a></div>
+                                <div class="explore-more"><a class="tp-button" href="purchaseManageV">我 的 訂 餐</a></div>
                             </div>
                             <!--湯類-->
                             <div role="tabpanel" class="tab-pane" id="soup">
@@ -260,7 +257,7 @@
 												</span>
                                                     </div>
                                                 </div>
-                                                <a href="#" class="button add_to_cart_button">我要訂購</a>
+                                                <a href="action_pcInt?action=insert&num=<?php echo $value->m_num;?>" class="button add_to_cart_button">我要訂購</a>
                                             </div>
                                         </div>
                                     <?php }
@@ -271,7 +268,7 @@
                                         <?php
                                     }?>
                                 </div>
-                                <div class="explore-more"><a class="tp-button" href="shop-left-sidebar-grid.html">我 的 訂 餐</a></div>
+                                <div class="explore-more"><a class="tp-button" href="purchaseManageV">我 的 訂 餐</a></div>
                             </div>
                             <!--小菜-->
                             <div role="tabpanel" class="tab-pane" id="sideDishes">
@@ -305,7 +302,7 @@
 												</span>
                                                     </div>
                                                 </div>
-                                                <a href="#" class="button add_to_cart_button">我要訂購</a>
+                                                <a href="action_pcInt?action=insert&num=<?php echo $value->m_num;?>" class="button add_to_cart_button">我要訂購</a>
                                             </div>
                                         </div>
                                     <?php }
@@ -316,7 +313,7 @@
                                         <?php
                                     }?>
                                 </div>
-                                <div class="explore-more"><a class="tp-button" href="shop-left-sidebar-grid.html">我 的 訂 餐</a></div>
+                                <div class="explore-more"><a class="tp-button" href="purchaseManageV">我 的 訂 餐</a></div>
                             </div>
                         </div>
                     </div>
@@ -325,17 +322,9 @@
         </div>
     </div>
 </div>
-<script src="assets/js/vendors/jquery.min.js"></script>
-<script src="assets/js/vendors/jquery-migrate.min.js"></script>
-<script src="assets/js/vendors/jquery-ui.min.js"></script>
-<script src="assets/js/vendors/bootstrap.min.js"></script>
-<script src="assets/js/vendors/swiper.min.js"></script>
-<script src="assets/js/vendors/jquery.slicknav.min.js"></script>
-<script src="assets/js/vendors/masonry.pkgd.min.js"></script>
-<script src="assets/js/vendors/imagesloaded.pkgd.min.js"></script>
-<script src="assets/js/vendors/jquery.prettyPhoto.js"></script>
-<script src="assets/js/global.js"></script>
-<script src="assets/js/menu.js"></script>
+<script src="assets/js/vendors/jquery.min.js"></script> <!--點觸淡出效果-->
+<script src="assets/js/vendors/bootstrap.min.js"></script> <!--點觸淡出效果-->
+<script src="assets/js/menu.js"></script> <!--RWD縮小選單列-->
 
 </body>
 </html>

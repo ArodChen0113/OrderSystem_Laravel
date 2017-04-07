@@ -5,7 +5,8 @@ Route::get('/','orderC@purchaseShow');
 
 Route::get('purchaseManageV','orderC@purchaseManageShow');
 Route::get('purchaseUpdateV','orderC@purchaseUpdateShow');
-Route::get('orderManageV','orderC@orderManageShow');
+Route::get('orderNameManageV','orderC@orderNameManageShow');
+Route::get('orderMenuManageV','orderC@orderMenuManageShow');
 
 Route::get('menuV', 'menuC@menuShow');
 Route::get('menuUpdateV', 'menuC@menuUpdateShow');
@@ -41,7 +42,7 @@ Route::get('home', 'HomeController@index');
 Route::get('testAJAX_php', 'testC@testShow');
 Route::get('testAJAX', 'testC@testShow2');
 
-Route::get('testHTML', 'orderC@purchaseShow');
+Route::get('testHTML', 'testC@testHTML');
 
 
 

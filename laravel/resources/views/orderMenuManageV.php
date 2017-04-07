@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>餐廳&菜單新增</title>
+    <title>我的訂餐</title>
     <link rel="stylesheet" href="assets/css/vendors/bootstrap.min.css"> <!--logout-->
     <link rel="stylesheet" href="assets/css/vendors/font-awesome.min.css"> <!--選單-->
     <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce.css"> <!--文字-->
@@ -12,6 +12,7 @@
 </head>
 <body class="woocommerce woocommerce-page">
 <div class="wrap-main">
+
     <header class="header">
         <div class="topbar">
             <div class="container">
@@ -87,85 +88,72 @@
                     <div class="container">
                         <nav class="woocommerce-breadcrumb">
                             <a href="#">Home</a>
-                            餐廳分類管理
+                            訂餐總覽 (以訂購者排序)
                         </nav>
                     </div>
                     <div class="wrap-main-page-cart tp-content-page tp-page-title-16">
                         <div class="tp-content-cart-items">
                             <div class="tp-table-cart">
                                 <div class="container">
-                                    <div class="actions">
-                                        <div class="text-left tp-btn-con-shopping">
-                                            <form name="from2" action="action_rKInt" method="post" enctype="multipart/form-data">
-                                                <table border="1">
-                                                    <tr>
-                                                        <td align="center" bgcolor="#FFABAB">新增分類</td>
-                                                        <td align="center"><input type="text" name="restKind"></td>
-                                                    </tr>
-                                                </table>
-                                                <br>
-                                                <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                                                <input type="hidden" name="action" value="insert">
-                                                如欲<font color="#FF0000">新增</font>餐廳分類，按下新增按鈕 >>>
-                                                <input type="submit" value="新增分類">
-                                            </form>
-                                        </div>
-                                    </div>
                                     <div class="tp-content-table-cart">
-                                        <form name="from1" action="action_rKUp" method="post" enctype="multipart/form-data">
+                                        <form action="#" method="post">
                                             <table class="shop_table cart" >
                                                 <thead>
                                                 <tr>
-                                                    <th class="product-name">分類名稱</th>
-                                                    <th class="product-remove">刪除</th>
+                                                    <td align="center" width="300px" bgcolor="#FFE1AB">菜單</td>
+                                                    <td align="center" width="300px" bgcolor="#ABFFAB">圖片</td>
+                                                    <td align="center" width="300px" bgcolor="#00FFFF">訂購數量</td>
+                                                    <td align="center" width="300px" bgcolor="#DBABFF">單價</td>
+                                                    <td align="center" width="300px" bgcolor="#FFABAB">訂購人</td>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <?php
-                                                $num=count($restData);
+                                                $num=count($order_menu);
                                                 for($k=0;$k<=$num-1;$k++) {
-                                                $value=$restData[$k];
-                                                ?>
-                                                        <tr class="cart_item">
-                                                            <td class="product-name"><input type="text" name="restKind[]" value="<?php echo $value->rest_kind; ?>"></td>
-                                                            <input type="hidden" name="num[]" value="<?php echo $value->num ;?>">
-                                                            <td class="product-remove" data-title="Remove"><a href="action_rKDel?action=delete&num=<?php echo $value->num ?>" class="remove">×</a></td>
-                                                        </tr>
+                                                    $value2=$order_menu[$k];
+                                                    ?>
+                                                    <tr>
+                                                        <?php
+                                                        echo "<td align=\"center\"><b>" . $value2->kind . "</<b></td>";
+                                                        ?>
+                                                        <td align="center"><img src="/userUpload/<?php echo $order_pic[$k] ; ?>" width="150" height="150"></td>
+                                                        <?php
+                                                        echo "<td align=\"center\"><b>" . $kindCount[$k] . "</<b></td>";
+                                                        echo "<td align=\"center\"><b>" . $order_unitPrice[$k] . "</<b></td>";
+                                                        ?>
+                                                        <td align="center"><b>
+                                                                <?php
+                                                                foreach ($kindOrderName[$k] as $value3) {
+                                                                    echo $value3->name." ";
+                                                                }
+                                                                ?>
+                                                            </<b></td>
+                                                    </tr>
                                                     <?php
-                                                }?>
+                                                }
+                                                ?>
                                                 </tbody>
                                             </table>
+                                            <div class="actions">
+                                                <div class="text-left tp-btn-con-shopping">
+                                                    <a href="orderNameManageV" class="tp-btn">訂購者排序總覽</a>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div><!-- table cart -->
-                            <div class="tp-info-add-checkout">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="tp-form-site">
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-
-                                            </div><!-- end box form shipping -->
-                                            <div class="tp-info-coupon-checkout col-md-6 col-sm-6 col-xs-12">
-
-                                                <div class="tp-link-checkout">
-                                                        <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                                                        <input type="hidden" name="action" value="update">
-                                                        <span>如欲<font color="#FF0000">修改</font>餐廳分類，按下修改按鈕 >>></span>
-                                                    <input type="submit" value="修改分類">
-                                                </div>
-                                            </div><!-- box add code coupon and link checkout -->
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
+<script src="assets/js/vendors/jquery.min.js"></script> <!--點觸淡出效果-->
+<script src="assets/js/vendors/bootstrap.min.js"></script> <!--點觸淡出效果-->
 <script src="assets/js/menu.js"></script> <!--RWD縮小選單列-->
 </body>
 </html>

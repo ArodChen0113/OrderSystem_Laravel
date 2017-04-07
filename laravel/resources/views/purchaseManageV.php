@@ -1,61 +1,229 @@
-<html>
+<!doctype html>
+<html class="no-js" lang="en">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>訂購單管理頁面</title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>我的訂餐</title>
+    <link rel="stylesheet" href="assets/css/vendors/bootstrap.min.css"> <!--logout-->
+    <link rel="stylesheet" href="assets/css/vendors/font-awesome.min.css"> <!--選單-->
+    <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce.css"> <!--文字-->
+    <link rel="stylesheet" href="assets/css/common/style.css"> <!--版面-->
 </head>
-<body>
-<form action="" method="post" enctype="multipart/form-data">
-    <table border="1">
-        <tr>
-            <td colspan="3" align="center" bgcolor="#ABFFFF">下單總覽</td>
-        </tr>
-        <tr>
-            <td align="center" width="300px" bgcolor="#FFE1AB">訂購者</td>
-            <td align="center" width="300px" bgcolor="#ABFFAB">總額</td>
-            <td align="center" width="300px" bgcolor="#DBABFF">瀏覽修改</td>
-        </tr>
+<body class="woocommerce woocommerce-page">
+<div class="wrap-main">
 
-        <?php
-        if($orderData!=NULL){
-        $num=count($orderData);
-        for($k=0;$k<=$num-1;$k++) {
-            $value=$orderData[$k];
-            ?>
-            <tr>
-                <td align="center"><?php echo $value->name; ?></td>
-                <td align="center"><?php echo $value->price; ?></td>
-                <td align="center"><a href="purchaseUpdateV?orderName=<?php echo $value->name; ?>"><img
-                                src="icon/eye.jpeg" width="30" height="30"></a></td>
-            </tr>
-            <?php
-        }
-        }else{
-            ?>
-            <tr>
-                <td colspan="3" align="center">今日尚無訂餐</td>
-            </tr>
-            <?php
-        }
-        ?>
-    </table>
-    <br>
-    <br>
-    <a href="restMenuInsertV">新增菜單</a>
-    <a href="restChooseV">餐廳管理</a>
-    <a href="restKindManageV">餐廳分類管理</a>
-    <br>
-    <a href="/">下單區</a>
-    <a href="purchaseManageV">下單總覽</a>
-    <br>
-    <a href="orderManageV">訂單總覽</a>
-</form>
-<table border="1">
-    <tr>
-        <td align="center" bgcolor="#FFD4D4">今日開餐: <?php echo $restName; ?></td>
-    </tr>
-    <tr>
-        <td><img src="/userUpload/<?php echo $restPic; ?>" width="800" height="600"></td>
-    </tr>
-</table>
+    <header class="header">
+        <div class="topbar">
+            <div class="container">
+                <div class="topbar__right">
+                    <div class="account">
+                        <i class="fa fa-smile-o"></i>
+                        <ul class="tp-ul-no-padding tp-li-list-style">
+                            <li><a href="login.html">Sign in</a></li>
+                            <li> / </li>
+                            <li><a href="register.html">Register</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- container -->
+        </div>
+        <!-- topbar -->
+        <div class="navbar">
+            <div class="container">
+                <div class="header-mobile">
+                    <div class="open-menu-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <nav class="main-nav">
+                    <ul class="main-menu">
+                        <li class="menu-item-has-children tp-activated">
+                            <a href="/">訂購系統</a>
+                        </li>
+                        <li class="menu-item-has-children tp-activated">
+                            <a href="purchaseManageV">我的訂餐</a>
+                        </li>
+                        <li class="menu-item-has-children tp-activated">
+                            <a href="">訂餐總覽</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="orderNameManageV">以訂購者排序</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="orderMenuManageV">以菜單名排序</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item-has-children tp-activated">
+                            <a href="">餐廳管理</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="restMenuInsertV">新增餐廳&菜單</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="">編輯餐廳&菜單</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="restKindManageV">餐廳分類管理</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item-has-children tp-activated">
+                            <a href="">今日開餐</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="site-content-contain">
+        <div id="content" class="site-content">
+            <div class="wrap">
+                <div id="primary" class="content-area">
+                    <div class="container">
+                        <nav class="woocommerce-breadcrumb">
+                            <a href="#">Home</a>
+                            我的訂餐
+                        </nav>
+                    </div>
+                    <div class="wrap-main-page-cart tp-content-page tp-page-title-16">
+                        <div class="tp-content-cart-items">
+                            <div class="tp-table-cart">
+                                <div class="container">
+                                    <div class="tp-content-table-cart">
+                                        <form action="#" method="post">
+                                            <table class="shop_table cart" >
+                                                <thead>
+                                                <tr>
+                                                    <th class="product-name">菜色圖片</th>
+                                                    <th class="product-name">菜色名稱</th>
+                                                    <th class="product-price">單價</th>
+                                                    <th class="product-quantity">數量</th>
+                                                    <th class="product-remove">刪除</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                if($orderData!=NULL){
+                                                $num=count($orderData);
+                                                for($k=0;$k<=$num-1;$k++) {
+                                                $value=$orderData[$k];
+                                                ?>
+                                                <tr class="cart_item">
+                                                    <td class="product-name">
+                                                        <img src="/userUpload/<?php echo $value->menu_picture; ?>" width="150" height="150"></td>
+                                                    </td>
+                                                    <td class="product-name">
+                                                    <?php echo $value->kind;?>
+                                                    </td>
+                                                    <td class="product-price" data-title="Price">
+                                                        <span class="amount">NT.&nbsp $<?php echo $value->unit_price;?>&nbsp</span>
+                                                    </td>
+                                                    <td class="product-quantity" data-title="Qty">
+                                                        <div class="quantity">
+                                                            <input type="number" name="qty" step="1"  value="1" class="input-text qty text" size="4">
+                                                        </div>
+                                                    </td>
+                                                    <td class="product-remove" data-title="Remove"><a href="action_pcDel?action=delete&num=<?php echo $value->num; ?>" class="remove">×</a></td>
+                                                </tr>
+                                                    <?php
+                                                }
+                                                }else{
+                                                    ?>
+                                                    <tr>
+                                                        <td colspan="5" align="center">今日尚無訂餐</td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                ?>
+                                                </tbody>
+                                            </table>
+                                            <div class="actions">
+                                                <div class="text-left tp-btn-con-shopping">
+                                                    <a href="" class="tp-btn">我要評價</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div><!-- table cart -->
+                            <div class="tp-info-add-checkout">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="tp-form-site">
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                            </div><!-- end box form shipping -->
+                                            <div class="tp-info-coupon-checkout col-md-6 col-sm-6 col-xs-12">
+
+                                                <div class="tp-link-checkout">
+                                                    <p>
+                                                        <span>TOTAL</span>
+                                                        $<?php echo $sumPrice;?>
+                                                    </p>
+                                                    <a href="/">繼續選購 <i class="fa fa-angle-double-right"></i></a>
+                                                </div>
+                                            </div><!-- box add code coupon and link checkout -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="related-product">
+                                    <h3 class="title-related">熱門菜色</h3>
+
+                                    <div class="swiper-container product-related tp-slider-tpl">
+                                        <div class="swiper-wrapper">
+                                            <?php
+                                            for($i=0;$i<=3;$i++){
+                                            $value=$hotOrder[$i];
+                                            ?>
+                                            <div class="col-md-3 col-xs-6">
+                                                <div class="product type-product has-post-thumbnail">
+                                                    <div class="product-image">
+                                                        <a href="#">
+                                                            <img src="/userUpload/<?php echo $value->menu_picture;?>" alt="shop item">
+                                                        </a>
+                                                        <div class="product-action">
+                                                            <a href="#" class="tp-btn-wishlist"><i class="fa fa-heart-o"></i></a>
+                                                            <a href="#" class="tp-btn-quickview"><i class="fa fa-search-plus"></i></a>
+                                                            <a href="#" class="tp-btn-compare"><i class="fa fa-list-ul"></i></a>
+                                                        </div>
+                                                    </div>
+                                                    <span class="onnew">Hot</span>
+                                                    <h3><a href="#"><?php echo $value->kind;?></a></h3>
+                                                    <div class="price">NT.&nbsp $<?php echo $value->unit_price;?>&nbsp</div>
+                                                    <div class="product-info">
+                                                        <div class="star-rating">
+														<span>
+															<strong class="rating">4</strong>
+															out of 5,
+														</span>
+                                                        </div>
+                                                        <a href="action_pcInt?action=insert&num=<?php echo $value->m_num;?>" class="button add_to_cart_button">我要訂購</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="assets/js/vendors/jquery.min.js"></script> <!--點觸淡出效果-->
+<script src="assets/js/vendors/bootstrap.min.js"></script> <!--點觸淡出效果-->
+<script src="assets/js/menu.js"></script> <!--RWD縮小選單列-->
 </body>
 </html>

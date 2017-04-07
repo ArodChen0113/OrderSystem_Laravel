@@ -53,6 +53,7 @@ class menuC extends Controller
         $restKind = $input['restKind'];
         $kind = $input['kind'];
         $price = $input['price'];
+        $mKind = $input['m_kind'];
         $restTel = $input['restTel'];
         $restName = $input['restName'];
 
@@ -86,7 +87,7 @@ class menuC extends Controller
                     $destination_path2 = public_path() . '/userUpload/';
                     $upload_success2 = $file2->move($destination_path2, $file_name2);
                     DB::table('menu')->insert(array(                           //新增菜單資料
-                        array('rest_name' => $restName, 'kind' => $kind[$i], 'unit_price' => $price[$i],'menu_picture'=> $file_name2)
+                        array('rest_name' => $restName, 'kind' => $kind[$i], 'unit_price' => $price[$i], 'm_kind' => $mKind[$i],'menu_picture'=> $file_name2)
                     ));
                 } else {
                     echo "menu_img upload failed!";
