@@ -15,6 +15,7 @@ class restaurantC extends Controller
     //餐廳選擇器顯示
     public function restChooseShow()
     {
+        $this->Authority(); //權限驗證
         $input = Input::all();
         $control = input::get('control','0');
         $restKind = DB::table('restaurant_kind')
@@ -51,6 +52,7 @@ class restaurantC extends Controller
     //餐廳管理頁面顯示
     public function restManageShow()
     {
+        $this->Authority(); //權限驗證
         $rest_data=DB::table('restaurant')
             ->where('rest_name', Input::get('restName',''))
             ->get();
@@ -65,11 +67,13 @@ class restaurantC extends Controller
     //今日開餐頁面顯示
     public function openMealShow()
     {
+        $this->Authority(); //權限驗證
         $input = Input::all();
         $control = input::get('restName','');
         $openMeal=DB::table('restaurant')
             ->select('rest_name')
             ->get();
+        $openRestName=$openMeal[0]->rest_name;
         if($control==NULL){
             $restPic='';
             $restName='';
@@ -82,7 +86,7 @@ class restaurantC extends Controller
                 $restName=$input['restName'];
         }
 
-        return view('openMealV', ['openMeal' => $openMeal,'restPic' => $restPic, 'restName' => $restName]);
+        return view('openMealV', ['openMeal' => $openMeal,'openRestName' => $openRestName,'restPic' => $restPic, 'restName' => $restName]);
     }
     //今日開餐功能執行
     public function openMealUp()
@@ -96,7 +100,7 @@ class restaurantC extends Controller
             ->where('rest_name', $input['restName']) //開啟今日開餐
             ->update(['rest_open' => 1]);
 
-        header("Location:restChooseV");
+        header("Location:/");
     }
     //餐廳資料修改
     public function restUpdate()

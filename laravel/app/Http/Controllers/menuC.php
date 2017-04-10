@@ -16,6 +16,7 @@ class menuC extends Controller
     //菜單瀏覽頁面顯示
     public function menuShow()
     {
+        $this->Authority(); //權限驗證
         $input = Input::all();
         $restData=DB::table('menu')
             ->select('kind','m_num','menu_picture','unit_price')
@@ -28,6 +29,7 @@ class menuC extends Controller
     //新增餐廳&菜單頁面顯示
     public function restMenuInsertShow()
     {
+        $this->Authority(); //權限驗證
         $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
@@ -37,14 +39,15 @@ class menuC extends Controller
     //菜單修改頁面顯示
     public function menuUpdateShow()
     {
+        $this->Authority(); //權限驗證
         $input = Input::all();
-        $rest_data=DB::table('menu')
+        $restData=DB::table('menu')
             ->select('kind','m_num','menu_picture','unit_price')
             ->where('m_num', $input['num'])
             ->get();
         $restName=$input['restName'];
 
-        return view('menuUpdateV', [ 'rest_data' => $rest_data,'restName' => $restName]);
+        return view('menuUpdateV', [ 'restData' => $restData,'restName' => $restName]);
     }
     //餐廳&菜單資料新增
     public function restMenuInsert()

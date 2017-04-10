@@ -35,13 +35,16 @@ Route::get('action_pcInt', 'orderC@purchaseInsert');
 Route::get('action_pcDel', 'orderC@purchaseDelete');
 Route::get('action_orPay', 'orderC@orderPay');
 
+//login
 Route::auth();
-
 Route::get('home', 'HomeController@index');
 
+//Authority
+Route::get('noAuthV', 'Controller@AuthUrl');
+
+//test
 Route::get('testAJAX_php', 'testC@testShow');
 Route::get('testAJAX', 'testC@testShow2');
-
 Route::get('testHTML', 'testC@testHTML');
 
 

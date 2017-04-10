@@ -65,7 +65,7 @@
                                     <a href="restMenuInsertV">新增餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
-                                    <a href="">編輯餐廳&菜單</a>
+                                    <a href="restChooseV">編輯餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
                                     <a href="restKindManageV">餐廳分類管理</a>
@@ -73,7 +73,7 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="">今日開餐</a>
+                            <a href="openMealV">今日開餐</a>
                         </li>
                     </ul>
                 </nav>
@@ -125,9 +125,7 @@
                                                         <span class="amount">NT.&nbsp $<?php echo $value->unit_price;?>&nbsp</span>
                                                     </td>
                                                     <td class="product-quantity" data-title="Qty">
-                                                        <div class="quantity">
-                                                            <input type="number" name="qty" step="1"  value="1" class="input-text qty text" size="4">
-                                                        </div>
+                                                        <?php echo $value->qty;?>
                                                     </td>
                                                     <td class="product-remove" data-title="Remove"><a href="action_pcDel?action=delete&num=<?php echo $value->num; ?>" class="remove">×</a></td>
                                                 </tr>

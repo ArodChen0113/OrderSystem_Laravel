@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 use DB;
 use Input;
 use Gate;
+use App\Providers\AuthServiceProvider;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Post;
+use Illuminate\Support\Facades\Auth;
 
 class orderC extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware('auth'); //驗證使用者是否登入
-
+        $this -> middleware('auth'); //驗證使用者是否登入
     }
     //訂購單頁面顯示
     public function purchaseShow()
@@ -52,28 +52,12 @@ class orderC extends Controller
             ->get();
         return view('purchaseV', ['restName' => $restName,'restMenuAll' => $restMenuAll,'restMenuRice' => $restMenuRice,'restMenuNoodle' => $restMenuNoodle,'restMenuSoup' => $restMenuSoup,'restMenuSideDishes' => $restMenuSideDishes]);
     }
-    //訂購單管理頁面顯示
-    public function purchaseManageShow2()
-    {
-        $orderData = DB::table('menu_order')
-            ->select('name', 'price')
-            ->where('pay', '!=', 9)
-            ->groupBy('name')
-            ->get();
-        $rest_data=DB::table('restaurant')
-            ->select('rest_name','rest_picture')
-            ->where('rest_open', 1)
-            ->get();
-            $restName=$rest_data[0]->rest_name;
-            $restPic=$rest_data[0]->rest_picture;
-
-        return view('purchaseManageV', ['orderData' => $orderData,'restName' => $restName,'restPic' => $restPic]);
-    }
 
     //我的訂餐頁面顯示
     public function purchaseManageShow()
     {
-        $orderName='Arod';
+        $user = Auth::user();
+        $orderName = $user->name;
         $orderData = DB::table('menu_order')
             ->join('menu', 'menu_order.kind', '=', 'menu.kind')
             ->where('name', $orderName)
@@ -97,7 +81,7 @@ class orderC extends Controller
             ->orderBy('m_count', 'desc')
             ->get();
 
-        return view('purchaseManageV', ['orderData' => $orderData,'sumPrice' =>$sumPrice,'orderName'=>$orderName,'hotOrder'=>$hotOrder]);
+        return view('purchaseManageV', ['orderData' => $orderData,'sumPrice' =>$sumPrice,'hotOrder'=>$hotOrder]);
     }
     //訂購單資料新增
     public function purchaseInsert()
@@ -105,7 +89,8 @@ class orderC extends Controller
         $input = Input::all();
         if ($input['action'] != NULL && $input['action'] == 'insert')      //判斷值是否由欄位輸入
         {
-            $orderName='Arod'; //暫存訂購者名稱(之後做會員系統時更換)
+            $user = Auth::user();
+            $orderName = $user->name;
             $last_price = DB::table('menu_order') //查詢之前訂購總額
             ->select('price')
                 ->where('name', $orderName)
@@ -123,11 +108,31 @@ class orderC extends Controller
             $orderRestName = $orderDate[0]->rest_name;
             $orderKind = $orderDate[0]->kind;
             $orderPrice = $orderDate[0]->unit_price;
-            date_default_timezone_set("Asia/Taipei"); //目前時間
-            $date=date("Y-m-d h:i:s");
-            DB::table('menu_order')->insert(array(
-                array('name' => $orderName, 'rest_Name' => $orderRestName, 'kind' => $orderKind, 'price' => $orderPrice,'date' => $date)//新增至資料庫
-            ));
+
+            $checkOrder = DB::table('menu_order')        //查詢是否有同商品訂購紀錄
+            ->select('kind','qty')
+                ->where('name', $orderName)
+                ->where('kind', $orderKind)
+                ->Where('pay', '!=', 9)
+                ->get();
+
+            if($checkOrder==NULL) {
+                date_default_timezone_set("Asia/Taipei"); //目前時間
+                $date = date("Y-m-d h:i:s");
+                DB::table('menu_order')->insert(array(
+                    array('name' => $orderName, 'rest_Name' => $orderRestName, 'kind' => $orderKind, 'price' => $orderPrice, 'date' => $date)//新增至資料庫
+                ));
+            }else
+            {
+                $qty=$checkOrder[0]->qty;
+                $checkKind=$checkOrder[0]->kind;
+                $upQty=$qty+1;
+                DB::table('menu_order')
+                    ->where('name', $orderName)
+                    ->where('kind', $orderKind)
+                    ->Where('pay', '!=', 9)
+                    ->update(['qty' => $upQty]);
+            }
             $add=$lastPrice;
             $totalPrice = $add + $orderPrice; //加總新舊訂購總額
             DB::table('menu_order')
@@ -155,12 +160,13 @@ class orderC extends Controller
         if ($input['action'] != NULL && $input['action'] == 'delete')      //判斷值是否由欄位輸入
         {
             $order_price = DB::table('menu_order')
-                ->select('price','kind','name')
+                ->select('price','kind','name','qty')
                 ->where('num', $input['num'])
                 ->get();
                 $orderPrice=$order_price[0]->price;
                 $orderKind=$order_price[0]->kind;
                 $orderName=$order_price[0]->name;
+                $orderQty=$order_price[0]->qty;
 
             $last_price = DB::table('menu')
                 ->select('unit_price')
@@ -168,7 +174,7 @@ class orderC extends Controller
                 ->get();
                 $unitPrice=$last_price[0]->unit_price;
 
-            $updatePrice=$orderPrice-$unitPrice;
+            $updatePrice=$orderPrice-$unitPrice*$orderQty;
 
             DB::table('menu_order')            //修改訂購金額
                 ->where('name', $orderName)
@@ -191,6 +197,7 @@ class orderC extends Controller
     //訂單管理頁面顯示(以訂購者排序)
     public function orderNameManageShow()
     {
+        $this->Authority(); //權限驗證
         $todayOpen = DB::table('restaurant') //今日開餐＆電話
             ->select('rest_name','rest_tel')
             ->where('rest_open', 1)
@@ -205,57 +212,63 @@ class orderC extends Controller
             ->get();
 
         $orderCount = DB::table('menu_order') //餐點數量
-        ->select('name')
+        ->select('qty')
             ->where('pay', '!=', 9)
             ->get();
+        $sumOrderCount=0;
+        for($i=0;$i<=count($orderCount)-1;$i++){
+            $qty=$orderCount[$i]->qty;
+            $sumOrderCount=$sumOrderCount+$qty;
+        }
         $totalPrice=0;
      foreach ($orderData as $value) //金額總計
      {
          $row_orderSum = $value->price;
          $totalPrice = $totalPrice + $row_orderSum;
      }
-        return view('orderNameManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'orderData' =>$orderData,'orderCount' =>$orderCount,'totalPrice' =>$totalPrice]);
+        return view('orderNameManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'orderData' =>$orderData,'sumOrderCount' =>$sumOrderCount,'totalPrice' =>$totalPrice]);
     }
     //訂單管理頁面顯示(以菜單名排序)
     public function orderMenuManageShow()
     {
+        $this->Authority(); //權限驗證
         $order_menu = DB::table('menu_order') //菜單明細顯示
         ->select('kind')
             ->where('pay', '!=', 9)
             ->groupBy('kind')
             ->get();
-
+        if($order_menu!=NULL){
         $num=count($order_menu);
-        for($i=0;$i<=$num-1;$i++) {
+        for($i=0;$i<=$num-1;$i++){
             $v=$order_menu[$i];
             $save_data = DB::table('menu')  //菜單圖片&單價
             ->select('menu_picture','unit_price')
                 ->where('kind', $v->kind)
                 ->get();
-            foreach ($save_data as $value){
-                $order_pic[$i]=$value->menu_picture;
-                $order_unitPrice[$i]=$value->unit_price;
-            }
+                $order_pic[$i]=$save_data[0]->menu_picture;
+                $order_unitPrice[$i]=$save_data[0]->unit_price;
         }
-
         $num=count($order_menu);
         for($i=0;$i<=$num-1;$i++) {
             $v=$order_menu[$i];
             $save_data = DB::table('menu_order')  //點餐數量
-            ->select(DB::raw('count(kind) as kind_count'))
+            ->select('qty')
                 ->where('kind', $v->kind)
                 ->where('pay', '!=', 9)
                 ->get();
-            foreach ($save_data as $value){
-                $kindCount[$i]=$value->kind_count;
+            $num2=count($save_data);
+            $sumQty=0;
+            for($a=0;$a<=$num2-1;$a++) {
+                $sumQty=$sumQty+$save_data[$a]->qty;
             }
-        }
+                $kindCount[$i]=$sumQty;
+            }
 
         $num=count($order_menu);
         for($i=0;$i<=$num-1;$i++) {
             $v=$order_menu[$i];
             $save_data = DB::table('menu_order')  //點餐名單
-            ->select('name')
+            ->select('name','qty')
                 ->where('kind', $v->kind)
                 ->where('pay', '!=', 9)
                 ->get();
@@ -265,6 +278,9 @@ class orderC extends Controller
             }
         }
         return view('orderMenuManageV', ['order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName]);
+    }else{
+            return view('orderMenuManageV',['order_menu' =>$order_menu]);
+        }
     }
     //訂餐付款控制
     public function orderPay()

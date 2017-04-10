@@ -21,7 +21,7 @@
                         <ul class="tp-ul-no-padding tp-li-list-style">
                             <li><a href="login.html">Sign in</a></li>
                             <li> / </li>
-                            <li><a href="register.html">Register</a></li>
+                            <li><a href="logout">Sign out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                                     <a href="restMenuInsertV">新增餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
-                                    <a href="">編輯餐廳&菜單</a>
+                                    <a href="restChooseV">編輯餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
                                     <a href="restKindManageV">餐廳分類管理</a>
@@ -72,7 +72,7 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="">今日開餐</a>
+                            <a href="openMealV">今日開餐</a>
                         </li>
                     </ul>
                 </nav>

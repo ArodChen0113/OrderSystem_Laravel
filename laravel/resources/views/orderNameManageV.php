@@ -65,7 +65,7 @@
                                     <a href="restMenuInsertV">新增餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
-                                    <a href="">編輯餐廳&菜單</a>
+                                    <a href="restChooseV">編輯餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
                                     <a href="restKindManageV">餐廳分類管理</a>
@@ -73,7 +73,7 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="">今日開餐</a>
+                            <a href="openMealV">今日開餐</a>
                         </li>
                     </ul>
                 </nav>
@@ -99,9 +99,18 @@
                                         <form action="#" method="post">
                                             <table class="shop_table cart" >
                                                 <thead>
+                                                <?php
+                                                if($orderData==NULL){
+                                                    ?>
+                                                    <font color="red" size="3">今日尚無訂餐！</font>
+                                                    <?php
+                                                }else{
+                                                ?>
                                                 <tr>
-                                                    <td colspan="2" align="center" bgcolor="#FFABAB">今日訂餐：<?php echo $open_restName;?></td>
-                                                    <td colspan="1" align="center" bgcolor="#FFE1AB">餐廳電話：<?php echo $open_restTel;?></td>
+                                                    <td colspan="2" align="center" bgcolor="#FFABAB">
+                                                        今日訂餐：<?php echo $open_restName; ?></td>
+                                                    <td colspan="1" align="center" bgcolor="#FFE1AB">
+                                                        餐廳電話：<?php echo $open_restTel; ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td align="center" width="300px" bgcolor="#FFE1AB">訂購人</td>
@@ -111,8 +120,8 @@
                                                 </thead>
                                                 <tbody>
                                                 <?php
-                                                $num=count($orderData);
-                                                for($k=0;$k<=$num-1;$k++) {
+                                                $num = count($orderData);
+                                                for ($k = 0; $k <= $num - 1; $k++) {
                                                     $value = $orderData[$k];
                                                     ?>
                                                     <tr>
@@ -126,7 +135,8 @@
                                                                 ?>
                                                                 <font color="#FF0000">尚未繳費</font>
                                                                 <a href="action_orPay?action=pay&payName=<?php echo $value->name; ?>"><img
-                                                                            src="icon/th.jpeg" width="30" height="30"></a>
+                                                                            src="icon/th.jpeg" width="30"
+                                                                            height="30"></a>
                                                             <?php } else if ($value->pay == 1) {
                                                             ?>
                                                             已繳費
@@ -141,17 +151,26 @@
                                                 }
                                                 ?>
                                                 <tr>
-                                                    <td align="center">訂餐人數</td><td align="center" colspan="2"><font color="#0000cd"><?php echo count($orderData); ?></font></td>
-                                                </tr>
-                                                <tr>
-                                                    <td align="center">餐點數量</td><td align="center" colspan="2"><font color="#0000cd"><?php echo count($orderCount); ?></font>
+                                                    <td align="center">訂餐人數</td>
+                                                    <td align="center" colspan="2"><font
+                                                                color="#0000cd"><?php echo count($orderData); ?></font>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td align="center">金額總計</td><td align="center" colspan="2"><font color="red"><?php echo $totalPrice; ?></font>
+                                                    <td align="center">餐點數量</td>
+                                                    <td align="center" colspan="2"><font
+                                                                color="#0000cd"><?php echo $sumOrderCount; ?></font>
                                                     </td>
                                                 </tr>
-
+                                                <tr>
+                                                    <td align="center">金額總計</td>
+                                                    <td align="center" colspan="2"><font
+                                                                color="red"><?php echo $totalPrice; ?></font>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                                }
+                                                ?>
                                                 </tbody>
                                             </table>
                                             <div class="actions">

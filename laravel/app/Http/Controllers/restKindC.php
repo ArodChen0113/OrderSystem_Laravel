@@ -15,6 +15,7 @@ class restKindC extends Controller
     //餐廳分類管理頁面顯示
     public function restKindManageShow()
     {
+        $this->Authority(); //權限驗證
         $restData = DB::table('restaurant_kind')
             ->select('rest_kind','num')
             ->get();

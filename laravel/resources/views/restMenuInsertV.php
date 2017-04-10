@@ -64,7 +64,7 @@
                                     <a href="restMenuInsertV">新增餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
-                                    <a href="">編輯餐廳&菜單</a>
+                                    <a href="restChooseV">編輯餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
                                     <a href="restKindManageV">餐廳分類管理</a>
@@ -72,7 +72,7 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="">今日開餐</a>
+                            <a href="openMealV">今日開餐</a>
                         </li>
                     </ul>
                 </nav>
@@ -111,7 +111,7 @@
                                                         </div>
                                                         <div class="form-row">
                                                             <label>餐廳分類 <abbr class="required" title="required">*</abbr></label>
-                                                            <select name="restKind">
+                                                            <select name="restKind" >
                                                                 <option value="">請選擇餐廳分類</option>
                                                                 <?php
                                                                 foreach ($restKind as $value){ ?>　

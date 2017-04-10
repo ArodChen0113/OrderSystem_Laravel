@@ -65,7 +65,7 @@
                                     <a href="restMenuInsertV">新增餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
-                                    <a href="">編輯餐廳&菜單</a>
+                                    <a href="restChooseV">編輯餐廳&菜單</a>
                                 </li>
                                 <li class="menu-item-has-children">
                                     <a href="restKindManageV">餐廳分類管理</a>
@@ -73,7 +73,7 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="">今日開餐</a>
+                            <a href="openMealV">今日開餐</a>
                         </li>
                     </ul>
                 </nav>
@@ -99,6 +99,13 @@
                                         <form action="#" method="post">
                                             <table class="shop_table cart" >
                                                 <thead>
+                                                <?php
+                                                if($order_menu==NULL){
+                                                    ?>
+                                                <font color="red" size="3">今日尚無訂餐！</font>
+                                                <?php
+                                                }else{
+                                                ?>
                                                 <tr>
                                                     <td align="center" width="300px" bgcolor="#FFE1AB">菜單</td>
                                                     <td align="center" width="300px" bgcolor="#ABFFAB">圖片</td>
@@ -125,13 +132,13 @@
                                                         <td align="center"><b>
                                                                 <?php
                                                                 foreach ($kindOrderName[$k] as $value3) {
-                                                                    echo $value3->name." ";
+                                                                    echo $value3->name."(".$value3->qty.") ";
                                                                 }
                                                                 ?>
                                                             </<b></td>
                                                     </tr>
                                                     <?php
-                                                }
+                                                }}
                                                 ?>
                                                 </tbody>
                                             </table>
