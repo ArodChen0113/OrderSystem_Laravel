@@ -15,7 +15,18 @@ class restKindC extends Controller
     //餐廳分類管理頁面顯示
     public function restKindManageShow()
     {
+        $input = Input::all();
         $this->Authority(); //權限驗證
+        $action = Input::get('action', '');
+        if($action== 'insert'){
+            $this->restKindInsert(); //餐廳分類新增
+        }
+        if($action== 'update'){
+            $this->restKindUpdate(); //餐廳分類修改
+        }
+        if($action== 'delete'){
+            $this->restKindDel(); //餐廳分類刪除
+        }
         $restData = DB::table('restaurant_kind')
             ->select('rest_kind','num')
             ->get();
@@ -31,8 +42,10 @@ class restKindC extends Controller
             DB::table('restaurant_kind')->insert(array(
                 array('rest_kind' => $input['restKind'])
             ));
+            return true;
+        }else{
+            return false;
         }
-        header("Location:restKindManageV");
     }
     //餐廳分類資料修改
     public function restKindUpdate()
@@ -48,8 +61,10 @@ class restKindC extends Controller
                     ->update(['rest_kind' => $input['restKind'][$k]]);
                 $k++;
             }
+            return true;
+        }else{
+            return false;
         }
-        header("Location:restKindManageV");
     }
     //餐廳分類資料刪除
     public function restKindDel()
@@ -58,7 +73,9 @@ class restKindC extends Controller
         if ($input['action'] != NULL && $input['action'] == 'delete')      //判斷值是否由欄位輸入
         {
             DB::table('restaurant_kind')->where('num', '=', $input['num'])->delete();
+            return true;
+        }else{
+            return false;
         }
-        header("Location:restKindManageV");
     }
 }

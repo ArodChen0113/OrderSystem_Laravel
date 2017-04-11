@@ -73,7 +73,15 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="openMealV">今日開餐</a>
+                            <a href="">今日開餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="openMealV">今日開餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="hotRestEvaluationV">餐廳評價</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -134,7 +142,7 @@
                                                             if ($value->pay == 0) {
                                                                 ?>
                                                                 <font color="#FF0000">尚未繳費</font>
-                                                                <a href="action_orPay?action=pay&payName=<?php echo $value->name; ?>"><img
+                                                                <a href="orderNameManageV?action=pay&payName=<?php echo $value->name; ?>"><img
                                                                             src="icon/th.jpeg" width="30"
                                                                             height="30"></a>
                                                             <?php } else if ($value->pay == 1) {

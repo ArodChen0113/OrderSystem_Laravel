@@ -72,7 +72,15 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="openMealV">今日開餐</a>
+                            <a href="">今日開餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="openMealV">今日開餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="hotRestEvaluationV">餐廳評價</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>

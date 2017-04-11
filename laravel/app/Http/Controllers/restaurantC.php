@@ -53,6 +53,17 @@ class restaurantC extends Controller
     public function restManageShow()
     {
         $this->Authority(); //權限驗證
+        $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'update'){
+            $this->restUpdate(); //餐廳資料修改
+            header("Location:restChooseV");
+        }
+        if($action== 'delete'){
+            $this->restDel();    //餐廳資料刪除
+            header("Location:restChooseV");
+        }
+
         $rest_data=DB::table('restaurant')
             ->where('rest_name', Input::get('restName',''))
             ->get();
@@ -67,13 +78,23 @@ class restaurantC extends Controller
     //今日開餐頁面顯示
     public function openMealShow()
     {
+        $input = Input::all();
         $this->Authority(); //權限驗證
+        $action = Input::get('action', '');
+        if($action== 'open'){
+            $this->openMealUp(); //開餐
+        }
+
         $input = Input::all();
         $control = input::get('restName','');
         $openMeal=DB::table('restaurant')
             ->select('rest_name')
             ->get();
-        $openRestName=$openMeal[0]->rest_name;
+        $rowOpenName=DB::table('restaurant')
+            ->select('rest_name')
+            ->where('rest_open', 1)
+            ->get();
+        $openRestName=$rowOpenName[0]->rest_name;
         if($control==NULL){
             $restPic='';
             $restName='';
@@ -92,6 +113,8 @@ class restaurantC extends Controller
     public function openMealUp()
     {
         $input = Input::all();
+        if ($input['action'] != NULL && $input['action'] == 'open')      //判斷值是否由欄位輸入
+        {
         DB::table('menu_order')                      //之前訂餐改為歷史紀錄
         ->update(['pay' => 9]);
         DB::table('restaurant')                      //關閉餐廳
@@ -99,8 +122,10 @@ class restaurantC extends Controller
         DB::table('restaurant')
             ->where('rest_name', $input['restName']) //開啟今日開餐
             ->update(['rest_open' => 1]);
-
-        header("Location:/");
+            return true;
+        }else{
+            return false;
+        }
     }
     //餐廳資料修改
     public function restUpdate()
@@ -135,8 +160,10 @@ class restaurantC extends Controller
             } else {
                 echo "restaurant_img upload failed!";
             }
+            return true;
+        }else{
+            return false;
         }
-        header("Location:restChooseV");
     }
     //餐廳資料刪除
     public function restDel()
@@ -147,7 +174,9 @@ class restaurantC extends Controller
             DB::table('menu_order')->where('rest_name', '=', $input['restName'])->delete();
             DB::table('menu')->where('rest_name', '=', $input['restName'])->delete();
             DB::table('restaurant')->where('rest_name', '=', $input['restName'])->delete();
+            return true;
+        }else{
+            return false;
         }
-        header("Location:restChooseV");
     }
 }

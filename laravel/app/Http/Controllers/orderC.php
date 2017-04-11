@@ -21,32 +21,37 @@ class orderC extends Controller
     //訂購單頁面顯示
     public function purchaseShow()
     {
+        $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'insert'){
+            $this->purchaseInsert($action,$input['num']);
+        }
         $rest_openName = DB::table('restaurant')
             ->select('rest_name')
             ->where('rest_open', 1)
             ->get();
         $restName = $rest_openName[0]->rest_name;
         $restMenuAll = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num')
+            ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->get();
         $restMenuRice = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num')
+            ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->where('m_kind', '飯')
             ->get();
         $restMenuNoodle = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num')
+            ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->where('m_kind', '麵')
             ->get();
         $restMenuSoup = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num')
+            ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->where('m_kind', '湯')
             ->get();
         $restMenuSideDishes = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num')
+            ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->where('m_kind', '小菜')
             ->get();
@@ -56,6 +61,16 @@ class orderC extends Controller
     //我的訂餐頁面顯示
     public function purchaseManageShow()
     {
+        $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'insert'){
+            $this->purchaseInsert($action,$input['num']); //熱門訂餐新增
+        }
+
+        if($action== 'delete'){
+            $this->purchaseDelete($action,$input['num']); //單筆訂餐刪除
+        }
+
         $user = Auth::user();
         $orderName = $user->name;
         $orderData = DB::table('menu_order')
@@ -76,7 +91,7 @@ class orderC extends Controller
         $openRestName=$todayOpen[0]->rest_name;
 
         $hotOrder = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num')
+            ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $openRestName)
             ->orderBy('m_count', 'desc')
             ->get();
@@ -149,8 +164,9 @@ class orderC extends Controller
             DB::table('menu')          //更新該菜色訂購數量
                 ->where('kind', $orderKind)
                 ->update(['m_count' => $mCount]);
-
-            header("Location:purchaseManageV");
+            return true;
+        }else{
+            return false;
         }
     }
     //訂購單資料單筆刪除
@@ -191,13 +207,22 @@ class orderC extends Controller
                 ->update(['m_count' => $mCount]);
 
             DB::table('menu_order')->where('num', '=', $input['num'])->delete(); //刪除訂購項目
+            return true;
+        }else{
+            return false;
         }
-        header("Location:purchaseManageV?orderName=$orderName");
     }
     //訂單管理頁面顯示(以訂購者排序)
     public function orderNameManageShow()
     {
         $this->Authority(); //權限驗證
+
+        $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'pay'){
+            $this->orderPay(); //訂餐付款修改控制
+        }
+
         $todayOpen = DB::table('restaurant') //今日開餐＆電話
             ->select('rest_name','rest_tel')
             ->where('rest_open', 1)
@@ -291,8 +316,9 @@ class orderC extends Controller
             ->where('name', $input['payName'])
             ->where('pay', '!=', 9)
             ->update(['pay' => 1]);
-
-        header("Location:orderNameManageV");
+        return true;
+        }else{
+            return false;
         }
     }
 }

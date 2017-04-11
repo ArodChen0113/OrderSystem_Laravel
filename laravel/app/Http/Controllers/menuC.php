@@ -18,6 +18,10 @@ class menuC extends Controller
     {
         $this->Authority(); //權限驗證
         $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'delete'){
+            $this->menuDel(); //菜單資料刪除
+        }
         $restData=DB::table('menu')
             ->select('kind','m_num','menu_picture','unit_price')
             ->where('rest_name', $input['restName'])
@@ -30,6 +34,11 @@ class menuC extends Controller
     public function restMenuInsertShow()
     {
         $this->Authority(); //權限驗證
+        $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'insert'){
+            $this->restMenuInsert(); //餐廳&菜單資料新增
+        }
         $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
@@ -41,6 +50,12 @@ class menuC extends Controller
     {
         $this->Authority(); //權限驗證
         $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'update'){
+            $this->menuUpdate(); //菜單資料修改
+            $restName=$input['restName'];
+            header("Location:menuV?restName=$restName");
+        }
         $restData=DB::table('menu')
             ->select('kind','m_num','menu_picture','unit_price')
             ->where('m_num', $input['num'])
@@ -96,7 +111,9 @@ class menuC extends Controller
                     echo "menu_img upload failed!";
                 }
             }
-            header("Location:restChooseV");
+            return true;
+        }else{
+            return false;
         }
     }
     //菜單資料修改
@@ -121,10 +138,10 @@ class menuC extends Controller
             } else {
                 echo "menu_img upload failed!";
             }
+            return true;
+        }else{
+            return false;
         }
-        $restName=$input['restName'];
-        header("Location:menuV?restName=$restName");
-
     }
     //菜單資料刪除
     public function menuDel()
@@ -133,9 +150,10 @@ class menuC extends Controller
         if ($input['action'] != NULL && $input['action'] == 'delete')      //判斷值是否由欄位輸入
         {
             DB::table('menu')->where('m_num', '=', $input['num'])->delete();
+            return true;
+        }else{
+            return false;
         }
-        $restName=$input['restName'];
-        header("Location:restChooseV?restName=$restName");
     }
 
 }

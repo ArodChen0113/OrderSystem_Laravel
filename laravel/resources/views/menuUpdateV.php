@@ -72,7 +72,15 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="openMealV">今日開餐</a>
+                            <a href="">今日開餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="openMealV">今日開餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="hotRestEvaluationV">餐廳評價</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -96,7 +104,7 @@
                                 <div class="container">
                                     <div class="actions">
                                         <div class="text-left tp-btn-con-shopping">
-                                            <form action="action_meUp" method="post" enctype="multipart/form-data">
+                                            <form action="menuUpdateV" method="get" enctype="multipart/form-data">
                                                 <table border="1">
                                                     <tr>
                                                         <td colspan="4" align="center" bgcolor="#ABFFFF">菜單總覽</td>

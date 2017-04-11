@@ -72,7 +72,15 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="openMealV">今日開餐</a>
+                            <a href="">今日開餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="openMealV">今日開餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="hotRestEvaluationV">餐廳評價</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -96,7 +104,7 @@
                                 <div class="container">
                                     <div class="actions">
                                         <div class="text-left tp-btn-con-shopping">
-                                            <form name="from2" action="action_rKInt" method="post" enctype="multipart/form-data">
+                                            <form name="from2" action="restKindManageV" method="get" enctype="multipart/form-data">
                                                 <table border="1">
                                                     <tr>
                                                         <td align="center" bgcolor="#FFABAB">新增分類</td>
@@ -112,7 +120,7 @@
                                         </div>
                                     </div>
                                     <div class="tp-content-table-cart">
-                                        <form name="from1" action="action_rKUp" method="post" enctype="multipart/form-data">
+                                        <form name="from1" action="restKindManageV" method="get" enctype="multipart/form-data">
                                             <table class="shop_table cart" >
                                                 <thead>
                                                 <tr>
@@ -129,7 +137,7 @@
                                                         <tr class="cart_item">
                                                             <td class="product-name"><input type="text" name="restKind[]" value="<?php echo $value->rest_kind; ?>"></td>
                                                             <input type="hidden" name="num[]" value="<?php echo $value->num ;?>">
-                                                            <td class="product-remove" data-title="Remove"><a href="action_rKDel?action=delete&num=<?php echo $value->num ?>" class="remove">×</a></td>
+                                                            <td class="product-remove" data-title="Remove"><a href="restKindManageV?action=delete&num=<?php echo $value->num ?>" class="remove">×</a></td>
                                                         </tr>
                                                     <?php
                                                 }?>

@@ -72,7 +72,15 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="openMealV">今日開餐</a>
+                            <a href="">今日開餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="openMealV">今日開餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="hotRestEvaluationV">餐廳評價</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -119,7 +127,7 @@
                                                             <td align="center"><?php echo $value->unit_price; ?></td>
                                                             <td align="center"><img src="/userUpload/<?php echo $value->menu_picture; ?>" width="150" height="150"></td>
                                                             <td align="center"><a href="menuUpdateV?num=<?php echo $value->m_num; ?>&restName=<?php echo $restName; ?>"><img src="icon/pencil.jpeg" width="30" height="30"></a></td>
-                                                            <td align="center"><a href="action_meDel?action=delete&restName=<?php echo $restName; ?>&num=<?php echo $value->m_num; ?>"><img src="icon/x.jpeg" width="30" height="30"></a></td>
+                                                            <td align="center"><a href="menuV?action=delete&restName=<?php echo $restName; ?>&num=<?php echo $value->m_num; ?>"><img src="icon/x.jpeg" width="30" height="30"></a></td>
                                                         </tr>
                                                         <?php
                                                     }

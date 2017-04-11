@@ -72,7 +72,15 @@
                             </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
-                            <a href="openMealV">今日開餐</a>
+                            <a href="">今日開餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="openMealV">今日開餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="hotRestEvaluationV">餐廳評價</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
@@ -96,7 +104,7 @@
                                 <div class="container">
                                     <div class="actions">
                                         <div class="text-left tp-btn-con-shopping">
-                                            <form name="rest_management" action="action_openMeal" method="post" enctype="multipart/form-data">
+                                            <form name="rest_management" action="openMealV" method="get" enctype="multipart/form-data">
                                                 <table border="1">
                                                     <tr>
                                                         <td colspan="3" align="center" bgcolor="#FFABAB">餐廳管理</td>
@@ -137,7 +145,7 @@
                                                     <?php } ?>
                                                 </table>
                                                 <br>
-                                                <input type="hidden" name="action" value="update">
+                                                <input type="hidden" name="action" value="open">
                                                 <input type="hidden" name="restName" value="<?php echo $restName; ?>">
                                                 <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
                                                 目前開餐餐廳&nbsp:&nbsp<font color="#FF0000"><?php echo $openRestName;?></font>
