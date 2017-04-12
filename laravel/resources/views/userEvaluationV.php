@@ -44,6 +44,14 @@
                     <ul class="main-menu">
                         <li class="menu-item-has-children tp-activated">
                             <a href="/">訂購系統</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotOrderV">熱門人氣</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotStarV">最高評價</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="purchaseManageV">我的訂餐</a>
@@ -105,7 +113,7 @@
                             <div class="tp-table-cart">
                                 <div class="container">
                                     <div class="tp-content-table-cart">
-                                        <form action="action_cInt" method="post">
+                                        <form action="action_cInt" method="get">
                                             <table class="shop_table cart" >
                                                 <thead>
                                                 <tr>
@@ -118,6 +126,7 @@
 
 
                                                 <?php
+                                                $num=count($orderData);
                                                 foreach ($todayOpen as $value){
                                                         ?>
                                                         <td class="product-name">
@@ -126,7 +135,7 @@
                                                         <td class="product-name">
                                                             <?php echo $value->rest_name;?>
                                                         </td>
-                                                        <td><div class="starBox4"></div></td>
+                                                        <td><div class="starBox<?php echo $num;?>"></div></td>
                                                         </tr>
                                                         <?php
                                                 }?>
@@ -144,8 +153,6 @@
 
 
                                                 <?php
-                                                if($orderData!=NULL){
-                                                $num=count($orderData);
                                                 for($k=0;$k<=$num-1;$k++) {
                                                 $value=$orderData[$k];
                                                 ?>
@@ -158,7 +165,7 @@
                                                     <td><div class="starBox<?php echo $k;?>"></div></td>
                                                     </tr>
                                                     <?php
-                                                }
+                                                    $mNum[$k]=$value->m_num;
                                                 }?>
                                                 </tbody>
                                             </table>
@@ -166,7 +173,7 @@
                                                 <div class="text-left tp-btn-con-shopping">
                                                     <input type="hidden" name="action" value="insert">
                                                     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                                                    <input type="submit"  class="tp-btn" value="確認送出">
+                                                    <input type="button" class="tp-btn" value="確認送出" onclick="express()">
                                                 </div>
                                             </div>
                                         </form>
@@ -186,7 +193,7 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script> <!--評價星星效果-->
 <script src="assets/jstarbox.js"></script> <!--評價星星效果-->
 <?php
-for($i=0;$i<=4;$i++){
+for($i=0;$i<=$num;$i++){
     ?>
     <script type="text/javascript"> //評價星星效果
         $('.starBox<?php echo $i;?>').starbox({
@@ -201,5 +208,17 @@ for($i=0;$i<=4;$i++){
     <?php
 }
 ?>
+<script>
+    function express() {
+        var value = new Array();
+        for(var i=0;i<=<?php echo $num;?>;i++) {
+            value[i] = $('.starBox'+i).starbox("getValue");
+        }
+        var js_mNum = ["<?php echo join("\", \"", $mNum); ?>"];
+//        var js_num = '<?php //print($num); ?>//';
+//        for(var i=0;i<js_num;i++)
+        location.href = "action_cInt?value=" + value+"&js_mNum="+js_mNum;
+    }
+</script>
 </body>
 </html>

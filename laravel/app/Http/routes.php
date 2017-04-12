@@ -3,6 +3,8 @@
 //View routes
 Route::get('/','orderC@purchaseShow');
 
+Route::get('purchaseHotOrderV','orderC@purchaseHotOrderShow');
+Route::get('purchaseHotStarV','orderC@purchaseHotStarShow');
 Route::get('purchaseManageV','orderC@purchaseManageShow');
 Route::get('purchaseUpdateV','orderC@purchaseUpdateShow');
 Route::get('orderNameManageV','orderC@orderNameManageShow');
@@ -22,8 +24,7 @@ Route::get('hotRestEvaluationV', 'evaluationC@hotRestEvaluationShow');
 Route::get('openMealV', 'restaurantC@openMealShow');
 
 //Controller routes
-Route::post('action_cInt', 'evaluationC@evaluationInsert');
-Route::get('userEvaluationV', 'evaluationC@userEvaluationShow');
+Route::get('action_cInt', 'evaluationC@evaluationInsert');
 
 //login
 Route::auth();

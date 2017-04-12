@@ -20,7 +20,7 @@
                     <div class="account">
                         <i class="fa fa-smile-o"></i>
                         <ul class="tp-ul-no-padding tp-li-list-style">
-                            <li><a href="login.html">Sign in</a></li>
+                            <li><font color="red">9點30分收單</font></li>
                             <li> / </li>
                             <li><a href="logout">Sign out</a></li>
                         </ul>
@@ -43,6 +43,14 @@
                     <ul class="main-menu">
                         <li class="menu-item-has-children tp-activated">
                             <a href="/">訂購系統</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotOrderV">熱門人氣</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotStarV">最高評價</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="purchaseManageV">我的訂餐</a>
@@ -118,7 +126,7 @@
                                             <div class="product-image">
                                                     <img src="/userUpload/<?php echo $value->menu_picture; ?>" alt="shop item">
                                                 <div class="product-action">
-                                                    <a href="#" class="tp-btn-wishlist"><i class="fa fa-heart-o"></i></a>
+                                                    <a href="purchaseHotOrderV" class="tp-btn-wishlist"><i class="fa fa-heart-o"></i></a>
                                                     <a href="#product-quickview" class="btn-quickview"><i class="fa fa-search-plus"></i></a>
                                                     <a href="purchaseManageV" class="tp-btn-compare"><i class="fa fa-list-ul"></i></a>
                                                     <div><font color="#FFFFFF">1 Hours 23 Minutes left</font></div>

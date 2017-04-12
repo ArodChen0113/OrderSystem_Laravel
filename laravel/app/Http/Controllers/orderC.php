@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\evaluationC;
 
 class orderC extends Controller
 {
@@ -17,6 +18,7 @@ class orderC extends Controller
     public function __construct()
     {
         $this -> middleware('auth'); //驗證使用者是否登入
+        $this -> closeOpen(); //檢驗開餐時間
     }
     //訂購單頁面顯示
     public function purchaseShow()
@@ -34,28 +36,73 @@ class orderC extends Controller
         $restMenuAll = DB::table('menu')
             ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
+            ->orderBy('m_star', 'desc')
             ->get();
         $restMenuRice = DB::table('menu')
             ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->where('m_kind', '飯')
+            ->orderBy('m_star', 'desc')
             ->get();
         $restMenuNoodle = DB::table('menu')
             ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->where('m_kind', '麵')
+            ->orderBy('m_star', 'desc')
             ->get();
         $restMenuSoup = DB::table('menu')
             ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->where('m_kind', '湯')
+            ->orderBy('m_star', 'desc')
             ->get();
         $restMenuSideDishes = DB::table('menu')
             ->select('kind','unit_price','menu_picture','m_num','m_star')
             ->where('rest_name', $restName)
             ->where('m_kind', '小菜')
+            ->orderBy('m_star', 'desc')
             ->get();
         return view('purchaseV', ['restName' => $restName,'restMenuAll' => $restMenuAll,'restMenuRice' => $restMenuRice,'restMenuNoodle' => $restMenuNoodle,'restMenuSoup' => $restMenuSoup,'restMenuSideDishes' => $restMenuSideDishes]);
+    }
+    //熱門訂餐頁面顯示
+    public function purchaseHotOrderShow()
+    {
+        $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'insert'){
+            $this->purchaseInsert($action,$input['num']);
+        }
+        $rest_openName = DB::table('restaurant')
+            ->select('rest_name')
+            ->where('rest_open', 1)
+            ->get();
+        $restName = $rest_openName[0]->rest_name;
+        $restMenuAll = DB::table('menu')
+            ->select('kind','unit_price','menu_picture','m_num','m_star','m_count')
+            ->where('rest_name', $restName)
+            ->orderBy('m_count', 'desc')
+            ->get();
+        return view('purchaseHotOrderV', ['restName' => $restName,'restMenuAll' => $restMenuAll]);
+    }
+    //最佳評價頁面顯示
+    public function purchaseHotStarShow()
+    {
+        $input = Input::all();
+        $action = Input::get('action', '');
+        if($action== 'insert'){
+            $this->purchaseInsert($action,$input['num']);
+        }
+        $rest_openName = DB::table('restaurant')
+            ->select('rest_name')
+            ->where('rest_open', 1)
+            ->get();
+        $restName = $rest_openName[0]->rest_name;
+        $restMenuAll = DB::table('menu')
+            ->select('kind','unit_price','menu_picture','m_num','m_star')
+            ->where('rest_name', $restName)
+            ->orderBy('m_star', 'desc')
+            ->get();
+        return view('purchaseHotStarV', ['restName' => $restName,'restMenuAll' => $restMenuAll]);
     }
 
     //我的訂餐頁面顯示
@@ -64,11 +111,11 @@ class orderC extends Controller
         $input = Input::all();
         $action = Input::get('action', '');
         if($action== 'insert'){
-            $this->purchaseInsert($action,$input['num']); //熱門訂餐新增
+            $this->purchaseInsert(); //熱門訂餐新增
         }
 
         if($action== 'delete'){
-            $this->purchaseDelete($action,$input['num']); //單筆訂餐刪除
+            $this->purchaseDelete(); //單筆訂餐刪除
         }
 
         $user = Auth::user();
@@ -96,7 +143,16 @@ class orderC extends Controller
             ->orderBy('m_count', 'desc')
             ->get();
 
-        return view('purchaseManageV', ['orderData' => $orderData,'sumPrice' =>$sumPrice,'hotOrder'=>$hotOrder]);
+        $rowTime = DB::table('rest_evaluation') //當日已評價顯示(一天可評價一次)
+            ->select('date')
+            ->where('name', $orderName)
+            ->get();
+        $evaTime=$rowTime[0]->date;
+        $checkDate = strtotime("NOW");
+        if(strtotime($evaTime)>strtotime($checkDate)){
+            $error=1;
+        }
+        return view('purchaseManageV', ['orderData' => $orderData,'sumPrice' =>$sumPrice,'hotOrder'=>$hotOrder,'error'=>$error]);
     }
     //訂購單資料新增
     public function purchaseInsert()
@@ -133,7 +189,7 @@ class orderC extends Controller
 
             if($checkOrder==NULL) {
                 date_default_timezone_set("Asia/Taipei"); //目前時間
-                $date = date("Y-m-d h:i:s");
+                $date = date("Y-m-d H:i:s");
                 DB::table('menu_order')->insert(array(
                     array('name' => $orderName, 'rest_Name' => $orderRestName, 'kind' => $orderKind, 'price' => $orderPrice, 'date' => $date)//新增至資料庫
                 ));
@@ -319,6 +375,29 @@ class orderC extends Controller
         return true;
         }else{
             return false;
+        }
+    }
+    //關閉訂餐(已到關餐時間)
+    public function closeOpen()
+    {
+        $rowCloseTime = DB::table('restaurant')  //關餐時間
+        ->select('close_time')
+            ->where('rest_open', 1)
+            ->get();
+        $closeTime = $rowCloseTime[0]->close_time;
+        var_dump($closeTime);
+        $checkTime = strtotime("NOW");
+        $closeTime = strtotime($closeTime);
+        date_default_timezone_set("Asia/Taipei"); //目前時間
+        $date = date("Y-m-d H:i:s");
+        var_dump($date);
+        var_dump($closeTime);
+        var_dump($checkTime);
+        exit;
+        if(strtotime($checkTime)>strtotime($closeTime)) {
+            DB::table('restaurant')              //關閉開餐
+            ->where('rest_open', 1)
+                ->update(['rest_open' => 0]);
         }
     }
 }

@@ -115,13 +115,19 @@ class restaurantC extends Controller
         $input = Input::all();
         if ($input['action'] != NULL && $input['action'] == 'open')      //判斷值是否由欄位輸入
         {
+            $date= date("Y-m-d");
+            $H=$input['openTimeH'];
+            $i=$input['openTimeM'];
+            $s=date('s');
+            $closeTime=$date.' '.$H.':'.$i.':'.$s;
         DB::table('menu_order')                      //之前訂餐改為歷史紀錄
         ->update(['pay' => 9]);
         DB::table('restaurant')                      //關閉餐廳
             ->update(['rest_open' => 0]);
         DB::table('restaurant')
             ->where('rest_name', $input['restName']) //開啟今日開餐
-            ->update(['rest_open' => 1]);
+            ->update(['rest_open' => 1, 'close_time' => $closeTime]);
+
             return true;
         }else{
             return false;

@@ -43,6 +43,14 @@
                     <ul class="main-menu">
                         <li class="menu-item-has-children tp-activated">
                             <a href="/">訂購系統</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotOrderV">熱門人氣</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotStarV">最高評價</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="purchaseManageV">我的訂餐</a>

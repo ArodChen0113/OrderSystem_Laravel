@@ -1,17 +1,18 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js">
 <head>
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>餐廳&菜單新增</title>
+    <title>訂餐系統</title>
     <link rel="stylesheet" href="assets/css/vendors/bootstrap.min.css"> <!--logout-->
     <link rel="stylesheet" href="assets/css/vendors/font-awesome.min.css"> <!--選單-->
     <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce.css"> <!--文字-->
     <link rel="stylesheet" href="assets/css/common/style.css"> <!--版面-->
+    <link href="assets/css/jsStar/jstarbox.css" rel="stylesheet"></link><!--評價星星效果-->
 </head>
 <body class="woocommerce woocommerce-page">
-<div class="wrap-main">
+<div class="wrap-main wrap-main-01">
     <header class="header">
         <div class="topbar">
             <div class="container">
@@ -21,7 +22,7 @@
                         <ul class="tp-ul-no-padding tp-li-list-style">
                             <li><a href="login.html">Sign in</a></li>
                             <li> / </li>
-                            <li><a href="register.html">Register</a></li>
+                            <li><a href="logout">Sign out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -100,77 +101,59 @@
         <div id="content" class="site-content">
             <div class="wrap">
                 <div id="primary" class="content-area">
-                    <div class="container">
-                        <nav class="woocommerce-breadcrumb">
-                            <a href="#">Home</a>
-                            餐廳分類管理
-                        </nav>
-                    </div>
-                    <div class="wrap-main-page-cart tp-content-page tp-page-title-16">
-                        <div class="tp-content-cart-items">
-                            <div class="tp-table-cart">
-                                <div class="container">
-                                    <div class="actions">
-                                        <div class="text-left tp-btn-con-shopping">
-                                            <form name="from2" action="restKindManageV" method="get" enctype="multipart/form-data">
-                                                <table border="1">
-                                                    <tr>
-                                                        <td align="center" bgcolor="#FFABAB">新增分類</td>
-                                                        <td align="center"><input type="text" name="restKind"></td>
-                                                    </tr>
-                                                </table>
-                                                <br>
-                                                <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                                                <input type="hidden" name="action" value="insert">
-                                                如欲<font color="#FF0000">新增</font>餐廳分類，按下新增按鈕 >>>
-                                                <input type="submit" value="新增分類">
-                                            </form>
+                <br>
+                    <br>
+                    <h3 class="title-homepage-center"><?php echo $restName;?></h3>
+                    <div class="container tab-product-01">
+                        <div class="tab-content shortcode-product-slider-01">
+                            <!--全部-->
+                            <div role="tabpanel" class="tab-pane active" id="all">
+                                <div class="row">
+                                    <?php
+                                    $numAll=count($restMenuAll);
+                                    for($i=0;$i<=$numAll-1;$i++){
+                                        $value=$restMenuAll[$i];
+                                    ?>
+                                    <div class="col-md-3 col-xs-6">
+                                        <div class="product type-product has-post-thumbnail">
+                                            <div class="product-image">
+                                                    <img src="/userUpload/<?php echo $value->menu_picture; ?>" alt="shop item">
+                                                <div class="product-action">
+                                                    <a href="#" class="tp-btn-wishlist"><i class="fa fa-heart-o"></i></a>
+                                                    <a href="#product-quickview" class="btn-quickview"><i class="fa fa-search-plus"></i></a>
+                                                    <a href="purchaseManageV" class="tp-btn-compare"><i class="fa fa-list-ul"></i></a>
+                                                    <div><font color="#FFFFFF">1 Hours 23 Minutes left</font></div>
+                                                </div>
+                                            </div>
+                                            <span class="onnew">HOT</span>
+                                            <h3><a href="product-detail.html"><?php echo $value->kind;?>
+                                                <font color="red">評價：<?php $star=$value->m_star; echo round($star*5,1);?>星</font>
+                                                </a></h3>
+                                            <div class="product-info">
+                                                <div class="price">
+                                                    <span class="woocommerce-Price-amount amount">NT.&nbsp $<?php echo $value->unit_price;?>&nbsp</span>
+                                                </div>
+                                                <div class="starBoxAll<?php echo $i;?>"><?php $starAll[$i]=$value->m_star; ?></div>
+                                            </div>
+                                            <a href="/?action=insert&num=<?php echo $value->m_num;?>" class="button add_to_cart_button">我要訂購</a>
                                         </div>
                                     </div>
-                                    <div class="tp-content-table-cart">
-                                        <form name="from1" action="restKindManageV" method="get" enctype="multipart/form-data">
-                                            <table class="shop_table cart" >
-                                                <thead>
-                                                <tr>
-                                                    <th class="product-name">分類名稱</th>
-                                                    <th class="product-remove">刪除</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php
-                                                $num=count($restData);
-                                                for($k=0;$k<=$num-1;$k++) {
-                                                $value=$restData[$k];
-                                                ?>
-                                                        <tr class="cart_item">
-                                                            <td class="product-name"><input type="text" name="restKind[]" value="<?php echo $value->rest_kind; ?>"></td>
-                                                            <input type="hidden" name="num[]" value="<?php echo $value->num ;?>">
-                                                            <td class="product-remove" data-title="Remove"><a href="restKindManageV?action=delete&num=<?php echo $value->num ?>" class="remove">×</a></td>
-                                                        </tr>
-                                                    <?php
-                                                }?>
-                                                </tbody>
-                                            </table>
-                                    </div>
+                                    <?php } ?>
                                 </div>
-                            </div><!-- table cart -->
-                            <div class="tp-info-add-checkout">
-                                <div class="container">
+                                <div class="explore-more"><a class="tp-button" href="purchaseManageV">我 的 訂 餐</a></div>
+                            </div>
+                        </div>
+                        <div class="product-quickview">
+                            <div class="container">
+                                <div class="btn-close">
+                                    <i class="fa fa-times"></i>
+                                </div>
+                                <div class="content-product-quickview">
                                     <div class="row">
-                                        <div class="tp-form-site">
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-
-                                            </div><!-- end box form shipping -->
-                                            <div class="tp-info-coupon-checkout col-md-6 col-sm-6 col-xs-12">
-
-                                                <div class="tp-link-checkout">
-                                                        <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                                                        <input type="hidden" name="action" value="update">
-                                                        <span>如欲<font color="#FF0000">修改</font>餐廳分類，按下修改按鈕 >>></span>
-                                                    <input type="submit" value="修改分類">
-                                                </div>
-                                            </div><!-- box add code coupon and link checkout -->
-                                            </form>
+                                        <div class="col-md-12">
+                                            <div class="image-product-detail images">
+                                                <img src="/userUpload/" alt="product detail">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -182,6 +165,28 @@
         </div>
     </div>
 </div>
+<script src="assets/js/vendors/jquery.min.js"></script> <!--點觸淡出效果-->
+<script src="assets/js/vendors/bootstrap.min.js"></script> <!--點觸淡出效果-->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script> <!--評價星星效果-->
+<script src="assets/jstarbox.js"></script> <!--評價星星效果-->
+<script src="assets/js/vendors/swiper.min.js"></script> <!--訂購圖片放大-->
+<script src="assets/js/global.js"></script> <!--訂購圖片放大-->
 <script src="assets/js/menu.js"></script> <!--RWD縮小選單列-->
+<?php
+for($i=0;$i<=$numAll-1;$i++){
+    ?>
+    <script type="text/javascript"> //評價星星效果
+        $('.starBoxAll<?php echo $i;?>').starbox({
+            average: <?php echo $starAll[$i]; ?>,//預設一開始顯示幾顆星星
+            stars: 5,//設定有幾顆星星可以選擇
+            buttons: 5,//設定星星可以切割成多少區塊可以選擇
+            changeable: false,//只能設定一次分數
+            autoUpdateAverage: false, //是否可更改分數
+            ghosting: false
+        });
+    </script>
+    <?php
+}
+?>
 </body>
 </html>

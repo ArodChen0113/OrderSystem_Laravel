@@ -44,6 +44,14 @@
                     <ul class="main-menu">
                         <li class="menu-item-has-children tp-activated">
                             <a href="/">訂購系統</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotOrderV">熱門人氣</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotStarV">最高評價</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="purchaseManageV">我的訂餐</a>
@@ -152,7 +160,13 @@
                                             </table>
                                             <div class="actions">
                                                 <div class="text-left tp-btn-con-shopping">
+                                                    <?php if($error!=NULL) {?>
+                                                        <strong><font color="red">當日已評價！</font></strong>
+                                                    <?php
+                                                    }else{
+                                                        ?>
                                                     <a href="userEvaluationV" class="tp-btn">我要評價</a>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </form>

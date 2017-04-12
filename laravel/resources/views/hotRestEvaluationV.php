@@ -4,14 +4,16 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>餐廳&菜單新增</title>
+    <title>我的訂餐</title>
     <link rel="stylesheet" href="assets/css/vendors/bootstrap.min.css"> <!--logout-->
     <link rel="stylesheet" href="assets/css/vendors/font-awesome.min.css"> <!--選單-->
     <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce.css"> <!--文字-->
     <link rel="stylesheet" href="assets/css/common/style.css"> <!--版面-->
+    <link href="assets/css/jsStar/jstarbox.css" rel="stylesheet"></link><!--評價星星效果-->
 </head>
 <body class="woocommerce woocommerce-page">
 <div class="wrap-main">
+
     <header class="header">
         <div class="topbar">
             <div class="container">
@@ -95,7 +97,7 @@
             </div>
         </div>
     </header>
-    <body>
+
     <div class="site-content-contain">
         <div id="content" class="site-content">
             <div class="wrap">
@@ -103,57 +105,84 @@
                     <div class="container">
                         <nav class="woocommerce-breadcrumb">
                             <a href="#">Home</a>
-                            菜單編輯&刪除
+                            餐廳評價
                         </nav>
                     </div>
                     <div class="wrap-main-page-cart tp-content-page tp-page-title-16">
                         <div class="tp-content-cart-items">
                             <div class="tp-table-cart">
                                 <div class="container">
-                                    <div class="actions">
-                                        <div class="">
-                                            <form action="orderPay_update.php" method="post" enctype="multipart/form-data">
-                                                <table border="1">
-                                                    <tr>
-                                                        <td colspan="5" align="center" bgcolor="#FFABAB"><?php echo '餐廳名稱：'.$restName; ?></td>
+                                    <div class="tp-content-table-cart">
+                                        <form action="action_cInt" method="post">
+                                            <table class="shop_table cart" >
+                                                <thead>
+                                                <tr>
+                                                    <th class="product-name">餐廳圖片</th>
+                                                    <th class="product-name">餐廳名稱</th>
+                                                    <th class="product-name">分數</th>
+                                                    <th class="product-price">整體評價</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                if($hotRestData!=NULL){
+                                                $num=count($hotRestData);
+                                                for($i=0;$i<=$num-1;$i++) {
+                                                $value=$hotRestData[$i];
+                                                ?>
+                                                    <td class="product-name">
+                                                        <img src="/userUpload/<?php echo $value->rest_picture; ?>" width="150" height="150"></td>
+                                                    </td>
+                                                    <td class="product-name">
+                                                    <?php echo $value->rest_name;?>
+                                                    </td>
+                                                    <td class="product-name">
+                                                        <font color="red"><?php $rStar=$value->r_star; echo $rStar*5 ;?></font>
+                                                    </td>
+                                                    <td><div class="starBox<?php echo $i;?>"><?php echo $star[$i]=$value->r_star;?></div></td>
                                                     </tr>
-                                                    <tr>
-                                                        <td align="center" width="300px" bgcolor="#FFE1AB">菜單</td>
-                                                        <td align="center" width="300px" bgcolor="#ABFFAB">金額</td>
-                                                        <td align="center" width="300px" bgcolor="#00FFFF">圖片</td>
-                                                        <td align="center" width="300px" bgcolor="#DBABFF">修改</td>
-                                                        <td align="center" width="300px" bgcolor="#FFABAB">刪除</td>
-                                                    </tr>
-
                                                     <?php
-                                                    $num=count($restData);
-                                                    for($k=0;$k<=$num-1;$k++) {
-                                                        $value=$restData[$k];
-                                                        ?>
-                                                        <tr>
-                                                            <td align="center"><?php echo $value->kind; ?></td>
-                                                            <td align="center"><?php echo $value->unit_price; ?></td>
-                                                            <td align="center"><img src="/userUpload/<?php echo $value->menu_picture; ?>" width="150" height="150"></td>
-                                                            <td align="center"><a href="menuUpdateV?num=<?php echo $value->m_num; ?>&restName=<?php echo $restName; ?>"><img src="icon/pencil.jpeg" width="30" height="30"></a></td>
-                                                            <td align="center"><a href="menuV?action=delete&restName=<?php echo $restName; ?>&num=<?php echo $value->m_num; ?>"><img src="icon/x.jpeg" width="30" height="30"></a></td>
-                                                        </tr>
-                                                        <?php
-                                                    }
-                                                    ?>
-                                                </table>
-                                                <br>
-                                                <input type="button" value="返回餐廳管理" onclick="self.location.href='restChooseV'"/>
-                                            </form>
-                                        </div>
+                                                }
+                                                }?>
+                                                </tbody>
+                                            </table>
+                                            <div class="actions">
+                                                <div class="text-left tp-btn-con-shopping">
+                                                    <a href="openMealV" class="tp-btn">今日開餐</a>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                            </div>
+                            </div><!-- table cart -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="assets/js/menu.js"></script> <!--RWD縮小選單列-->
-    </body>
+</div>
+<script src="assets/js/vendors/jquery.min.js"></script> <!--點觸淡出效果-->
+<script src="assets/js/vendors/bootstrap.min.js"></script> <!--點觸淡出效果-->
+<script src="assets/js/menu.js"></script> <!--RWD縮小選單列-->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script> <!--評價星星效果-->
+<script src="assets/jstarbox.js"></script> <!--評價星星效果-->
+<?php
+$hotNum=count($hotRestData);
+for($i=0;$i<=$hotNum-1;$i++) {
+    ?>
+    <script type="text/javascript"> //評價星星效果
+        $('.starBox<?php echo $i;?>').starbox({
+            average: <?php echo $star[$i];?>,//預設一開始顯示幾顆星星
+            stars: 5,//設定有幾顆星星可以選擇
+            buttons: 5,//設定星星可以切割成多少區塊可以選擇
+            changeable: false,//只能設定一次分數
+            autoUpdateAverage: false, //是否可更改分數
+            ghosting: false
+        });
+    </script>
+    <?php
+}
+?>
+</body>
 </html>
