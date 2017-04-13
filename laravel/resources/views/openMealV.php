@@ -156,7 +156,7 @@
                                                 <input type="hidden" name="action" value="open">
                                                 <input type="hidden" name="restName" value="<?php echo $restName; ?>">
                                                 <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                                                目前開餐餐廳&nbsp:&nbsp<font color="#FF0000"><?php echo $openRestName;?></font>
+                                                目前開餐餐廳&nbsp:&nbsp<font color="#FF0000"><?php echo $openRestName; ?></font>
                                                 <br>
                                                 請選擇<font color="#FF0000">關餐時間</font> >>>
                                                 <select name="openTimeH">
@@ -171,6 +171,7 @@
                                                     <option value="9">9</option>
                                                     <option value="10">10</option>
                                                     <option value="11">11</option>
+                                                    <option value="12">12</option>
                                                     <option value="13">13</option>
                                                     <option value="14">14</option>
                                                     <option value="15">15</option>

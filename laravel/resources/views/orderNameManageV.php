@@ -20,9 +20,9 @@
                     <div class="account">
                         <i class="fa fa-smile-o"></i>
                         <ul class="tp-ul-no-padding tp-li-list-style">
-                            <li><a href="login.html">Sign in</a></li>
+                            <li><font color="red"><?php echo $hours; ?>點<?php echo $minutes;?>分收單 (<?php echo $timer;?>)</font></li>
                             <li> / </li>
-                            <li><a href="register.html">Register</a></li>
+                            <li><a href="logout">Sign out</a></li>
                         </ul>
                     </div>
                 </div>

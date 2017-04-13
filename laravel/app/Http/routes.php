@@ -23,7 +23,10 @@ Route::get('hotRestEvaluationV', 'evaluationC@hotRestEvaluationShow');
 
 Route::get('openMealV', 'restaurantC@openMealShow');
 
+Route::get('noRestOpenV','errorC@noRestOpenShow');
+
 //Controller routes
+Route::post('action_rmInt', 'menuC@restMenuInsert');
 Route::get('action_cInt', 'evaluationC@evaluationInsert');
 
 //login

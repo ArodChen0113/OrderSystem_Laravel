@@ -10,68 +10,75 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\evaluationC;
+
 
 class orderC extends Controller
 {
-
     public function __construct()
     {
-        $this -> middleware('auth'); //驗證使用者是否登入
-        $this -> closeOpen(); //檢驗開餐時間
+        $this -> middleware('auth');  //驗證使用者是否登入
+        $this -> closeOpen();         //檢驗開餐時間
     }
     //訂購單頁面顯示
     public function purchaseShow()
     {
+        $this -> noRestOpen();        //如無開餐,導入無開餐頁面
         $input = Input::all();
         $action = Input::get('action', '');
+        $orderKind='';
         if($action== 'insert'){
-            $this->purchaseInsert($action,$input['num']);
+            $orderKind=$this->purchaseInsert($action,$input['num']);
         }
-        $rest_openName = DB::table('restaurant')
+        $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        $timer=$this->closeTimer();                   //關餐計時器
+        $restOpen = DB::table('restaurant')
             ->select('rest_name')
             ->where('rest_open', 1)
             ->get();
-        $restName = $rest_openName[0]->rest_name;
-        $restMenuAll = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num','m_star')
-            ->where('rest_name', $restName)
-            ->orderBy('m_star', 'desc')
-            ->get();
-        $restMenuRice = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num','m_star')
-            ->where('rest_name', $restName)
-            ->where('m_kind', '飯')
-            ->orderBy('m_star', 'desc')
-            ->get();
-        $restMenuNoodle = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num','m_star')
-            ->where('rest_name', $restName)
-            ->where('m_kind', '麵')
-            ->orderBy('m_star', 'desc')
-            ->get();
-        $restMenuSoup = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num','m_star')
-            ->where('rest_name', $restName)
-            ->where('m_kind', '湯')
-            ->orderBy('m_star', 'desc')
-            ->get();
-        $restMenuSideDishes = DB::table('menu')
-            ->select('kind','unit_price','menu_picture','m_num','m_star')
-            ->where('rest_name', $restName)
-            ->where('m_kind', '小菜')
-            ->orderBy('m_star', 'desc')
-            ->get();
-        return view('purchaseV', ['restName' => $restName,'restMenuAll' => $restMenuAll,'restMenuRice' => $restMenuRice,'restMenuNoodle' => $restMenuNoodle,'restMenuSoup' => $restMenuSoup,'restMenuSideDishes' => $restMenuSideDishes]);
-    }
+            $restName = $restOpen[0]->rest_name;
+            $restMenuAll = DB::table('menu')
+                ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
+                ->where('rest_name', $restName)
+                ->orderBy('m_star', 'desc')
+                ->get();
+            $restMenuRice = DB::table('menu')
+                ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
+                ->where('rest_name', $restName)
+                ->where('m_kind', '飯')
+                ->orderBy('m_star', 'desc')
+                ->get();
+            $restMenuNoodle = DB::table('menu')
+                ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
+                ->where('rest_name', $restName)
+                ->where('m_kind', '麵')
+                ->orderBy('m_star', 'desc')
+                ->get();
+            $restMenuSoup = DB::table('menu')
+                ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
+                ->where('rest_name', $restName)
+                ->where('m_kind', '湯')
+                ->orderBy('m_star', 'desc')
+                ->get();
+            $restMenuSideDishes = DB::table('menu')
+                ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
+                ->where('rest_name', $restName)
+                ->where('m_kind', '小菜')
+                ->orderBy('m_star', 'desc')
+                ->get();
+            return view('purchaseV', ['restOpen' => $restOpen,'restName' => $restName, 'restMenuAll' => $restMenuAll, 'restMenuRice' => $restMenuRice, 'restMenuNoodle' => $restMenuNoodle, 'restMenuSoup' => $restMenuSoup, 'restMenuSideDishes' => $restMenuSideDishes,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer,'orderKind'=>$orderKind]);
+        }
     //熱門訂餐頁面顯示
     public function purchaseHotOrderShow()
     {
+        $this -> noRestOpen();        //如無開餐,導入無開餐頁面
         $input = Input::all();
         $action = Input::get('action', '');
+        $orderKind='';
         if($action== 'insert'){
-            $this->purchaseInsert($action,$input['num']);
+            $orderKind=$this->purchaseInsert($action,$input['num']);
         }
+        $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        $timer=$this->closeTimer();                   //關餐計時器
         $rest_openName = DB::table('restaurant')
             ->select('rest_name')
             ->where('rest_open', 1)
@@ -82,16 +89,20 @@ class orderC extends Controller
             ->where('rest_name', $restName)
             ->orderBy('m_count', 'desc')
             ->get();
-        return view('purchaseHotOrderV', ['restName' => $restName,'restMenuAll' => $restMenuAll]);
+        return view('purchaseHotOrderV', ['restName' => $restName,'restMenuAll' => $restMenuAll,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer,'orderKind'=>$orderKind]);
     }
     //最佳評價頁面顯示
     public function purchaseHotStarShow()
     {
+        $this -> noRestOpen();        //如無開餐,導入無開餐頁面
         $input = Input::all();
         $action = Input::get('action', '');
+        $orderKind='';
         if($action== 'insert'){
-            $this->purchaseInsert($action,$input['num']);
+            $orderKind=$this->purchaseInsert($action,$input['num']);
         }
+        $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        $timer=$this->closeTimer();                   //關餐計時器
         $rest_openName = DB::table('restaurant')
             ->select('rest_name')
             ->where('rest_open', 1)
@@ -102,22 +113,25 @@ class orderC extends Controller
             ->where('rest_name', $restName)
             ->orderBy('m_star', 'desc')
             ->get();
-        return view('purchaseHotStarV', ['restName' => $restName,'restMenuAll' => $restMenuAll]);
+        return view('purchaseHotStarV', ['restName' => $restName,'restMenuAll' => $restMenuAll,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer,'orderKind'=>$orderKind]);
     }
 
     //我的訂餐頁面顯示
     public function purchaseManageShow()
     {
+        $this -> noRestOpen();        //如無開餐,導入無開餐頁面
         $input = Input::all();
         $action = Input::get('action', '');
+        $orderKind='';
         if($action== 'insert'){
-            $this->purchaseInsert(); //熱門訂餐新增
+            $orderKind=$this->purchaseInsert(); //熱門訂餐新增
         }
 
         if($action== 'delete'){
-            $this->purchaseDelete(); //單筆訂餐刪除
+            $orderKind=$this->purchaseDelete(); //單筆訂餐刪除
         }
-
+        $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        $timer=$this->closeTimer();                   //關餐計時器
         $user = Auth::user();
         $orderName = $user->name;
         $orderData = DB::table('menu_order')
@@ -142,17 +156,9 @@ class orderC extends Controller
             ->where('rest_name', $openRestName)
             ->orderBy('m_count', 'desc')
             ->get();
-
-        $rowTime = DB::table('rest_evaluation') //當日已評價顯示(一天可評價一次)
-            ->select('date')
-            ->where('name', $orderName)
-            ->get();
-        $evaTime=$rowTime[0]->date;
-        $checkDate = strtotime("NOW");
-        if(strtotime($evaTime)>strtotime($checkDate)){
-            $error=1;
-        }
-        return view('purchaseManageV', ['orderData' => $orderData,'sumPrice' =>$sumPrice,'hotOrder'=>$hotOrder,'error'=>$error]);
+        $error = new evaluationC();
+        $error -> doEvaluation();                   //是否已評價(一次/天)
+        return view('purchaseManageV', ['orderData' => $orderData,'sumPrice' =>$sumPrice,'hotOrder'=>$hotOrder,'error'=>$error,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer,'orderKind'=>$orderKind,'action'=>$action]);
     }
     //訂購單資料新增
     public function purchaseInsert()
@@ -220,9 +226,9 @@ class orderC extends Controller
             DB::table('menu')          //更新該菜色訂購數量
                 ->where('kind', $orderKind)
                 ->update(['m_count' => $mCount]);
-            return true;
+            return $orderKind ;
         }else{
-            return false;
+            return false ;
         }
     }
     //訂購單資料單筆刪除
@@ -263,7 +269,7 @@ class orderC extends Controller
                 ->update(['m_count' => $mCount]);
 
             DB::table('menu_order')->where('num', '=', $input['num'])->delete(); //刪除訂購項目
-            return true;
+            return $orderKind ;
         }else{
             return false;
         }
@@ -272,7 +278,8 @@ class orderC extends Controller
     public function orderNameManageShow()
     {
         $this->Authority(); //權限驗證
-
+        $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        $timer=$this->closeTimer();                   //關餐計時器
         $input = Input::all();
         $action = Input::get('action', '');
         if($action== 'pay'){
@@ -282,6 +289,7 @@ class orderC extends Controller
         $todayOpen = DB::table('restaurant') //今日開餐＆電話
             ->select('rest_name','rest_tel')
             ->where('rest_open', 1)
+            ->orWhere('rest_open', 2)
             ->get();
             $open_restName=$todayOpen[0]->rest_name;
             $open_restTel=$todayOpen[0]->rest_tel;
@@ -307,12 +315,14 @@ class orderC extends Controller
          $row_orderSum = $value->price;
          $totalPrice = $totalPrice + $row_orderSum;
      }
-        return view('orderNameManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'orderData' =>$orderData,'sumOrderCount' =>$sumOrderCount,'totalPrice' =>$totalPrice]);
+        return view('orderNameManageV', ['open_restName' => $open_restName,'open_restTel' =>$open_restTel,'orderData' =>$orderData,'sumOrderCount' =>$sumOrderCount,'totalPrice' =>$totalPrice,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer]);
     }
     //訂單管理頁面顯示(以菜單名排序)
     public function orderMenuManageShow()
     {
         $this->Authority(); //權限驗證
+        $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        $timer=$this->closeTimer();                   //關餐計時器
         $order_menu = DB::table('menu_order') //菜單明細顯示
         ->select('kind')
             ->where('pay', '!=', 9)
@@ -358,9 +368,9 @@ class orderC extends Controller
                 $kindOrderName[$i] = $save_data;
             }
         }
-        return view('orderMenuManageV', ['order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName]);
+        return view('orderMenuManageV', ['order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer]);
     }else{
-            return view('orderMenuManageV',['order_menu' =>$order_menu]);
+            return view('orderMenuManageV',['order_menu' =>$order_menu,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1]]);
         }
     }
     //訂餐付款控制
@@ -377,27 +387,67 @@ class orderC extends Controller
             return false;
         }
     }
-    //關閉訂餐(已到關餐時間)
-    public function closeOpen()
+    //關餐時間
+    public function closeTime()
     {
         $rowCloseTime = DB::table('restaurant')  //關餐時間
         ->select('close_time')
             ->where('rest_open', 1)
             ->get();
-        $closeTime = $rowCloseTime[0]->close_time;
-        var_dump($closeTime);
-        $checkTime = strtotime("NOW");
-        $closeTime = strtotime($closeTime);
+        if($rowCloseTime!=NULL){
+            $closeTime = $rowCloseTime[0]->close_time;
+        }else{
+            $closeTime = '';
+        }
+        return $closeTime;
+    }
+    //關餐時間(拆解顯示字串)
+    public function closeTimeString()
+    {
+        $closeTime = $this->closeTime();                              //關餐時間
+        if($closeTime!=NULL) {
+            $closeTimeString = preg_split('/ /', $closeTime);         //拆解字串
+            $echoCloseTime = preg_split('/:/', $closeTimeString[1]);  //拆解字串
+        }else
+        {
+            $echoCloseTime = '';
+        }
+            return $echoCloseTime;
+    }
+    //關閉訂餐(已到關餐時間)
+    public function closeOpen()
+    {
+        $closeTime = $this->closeTime();          //關餐時間
         date_default_timezone_set("Asia/Taipei"); //目前時間
-        $date = date("Y-m-d H:i:s");
-        var_dump($date);
-        var_dump($closeTime);
-        var_dump($checkTime);
-        exit;
+        $checkTime = date("Y-m-d H:i:s");
+
         if(strtotime($checkTime)>strtotime($closeTime)) {
-            DB::table('restaurant')              //關閉開餐
+            DB::table('restaurant')               //關閉開餐
             ->where('rest_open', 1)
-                ->update(['rest_open' => 0]);
+                ->update(['rest_open' => 2]);
         }
     }
+    //尚未開餐頁面判斷
+    public function noRestOpen()
+    {
+        $restOpen = DB::table('restaurant')
+            ->select('rest_name')
+            ->where('rest_open', 1)
+            ->get();
+        if($restOpen==NULL) {
+            header("Location:noRestOpenV");
+            exit;
+        }
+    }
+    //關餐倒數計時器
+    public function closeTimer()
+    {
+        date_default_timezone_set("Asia/Taipei"); //設定時區
+        $nowTime = date("Y-m-d H:i:s");           //目前時間
+        $closeTime = $this->closeTime();          //關餐時間
+        $time = strtotime($closeTime) - strtotime($nowTime);
+        $timer = str_pad(floor($time % (24 * 3600) / 3600), 2, 0, STR_PAD_LEFT) . "Hours " . str_pad(floor($time % 3600 / 60), 2, 0, STR_PAD_LEFT) . "Minutes left"; //時間換算
+        return $timer;
+    }
+
 }

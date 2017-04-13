@@ -5,9 +5,11 @@ use DB;
 use App\Http\Controllers\Controller;
 use Input;
 use Illuminate\Http\Request;
+use App\Http\Controllers\orderC;
 
 class restaurantC extends Controller
 {
+    var $check;
     public function __construct()
     {
         $this->middleware('auth'); //驗證使用者是否登入
@@ -90,11 +92,15 @@ class restaurantC extends Controller
         $openMeal=DB::table('restaurant')
             ->select('rest_name')
             ->get();
-        $rowOpenName=DB::table('restaurant')
+        $rowOpenRest=DB::table('restaurant')
             ->select('rest_name')
             ->where('rest_open', 1)
             ->get();
-        $openRestName=$rowOpenName[0]->rest_name;
+        if($rowOpenRest!=NULL) {
+            $openRestName = $rowOpenRest[0]->rest_name;
+        }else{
+            $openRestName = '目前尚無開餐！';
+        }
         if($control==NULL){
             $restPic='';
             $restName='';
@@ -107,7 +113,7 @@ class restaurantC extends Controller
                 $restName=$input['restName'];
         }
 
-        return view('openMealV', ['openMeal' => $openMeal,'openRestName' => $openRestName,'restPic' => $restPic, 'restName' => $restName]);
+        return view('openMealV', ['openMeal' => $openMeal,'rowOpenRest' => $rowOpenRest,'openRestName' => $openRestName,'restPic' => $restPic, 'restName' => $restName]);
     }
     //今日開餐功能執行
     public function openMealUp()
@@ -118,7 +124,7 @@ class restaurantC extends Controller
             $date= date("Y-m-d");
             $H=$input['openTimeH'];
             $i=$input['openTimeM'];
-            $s=date('s');
+            $s='00';
             $closeTime=$date.' '.$H.':'.$i.':'.$s;
         DB::table('menu_order')                      //之前訂餐改為歷史紀錄
         ->update(['pay' => 9]);

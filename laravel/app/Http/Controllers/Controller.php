@@ -25,7 +25,8 @@ class Controller extends BaseController
             ->get();
         $checkLevel = $rowCheck[0]->authority;
         if ($checkLevel == 0) {
-            header("Location:noAuthV");
+            $this->AuthUrl();
+            exit;
         }
     }
     public function AuthUrl()

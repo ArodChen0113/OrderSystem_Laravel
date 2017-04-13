@@ -215,8 +215,6 @@ for($i=0;$i<=$num;$i++){
             value[i] = $('.starBox'+i).starbox("getValue");
         }
         var js_mNum = ["<?php echo join("\", \"", $mNum); ?>"];
-//        var js_num = '<?php //print($num); ?>//';
-//        for(var i=0;i<js_num;i++)
         location.href = "action_cInt?value=" + value+"&js_mNum="+js_mNum;
     }
 </script>

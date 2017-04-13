@@ -35,15 +35,15 @@ class menuC extends Controller
     {
         $this->Authority(); //權限驗證
         $input = Input::all();
-        $action = Input::get('action', '');
-        if($action== 'insert'){
-            $this->restMenuInsert(); //餐廳&菜單資料新增
+        $result = Input::get('result', '');
+        if($result== 1){
+            $result='餐廳&菜單資料已新增！';
         }
         $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
 
-        return view('restMenuInsertV', ['restKind' => $restKind]);
+        return view('restMenuInsertV', ['restKind' => $restKind,'result'=>$result]);
     }
     //菜單修改頁面顯示
     public function menuUpdateShow()
@@ -87,7 +87,7 @@ class menuC extends Controller
                     array('rest_name' => $restName, 'rest_kind' => $restKind, 'rest_tel' => $restTel, 'rest_picture' => $file_name)
                 ));
             } else {
-                echo "restaurant_img upload failed!";
+                return "restaurant_img upload failed!";
             }
 
             $row_file = Input::file('menu_picture');
@@ -108,10 +108,10 @@ class menuC extends Controller
                         array('rest_name' => $restName, 'kind' => $kind[$i], 'unit_price' => $price[$i], 'm_kind' => $mKind[$i],'menu_picture'=> $file_name2)
                     ));
                 } else {
-                    echo "menu_img upload failed!";
+                    return "menu_img upload failed!";
                 }
             }
-            return true;
+            header("Location:restMenuInsertV?result=1");
         }else{
             return false;
         }
@@ -136,7 +136,7 @@ class menuC extends Controller
                     ->where('m_num', $input['num'])
                     ->update(['menu_picture' => $file_name]);
             } else {
-                echo "menu_img upload failed!";
+                return "menu_img upload failed!";
             }
             return true;
         }else{

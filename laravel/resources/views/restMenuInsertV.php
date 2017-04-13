@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce.css"> <!--文字-->
     <link rel="stylesheet" href="assets/css/common/style.css"> <!--版面-->
 </head>
-<body class="woocommerce woocommerce-page">
+<body class="woocommerce woocommerce-page" onload="define()">
 <div class="wrap-main">
     <header class="header">
         <div class="topbar">
@@ -302,5 +302,14 @@
     </div>
 </div>
 <script src="assets/js/menu.js"></script> <!--RWD縮小選單列-->
+<?php if($result!=NULL){?>
+<script>
+    function define() {
+        alert("<?php echo $result;?>");
+    }
+</script>
+<?php
+}
+?>
 </body>
 </html>
