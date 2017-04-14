@@ -31,7 +31,7 @@ class restKindC extends Controller
             ->select('rest_kind','num')
             ->get();
 
-        return view('restKindManageV', ['restData' => $restData]);
+        return view('restKindManageV', ['restData' => $restData, 'action' => $action]);
     }
     //餐廳分類資料新增
     public function restKindInsert()

@@ -54,6 +54,14 @@
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="purchaseManageV">我的訂餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotOrderV">我的訂餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHistoryV">歷史訂餐</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="">訂餐總覽</a>
@@ -101,6 +109,12 @@
         <div id="content" class="site-content">
             <div class="wrap">
                 <div id="primary" class="content-area">
+                    <div class="container">
+                        <nav class="woocommerce-breadcrumb">
+                            <a href="/">Home</a>
+                            最高評價
+                        </nav>
+                    </div>
                 <br>
                     <br>
                     <h3 class="title-homepage-center"><?php echo $restName;?></h3>

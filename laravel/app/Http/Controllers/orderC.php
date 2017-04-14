@@ -156,9 +156,66 @@ class orderC extends Controller
             ->where('rest_name', $openRestName)
             ->orderBy('m_count', 'desc')
             ->get();
-        $error = new evaluationC();
-        $error -> doEvaluation();                   //是否已評價(一次/天)
+        $error = $this-> doEvaluation();                   //是否已評價(一次/天)
+
         return view('purchaseManageV', ['orderData' => $orderData,'sumPrice' =>$sumPrice,'hotOrder'=>$hotOrder,'error'=>$error,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer,'orderKind'=>$orderKind,'action'=>$action]);
+    }
+    //我的歷史訂餐頁面顯示
+    public function purchaseHistoryShow()
+    {
+        $this -> noRestOpen();        //如無開餐,導入無開餐頁面
+        $input = Input::all();
+        $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        $timer=$this->closeTimer();                   //關餐計時器
+        $user = Auth::user();
+        $orderName = $user->name;
+
+        $histOpenRest = DB::table('restaurant_open')
+        ->select('rest_name','close_time')
+        ->get();
+        $num=count($histOpenRest);
+        for ($i=0;$i<=$num-1;$i++) {
+            $histRestName = $histOpenRest[$i]->rest_name;
+            $histCloseTime = $histOpenRest[$i]->close_time;
+
+            $histOrderData[$i] = DB::table('menu_order')
+                ->join('menu', 'menu_order.kind', '=', 'menu.kind')
+                ->where('name', $orderName)
+                ->where('menu_order.rest_name', $histRestName)
+                ->where('close_time', $histCloseTime)
+                ->orderBy('close_time', 'desc')
+                ->get();
+
+            if ($histOrderData[$i] != NULL) {
+                $sumPrice[$i] = $histOrderData[$i][0]->price; //計算總額
+
+                $closeTimeString = preg_split('/ /', $histCloseTime);         //拆解字串
+                $rowEvaStar = DB::table('rest_evaluation')    //餐廳評價
+                    ->select('r_star')
+                    ->where('rest_name', $histRestName)
+                    ->where('name', $orderName)
+                    ->where('date', $closeTimeString[0])
+                    ->get();
+                if($rowEvaStar!=NULL) {
+                    $evaStar[$i] = $rowEvaStar[0]->r_star;
+                }else
+                {
+                    $evaStar[$i] = '';
+                }
+            } else {
+                $sumPrice[$i] = 0;
+            }
+        }
+        $histOrderRest = DB::table('restaurant_open')
+            ->join('menu_order', 'restaurant_open.rest_name', '=', 'menu_order.rest_name')
+            ->where('name', $orderName)
+            ->groupBy('restaurant_open.close_time')
+            ->orderBy('restaurant_open.close_time', 'desc')
+            ->get();
+
+        $error = $this-> doEvaluation();                   //是否已評價(一次/天)
+
+        return view('purchaseHistoryV', ['histOrderRest' => $histOrderRest,'histOrderData' => $histOrderData,'sumPrice' =>$sumPrice,'evaStar' =>$evaStar,'error'=>$error,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer]);
     }
     //訂購單資料新增
     public function purchaseInsert()
@@ -195,9 +252,10 @@ class orderC extends Controller
 
             if($checkOrder==NULL) {
                 date_default_timezone_set("Asia/Taipei"); //目前時間
-                $date = date("Y-m-d H:i:s");
+                $orderTime = date("Y-m-d H:i:s");
+                $closeTime=$this->closeTime();            //關餐時間
                 DB::table('menu_order')->insert(array(
-                    array('name' => $orderName, 'rest_Name' => $orderRestName, 'kind' => $orderKind, 'price' => $orderPrice, 'date' => $date)//新增至資料庫
+                    array('name' => $orderName, 'rest_Name' => $orderRestName, 'kind' => $orderKind, 'price' => $orderPrice, 'order_time' => $orderTime, 'close_time' => $closeTime)//新增至資料庫
                 ));
             }else
             {
@@ -279,6 +337,10 @@ class orderC extends Controller
     {
         $this->Authority(); //權限驗證
         $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        if($echoCloseTime==NULL){
+            $echoCloseTime[0]='';
+            $echoCloseTime[1]='';
+        }
         $timer=$this->closeTimer();                   //關餐計時器
         $input = Input::all();
         $action = Input::get('action', '');
@@ -322,6 +384,10 @@ class orderC extends Controller
     {
         $this->Authority(); //權限驗證
         $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
+        if($echoCloseTime==NULL){
+            $echoCloseTime[0]='';
+            $echoCloseTime[1]='';
+        }
         $timer=$this->closeTimer();                   //關餐計時器
         $order_menu = DB::table('menu_order') //菜單明細顯示
         ->select('kind')
@@ -370,7 +436,7 @@ class orderC extends Controller
         }
         return view('orderMenuManageV', ['order_menu' =>$order_menu,'order_pic' =>$order_pic,'order_unitPrice' =>$order_unitPrice,'kindCount' =>$kindCount,'kindOrderName' =>$kindOrderName,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer]);
     }else{
-            return view('orderMenuManageV',['order_menu' =>$order_menu,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1]]);
+            return view('orderMenuManageV',['order_menu' =>$order_menu,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],'timer' => $timer]);
         }
     }
     //訂餐付款控制
@@ -448,6 +514,31 @@ class orderC extends Controller
         $time = strtotime($closeTime) - strtotime($nowTime);
         $timer = str_pad(floor($time % (24 * 3600) / 3600), 2, 0, STR_PAD_LEFT) . "Hours " . str_pad(floor($time % 3600 / 60), 2, 0, STR_PAD_LEFT) . "Minutes left"; //時間換算
         return $timer;
+    }
+    //判斷是否已評價
+    public function doEvaluation()
+    {
+        $user = Auth::user();
+        $orderName = $user->name;
+        $rowTime = DB::table('rest_evaluation') //當日已評價顯示(一天可評價一次)
+        ->select('date')
+            ->where('name', $orderName)
+            ->orderBy('date', 'desc')
+            ->get();
+        $evaTime=$rowTime[0]->date;                         //評價時間
+        $evaTimeUnix=strtotime($evaTime);                   //轉成Unix time
+        $doEvaTimeUnix = strtotime('+1 day',$evaTimeUnix);  //可評價時間(隔日)
+
+        date_default_timezone_set("Asia/Taipei");           //設定時區
+        $nowTime = date('Y-m-d');                           //目前時間
+        $nowTimeUnix = strtotime($nowTime);                 //轉成Unix time
+
+        if($nowTimeUnix>=$doEvaTimeUnix){
+            $error = 0;
+        }else {
+            $error = 1;
+        }
+        return $error;
     }
 
 }

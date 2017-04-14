@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="assets/css/vendors/woo/woocommerce.css"> <!--文字-->
     <link rel="stylesheet" href="assets/css/common/style.css"> <!--版面-->
 </head>
-<body class="woocommerce woocommerce-page">
+<body class="woocommerce woocommerce-page" onload="define()">
 <div class="wrap-main">
     <header class="header">
         <div class="topbar">
@@ -53,6 +53,14 @@
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="purchaseManageV">我的訂餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotOrderV">我的訂餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHistoryV">歷史訂餐</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="">訂餐總覽</a>
@@ -102,7 +110,7 @@
             <div id="primary" class="content-area">
                 <div class="container">
                     <nav class="woocommerce-breadcrumb">
-                        <a href="#">Home</a>
+                        <a href="/">Home</a>
                         編輯餐廳&菜單
                     </nav>
                 </div>
@@ -112,7 +120,7 @@
                             <div class="container">
                                 <div class="actions">
                                     <div class="text-left tp-btn-con-shopping">
-                                        <form name="rest_management" action="restManageV" method="post" enctype="multipart/form-data">
+                                        <form name="rest_management" action="restManageV" method="get" enctype="multipart/form-data">
                                             <table border="1">
                                                 <tr>
                                                     <td colspan="3" align="center" bgcolor="#DBABFF">餐廳管理</td>
@@ -190,5 +198,22 @@
     </div>
 </div>
 <script src="assets/js/menu.js"></script> <!--RWD縮小選單列-->
+<?php if($action=='update'){?>
+    <script>
+        function define() {
+            alert("<?php echo $restName;?> 資料已修改！");
+        }
+    </script>
+    <?php
+}
+if($action=='delete'){?>
+    <script>
+        function define() {
+            alert("<?php echo $orderKind;?> 資料已刪除！");
+        }
+    </script>
+    <?php
+}
+?>
 </body>
 </html>

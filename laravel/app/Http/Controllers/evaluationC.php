@@ -106,35 +106,10 @@ class evaluationC extends Controller
             ->where('rest_name', $openRestName)
                 ->update(['r_star' => $upRStar]);
 
-            header("Location:purchaseManageV");
+            header("Location:purchaseManageV?action=evaInt");
         }else{
             return false;
         }
-    }
-    //判斷是否已評價
-    public function doEvaluation()
-    {
-        $user = Auth::user();
-        $orderName = $user->name;
-        $rowTime = DB::table('rest_evaluation') //當日已評價顯示(一天可評價一次)
-        ->select('date')
-            ->where('name', $orderName)
-            ->orderBy('date', 'desc')
-            ->get();
-        $evaTime=$rowTime[0]->date;                         //評價時間
-        $evaTimeUnix=strtotime($evaTime);                   //轉成Unix time
-        $doEvaTimeUnix = strtotime('+1 day',$evaTimeUnix);  //可評價時間(隔日)
-
-        date_default_timezone_set("Asia/Taipei");           //設定時區
-        $nowTime = date('Y-m-d');                           //目前時間
-        $nowTimeUnix = strtotime($nowTime);                 //轉成Unix time
-
-        if($nowTimeUnix>=$doEvaTimeUnix){
-            $error = 0;
-        }else {
-            $error = 1;
-        }
-        return $error;
     }
 
 }

@@ -53,6 +53,14 @@
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="purchaseManageV">我的訂餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotOrderV">我的訂餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHistoryV">歷史訂餐</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="">訂餐總覽</a>
@@ -102,7 +110,7 @@
                 <div id="primary" class="content-area">
                     <div class="container">
                         <nav class="woocommerce-breadcrumb">
-                            <a href="#">Home</a>
+                            <a href="/">Home</a>
                             餐廳資料編輯修改
                         </nav>
                     </div>
@@ -112,7 +120,7 @@
                                 <div class="container">
                                     <div class="actions">
                                         <div class="">
-                                            <form name="rest_open" action="restManageV" method="post" enctype="multipart/form-data">
+                                            <form name="rest_open" action="restManageV" method="get" enctype="multipart/form-data">
                                                 <table border="1">
                                                     <tr>
                                                         <td colspan="3" align="center" bgcolor="#FFABAB">餐廳管理</td>
@@ -145,7 +153,7 @@
                                                 如欲瀏覽<font color="#FF0000">菜單</font>資料，按下瀏覽按鈕 >>>
                                                 <input type="button" value="菜單瀏覽" onclick="self.location.href='menuV?restName=<?php echo $restName; ?>'"/>
                                                 如欲<font color="#FF0000">刪除</font>這間餐廳，按下刪除按鈕 >>>
-                                                <a href="restManageV?action=delete&restname=<?php echo $restName; ?>"><img src="icon/x.jpeg" width="30" height="30"></a>
+                                                <a href="restManageV?action=delete&restName=<?php echo $restName; ?>"><img src="icon/x.jpeg" width="30" height="30"></a>
                                             </form>
                                         </div>
                                     </div>

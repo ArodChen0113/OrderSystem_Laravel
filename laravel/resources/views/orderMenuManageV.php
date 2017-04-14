@@ -20,7 +20,14 @@
                     <div class="account">
                         <i class="fa fa-smile-o"></i>
                         <ul class="tp-ul-no-padding tp-li-list-style">
-                            <li><font color="red"><?php echo $hours; ?>點<?php echo $minutes;?>分收單 (<?php echo $timer;?>)</font></li>
+                            <li><font color="red"><?php
+                                    if($hours!=NULL){
+                                    echo $hours; ?>點<?php echo $minutes;?>分收單 (<?php echo $timer;?>)
+                                <?php
+                                    }else{
+                                      echo "已關閉訂餐！";
+                                    } ?>
+                                </font></li>
                             <li> / </li>
                             <li><a href="logout">Sign out</a></li>
                         </ul>
@@ -54,6 +61,14 @@
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="purchaseManageV">我的訂餐</a>
+                            <ul class="sub-menu">
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHotOrderV">我的訂餐</a>
+                                </li>
+                                <li class="menu-item-has-children">
+                                    <a href="purchaseHistoryV">歷史訂餐</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="menu-item-has-children tp-activated">
                             <a href="">訂餐總覽</a>
@@ -103,8 +118,8 @@
                 <div id="primary" class="content-area">
                     <div class="container">
                         <nav class="woocommerce-breadcrumb">
-                            <a href="#">Home</a>
-                            訂餐總覽 (以訂購者排序)
+                            <a href="/">Home</a>
+                            訂餐總覽 (以菜單名排序)
                         </nav>
                     </div>
                     <div class="wrap-main-page-cart tp-content-page tp-page-title-16">

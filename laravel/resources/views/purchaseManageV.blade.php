@@ -113,7 +113,7 @@
                             <div class="tp-table-cart">
                                 <div class="container">
                                     <div class="tp-content-table-cart">
-                                        <form action="#" method="post">
+                                        <form action="/" method="post">
                                             <table class="shop_table cart" >
                                                 <thead>
                                                 <tr>
@@ -160,12 +160,12 @@
                                             </table>
                                             <div class="actions">
                                                 <div class="text-left tp-btn-con-shopping">
-                                                    <?php if($error!=NULL) {?>
-                                                        <strong><font color="red">當日已評價！</font></strong>
+                                                    <?php if($error==0) {?>
+                                                        <a href="userEvaluationV" class="tp-btn">我要評價</a>
                                                     <?php
                                                     }else{
                                                         ?>
-                                                    <a href="userEvaluationV" class="tp-btn">我要評價</a>
+                                                        <strong><font color="red">當日已評價！</font></strong>
                                                     <?php } ?>
                                                 </div>
                                             </div>
@@ -272,6 +272,14 @@ if($action=='delete'){?>
 <script>
     function define() {
         alert("<?php echo $orderKind;?> 已刪除！");
+    }
+</script>
+<?php
+}
+if($action=='evaInt'){?>
+<script>
+    function define() {
+        alert("您的評價已新增！");
     }
 </script>
 <?php
