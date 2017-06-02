@@ -25,7 +25,7 @@ class menuC extends Controller
         }
         $restData=DB::table('menu')
             ->select('kind','m_num','menu_picture','unit_price')
-            ->where('rest_name', $input['restName'])
+            ->where('rest_name',$input['restName'])
             ->get();
         $restName=$input['restName'];
 
@@ -37,14 +37,14 @@ class menuC extends Controller
         $this->Authority(); //權限驗證
         $input = Input::all();
         $result = Input::get('result', '');
-        if($result== 1){
-            $result='餐廳&菜單資料已新增！';
+        if($result == 1){
+            $result = '餐廳&菜單資料已新增！';
         }
         $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
 
-        return view('restMenuInsertV', ['restKind' => $restKind,'result' => $result]);
+        return view('restMenuInsertV', ['restKind' => $restKind, 'result' => $result]);
     }
     //菜單修改頁面顯示
     public function menuUpdateShow()
@@ -52,18 +52,18 @@ class menuC extends Controller
         $this->Authority(); //權限驗證
         $input = Input::all();
         $action = Input::get('action', '');
-        if($action== 'update'){
-            $kind=$this->menuUpdate(); //菜單資料修改
-            $restName=$input['restName'];
+        if($action == 'update'){
+            $kind = $this->menuUpdate(); //菜單資料修改
+            $restName = $input['restName'];
             header("Location:menuV?restName=$restName&kind=$kind&action=$action");
         }
-        $restData=DB::table('menu')
+        $restData = DB::table('menu')
             ->select('kind','m_num','menu_picture','unit_price')
-            ->where('m_num', $input['num'])
+            ->where('m_num',$input['num'])
             ->get();
-        $restName=$input['restName'];
+        $restName = $input['restName'];
 
-        return view('menuUpdateV', [ 'restData' => $restData,'restName' => $restName]);
+        return view('menuUpdateV', ['restData' => $restData, 'restName' => $restName]);
     }
     //餐廳&菜單資料新增
     public function restMenuInsert()
@@ -85,7 +85,8 @@ class menuC extends Controller
                 $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
                 $upload_success = $file->move($destination_path, $file_name);     //移動至指定資料夾
                 DB::table('restaurant')->insert(array(                            //新增餐廳資料
-                    array('rest_name' => $restName, 'rest_kind' => $restKind, 'rest_tel' => $restTel, 'rest_picture' => $file_name)
+                    array('rest_name' => $restName, 'rest_kind' => $restKind, 'rest_tel' => $restTel,
+                        'rest_picture' => $file_name)
                 ));
             } else {
                 return "restaurant_img upload failed!";
@@ -98,15 +99,16 @@ class menuC extends Controller
             var_dump($row_file);
             $kind = array_filter($kind);
             $num = count($kind);
-            for ($i = 0; $i <= $num - 1; $i++) {
-                $file2=$row_file[$i];
+            for ($i = 0; $i<=$num-1; $i++) {
+                $file2 = $row_file[$i];
                 if (Input::hasFile('menu_picture')) {
                     $extension2 = $file2->getClientOriginalExtension();
                     $file_name2 = strval(time()) . str_random(5) . '.' . $extension2;
                     $destination_path2 = public_path() . '/userUpload/';
                     $upload_success2 = $file2->move($destination_path2, $file_name2);
                     DB::table('menu')->insert(array(                           //新增菜單資料
-                        array('rest_name' => $restName, 'kind' => $kind[$i], 'unit_price' => $price[$i], 'm_kind' => $mKind[$i],'menu_picture'=> $file_name2)
+                        array('rest_name' => $restName, 'kind' => $kind[$i], 'unit_price' => $price[$i],
+                            'm_kind' => $mKind[$i], 'menu_picture'=> $file_name2)
                     ));
                 } else {
                     return "menu_img upload failed!";
@@ -125,9 +127,9 @@ class menuC extends Controller
         {
             DB::table('menu')
                 ->where('m_num', $input['num'])
-                ->update(['kind' => $input['kind'],'unit_price' => $input['price']]);
+                ->update(['kind' => $input['kind'], 'unit_price' => $input['price']]);
 
-            if (Input::hasFile('menu_picture')!=false) {
+            if (Input::hasFile('menu_picture') != false) {
                 $file = Input::file('menu_picture');                              //取得檔案資訊
                 $extension = $file->getClientOriginalExtension();                 //取得檔案副檔名
                 $file_name = strval(time()) . str_random(5) . '.' . $extension;   //定義檔案名稱
@@ -137,8 +139,8 @@ class menuC extends Controller
                     ->where('m_num', $input['num'])
                     ->update(['menu_picture' => $file_name]);
             }
-            $kind=$input['kind'];
-            $restName=$input['restName'];
+            $kind = $input['kind'];
+            $restName = $input['restName'];
             header("Location:menuV?kind=$kind&restName=$restName&action=update");
         }else{
             return false;
@@ -154,12 +156,11 @@ class menuC extends Controller
                 ->select('kind')
                 ->where('m_num', $input['num'])
                 ->get();
-            $kind=$rowKind[0]->kind;
+            $kind = $rowKind[0]->kind;
             DB::table('menu')->where('m_num', '=', $input['num'])->delete();
             return $kind;
         }else{
             return false;
         }
     }
-
 }

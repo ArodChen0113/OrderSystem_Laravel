@@ -24,24 +24,26 @@ class restaurantC extends Controller
         $restKind = DB::table('restaurant_kind')
             ->select(DB::raw('rest_kind'))
             ->get();
-        if($control==0){
-            $chooseKind='';
-            $chooseName='';
-            $restName=Input::get('restName', '');
-        return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName, 'restName' => $restName, 'control'=> $control ,'action' =>$action]);
+        if($control == 0){
+            $chooseKind = '';
+            $chooseName = '';
+            $restName = Input::get('restName', '');
+        return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName,
+            'restName' => $restName, 'control'=> $control , 'action' => $action]);
         }
 
-        if($control==1) {
+        if($control == 1) {
             $restName = DB::table('restaurant')
                 ->select('rest_name')
                 ->where('rest_kind', $input['restKind'])
                 ->get();
             $chooseKind = $input['restKind'];
             $chooseName = '';
-            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName, 'restName' => $restName, 'control'=> $control,'action' =>$action]);
+            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind,
+                'chooseName' => $chooseName, 'restName' => $restName, 'control' => $control, 'action' => $action]);
         }
 
-        if($control==2) {
+        if($control == 2) {
             $restName = DB::table('restaurant')
                 ->select('rest_name')
                 ->where('rest_kind', $input['restKind'])
@@ -49,22 +51,22 @@ class restaurantC extends Controller
             $chooseKind = $input['restKind'];
             $chooseName = $input['restName'];
 
-            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind, 'chooseName' => $chooseName, 'restName' => $restName, 'control'=> $control,'action' =>$action]);
+            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind,
+                'chooseName' => $chooseName, 'restName' => $restName, 'control' => $control, 'action' => $action]);
         }
     }
     //餐廳管理頁面顯示
     public function restManageShow()
     {
         $this->Authority(); //權限驗證
-        $input = Input::all();
         $action = Input::get('action', '');
-        if($action== 'update'){
-            $restName=$this->restUpdate(); //餐廳資料修改
+        if($action == 'update'){
+            $restName = $this->restUpdate(); //餐廳資料修改
             header("Location:restChooseV?action=$action&restName=$restName");
             exit;
         }
-        if($action== 'delete'){
-            $restName=$this->restDel();    //餐廳資料刪除
+        if($action == 'delete'){
+            $restName = $this->restDel();    //餐廳資料刪除
             header("Location:restChooseV?action=$action&restName=$restName");
             exit;
         }
@@ -72,21 +74,17 @@ class restaurantC extends Controller
         $rest_data=DB::table('restaurant')
             ->where('rest_name', Input::get('restName',''))
             ->get();
-            $restName=$rest_data[0]->rest_name;
-            $restKind=$rest_data[0]->rest_kind;
-            $restTel=$rest_data[0]->rest_tel;
-            $restPic=$rest_data[0]->rest_picture;
-            $restNum=$rest_data[0]->num;
 
-        return view('restManageV', ['restName' => $restName,'restKind' => $restKind,'restTel' => $restTel,'restPic' => $restPic,'restNum' => $restNum]);
+        return view('restManageV', ['restName' => $rest_data[0]->rest_name, 'restKind' => $rest_data[0]->rest_kind,
+            'restTel' => $rest_data[0]->rest_tel, 'restPic' => $rest_data[0]->rest_picture,
+            'restNum' => $rest_data[0]->num]);
     }
     //今日開餐頁面顯示
     public function openMealShow()
     {
-        $input = Input::all();
         $this->Authority(); //權限驗證
         $action = Input::get('action', '');
-        if($action== 'open'){
+        if($action == 'open'){
             $this->openMealUp(); //開餐
             header("Location:/");
             exit;
@@ -94,31 +92,32 @@ class restaurantC extends Controller
 
         $input = Input::all();
         $control = input::get('restName','');
-        $openMeal=DB::table('restaurant')
+        $openMeal = DB::table('restaurant')
             ->select('rest_name')
             ->get();
-        $rowOpenRest=DB::table('restaurant')
+        $rowOpenRest = DB::table('restaurant')
             ->select('rest_name')
             ->where('rest_open', 1)
             ->get();
-        if($rowOpenRest!=NULL) {
+        if($rowOpenRest != NULL) {
             $openRestName = $rowOpenRest[0]->rest_name;
         }else{
             $openRestName = '目前尚無開餐！';
         }
-        if($control==NULL){
-            $restPic='';
-            $restName='';
+        if($control == NULL){
+            $restPic = '';
+            $restName = '';
         }else{
-            $openPic=DB::table('restaurant')
+            $openPic = DB::table('restaurant')
                 ->select('rest_picture')
                 ->where('rest_name', $input['restName'])
                 ->get();
-                $restPic=$openPic[0]->rest_picture;
-                $restName=$input['restName'];
+                $restPic = $openPic[0]->rest_picture;
+                $restName = $input['restName'];
         }
 
-        return view('openMealV', ['openMeal' => $openMeal,'rowOpenRest' => $rowOpenRest,'openRestName' => $openRestName,'restPic' => $restPic, 'restName' => $restName, 'action' => $action]);
+        return view('openMealV', ['openMeal' => $openMeal, 'rowOpenRest' => $rowOpenRest,
+            'openRestName' => $openRestName, 'restPic' => $restPic, 'restName' => $restName, 'action' => $action]);
     }
     //今日開餐功能執行
     public function openMealUp()
@@ -127,11 +126,12 @@ class restaurantC extends Controller
         $restName = $input['restName'];
         if ($input['action'] != NULL && $input['action'] == 'open')      //判斷值是否由欄位輸入
         {
-            $date= date("Y-m-d");
-            $H=$input['openTimeH'];
-            $i=$input['openTimeM'];
-            $s='00';
-            $closeTime=$date.' '.$H.':'.$i.':'.$s;
+            date_default_timezone_set("Asia/Taipei"); //目前時間
+            $date = date("Y-m-d");
+            $H = $input['openTimeH'];
+            $i = $input['openTimeM'];
+            $s = '00';
+            $closeTime = $date.' '.$H.':'.$i.':'.$s;
         DB::table('menu_order')                      //之前訂餐改為歷史紀錄
         ->update(['pay' => 9]);
         DB::table('restaurant')                      //關閉餐廳
@@ -143,7 +143,7 @@ class restaurantC extends Controller
             DB::table('restaurant_open')->insert(array(
                 array('rest_name' => $restName, 'close_time' => $closeTime)//新增至資料庫
             ));
-            return $restName=$input['restName'];
+            return $restName = $input['restName'];
         }else{
             return false;
         }
@@ -159,7 +159,7 @@ class restaurantC extends Controller
                 ->where('num', $input['num'])
                 ->get();
             foreach ($restName as $value){
-                $lastRestName=$value->rest_name;
+                $lastRestName = $value->rest_name;
             }
             DB::table('menu')
                 ->where('rest_name', $lastRestName)
@@ -167,7 +167,8 @@ class restaurantC extends Controller
 
             DB::table('restaurant')
                 ->where('num', $input['num'])
-                ->update(['rest_name' => $input['restName'],'rest_kind' => $input['restKind'],'rest_tel' => $input['restTel']]);//修改餐廳資料
+                ->update(['rest_name' => $input['restName'], 'rest_kind' => $input['restKind'],
+                    'rest_tel' => $input['restTel']]);//修改餐廳資料
 
             if (Input::hasFile('rest_picture')) {
                 $file = Input::file('rest_picture');                              //取得檔案資訊
@@ -181,7 +182,7 @@ class restaurantC extends Controller
             } else {
                 echo "restaurant_img upload failed!";
             }
-            return $restName=$input['restName'];
+            return $restName = $input['restName'];
         }else{
             return false;
         }

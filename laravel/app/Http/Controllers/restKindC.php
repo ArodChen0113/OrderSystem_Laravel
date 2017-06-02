@@ -18,13 +18,13 @@ class restKindC extends Controller
         $input = Input::all();
         $this->Authority(); //權限驗證
         $action = Input::get('action', '');
-        if($action== 'insert'){
+        if($action == 'insert'){
             $this->restKindInsert(); //餐廳分類新增
         }
-        if($action== 'update'){
+        if($action == 'update'){
             $this->restKindUpdate(); //餐廳分類修改
         }
-        if($action== 'delete'){
+        if($action == 'delete'){
             $this->restKindDel(); //餐廳分類刪除
         }
         $restData = DB::table('restaurant_kind')
@@ -54,8 +54,7 @@ class restKindC extends Controller
         if ($input['action'] != NULL && $input['action'] == 'update')      //判斷值是否由欄位輸入
         {
             $k=0;
-            $count_kind=count($input['num']);
-            for($i=1;$i<=$count_kind;$i++) {
+            for($i=1 ; $i<count($input['num']) ; $i++) {
                 DB::table('restaurant_kind')
                     ->where('num', $input['num'][$k])
                     ->update(['rest_kind' => $input['restKind'][$k]]);
