@@ -37,9 +37,8 @@ class restaurantC extends Controller
                 ->select('rest_name')
                 ->where('rest_kind', $input['restKind'])
                 ->get();
-            $chooseKind = $input['restKind'];
             $chooseName = '';
-            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind,
+            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $input['restKind'],
                 'chooseName' => $chooseName, 'restName' => $restName, 'control' => $control, 'action' => $action]);
         }
 
@@ -48,11 +47,9 @@ class restaurantC extends Controller
                 ->select('rest_name')
                 ->where('rest_kind', $input['restKind'])
                 ->get();
-            $chooseKind = $input['restKind'];
-            $chooseName = $input['restName'];
 
-            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $chooseKind,
-                'chooseName' => $chooseName, 'restName' => $restName, 'control' => $control, 'action' => $action]);
+            return view('restChooseV', ['restKind' => $restKind, 'chooseKind' => $input['restKind'],
+                'chooseName' => $input['restName'], 'restName' => $restName, 'control' => $control, 'action' => $action]);
         }
     }
     //餐廳管理頁面顯示
@@ -123,7 +120,6 @@ class restaurantC extends Controller
     public function openMealUp()
     {
         $input = Input::all();
-        $restName = $input['restName'];
         if ($input['action'] != NULL && $input['action'] == 'open')      //判斷值是否由欄位輸入
         {
             date_default_timezone_set("Asia/Taipei"); //目前時間
@@ -137,13 +133,13 @@ class restaurantC extends Controller
         DB::table('restaurant')                      //關閉餐廳
             ->update(['rest_open' => 0]);
         DB::table('restaurant')
-            ->where('rest_name', $restName) //開啟今日開餐
+            ->where('rest_name', $input['restName']) //開啟今日開餐
             ->update(['rest_open' => 1, 'close_time' => $closeTime]);
 
             DB::table('restaurant_open')->insert(array(
-                array('rest_name' => $restName, 'close_time' => $closeTime)//新增至資料庫
+                array('rest_name' => $input['restName'], 'close_time' => $closeTime)//新增至資料庫
             ));
-            return $restName = $input['restName'];
+            return $input['restName'];
         }else{
             return false;
         }
@@ -159,10 +155,9 @@ class restaurantC extends Controller
                 ->where('num', $input['num'])
                 ->get();
             foreach ($restName as $value){
-                $lastRestName = $value->rest_name;
             }
             DB::table('menu')
-                ->where('rest_name', $lastRestName)
+                ->where('rest_name', $value->rest_name)
                 ->update(['rest_name' => $input['restName']]);//修改菜單(餐廳名稱)
 
             DB::table('restaurant')
@@ -182,7 +177,7 @@ class restaurantC extends Controller
             } else {
                 echo "restaurant_img upload failed!";
             }
-            return $restName = $input['restName'];
+            return $input['restName'];
         }else{
             return false;
         }
@@ -196,7 +191,7 @@ class restaurantC extends Controller
             DB::table('menu_order')->where('rest_name', '=', $input['restName'])->delete();
             DB::table('menu')->where('rest_name', '=', $input['restName'])->delete();
             DB::table('restaurant')->where('rest_name', '=', $input['restName'])->delete();
-            return $restName=$input['restName'];
+            return $input['restName'];
         }else{
             return false;
         }

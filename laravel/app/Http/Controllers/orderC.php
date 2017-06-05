@@ -35,37 +35,36 @@ class orderC extends Controller
             ->select('rest_name')
             ->where('rest_open', 1)
             ->get();
-            $restName = $restOpen[0]->rest_name;
             $restMenuAll = DB::table('menu')
                 ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
-                ->where('rest_name', $restName)
+                ->where('rest_name', $restOpen[0]->rest_name)
                 ->orderBy('m_star', 'desc')
                 ->get();
             $restMenuRice = DB::table('menu')
                 ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
-                ->where('rest_name', $restName)
+                ->where('rest_name', $restOpen[0]->rest_name)
                 ->where('m_kind', '飯')
                 ->orderBy('m_star', 'desc')
                 ->get();
             $restMenuNoodle = DB::table('menu')
                 ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
-                ->where('rest_name', $restName)
+                ->where('rest_name', $restOpen[0]->rest_name)
                 ->where('m_kind', '麵')
                 ->orderBy('m_star', 'desc')
                 ->get();
             $restMenuSoup = DB::table('menu')
                 ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
-                ->where('rest_name', $restName)
+                ->where('rest_name', $restOpen[0]->rest_name)
                 ->where('m_kind', '湯')
                 ->orderBy('m_star', 'desc')
                 ->get();
             $restMenuSideDishes = DB::table('menu')
                 ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star')
-                ->where('rest_name', $restName)
+                ->where('rest_name', $restOpen[0]->rest_name)
                 ->where('m_kind', '小菜')
                 ->orderBy('m_star', 'desc')
                 ->get();
-            return view('purchaseV', ['restOpen' => $restOpen,'restName' => $restName, 'restMenuAll' => $restMenuAll,
+            return view('purchaseV', ['restOpen' => $restOpen,'restName' => $restOpen[0]->rest_name, 'restMenuAll' => $restMenuAll,
                 'restMenuRice' => $restMenuRice, 'restMenuNoodle' => $restMenuNoodle, 'restMenuSoup' => $restMenuSoup,
                 'restMenuSideDishes' => $restMenuSideDishes,'hours' => $echoCloseTime[0],'minutes' => $echoCloseTime[1],
                 'timer' => $timer,'orderKind'=>$orderKind]);
@@ -86,13 +85,12 @@ class orderC extends Controller
             ->select('rest_name')
             ->where('rest_open', 1)
             ->get();
-        $restName = $rest_openName[0]->rest_name;
         $restMenuAll = DB::table('menu')
             ->select('kind', 'unit_price', 'menu_picture', 'm_num', 'm_star', 'm_count')
-            ->where('rest_name', $restName)
+            ->where('rest_name', $rest_openName[0]->rest_name)
             ->orderBy('m_count', 'desc')
             ->get();
-        return view('purchaseHotOrderV', ['restName' => $restName, 'restMenuAll' => $restMenuAll,
+        return view('purchaseHotOrderV', ['restName' => $rest_openName[0]->rest_name, 'restMenuAll' => $restMenuAll,
             'hours' => $echoCloseTime[0], 'minutes' => $echoCloseTime[1], 'timer' => $timer,'orderKind'=>$orderKind]);
     }
     //最佳評價頁面顯示
@@ -111,13 +109,12 @@ class orderC extends Controller
             ->select('rest_name')
             ->where('rest_open', 1)
             ->get();
-        $restName = $rest_openName[0]->rest_name;
         $restMenuAll = DB::table('menu')
             ->select('kind','unit_price','menu_picture','m_num','m_star')
-            ->where('rest_name', $restName)
+            ->where('rest_name', $rest_openName[0]->rest_name)
             ->orderBy('m_star', 'desc')
             ->get();
-        return view('purchaseHotStarV', ['restName' => $restName, 'restMenuAll' => $restMenuAll,
+        return view('purchaseHotStarV', ['restName' => $rest_openName[0]->rest_name, 'restMenuAll' => $restMenuAll,
             'hours' => $echoCloseTime[0], 'minutes' => $echoCloseTime[1], 'timer' => $timer, 'orderKind' => $orderKind]);
     }
 
@@ -125,7 +122,6 @@ class orderC extends Controller
     public function purchaseManageShow()
     {
         $this -> noRestOpen();        //如無開餐,導入無開餐頁面
-        $input = Input::all();
         $action = Input::get('action', '');
         $orderKind = '';
         if($action == 'insert'){
@@ -138,10 +134,9 @@ class orderC extends Controller
         $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
         $timer = $this->closeTimer();                   //關餐計時器
         $user = Auth::user();
-        $orderName = $user->name;
         $orderData = DB::table('menu_order')
             ->join('menu', 'menu_order.kind', '=', 'menu.kind')
-            ->where('name', $orderName)
+            ->where('name', $user->name)
             ->Where('pay', '!=', 9)
             ->get();
         if($orderData != NULL) {
@@ -153,11 +148,10 @@ class orderC extends Controller
             ->select('rest_name')
             ->where('rest_open', 1)
             ->get();
-        $openRestName = $todayOpen[0]->rest_name;
 
         $hotOrder = DB::table('menu')
             ->select('kind','unit_price','menu_picture','m_num','m_star')
-            ->where('rest_name', $openRestName)
+            ->where('rest_name', $todayOpen[0]->rest_name)
             ->orderBy('m_count', 'desc')
             ->get();
         $error = $this-> doEvaluation();                   //是否已評價(一次/天)
@@ -170,36 +164,31 @@ class orderC extends Controller
     public function purchaseHistoryShow()
     {
         $this -> noRestOpen();        //如無開餐,導入無開餐頁面
-        $input = Input::all();
         $echoCloseTime = $this->closeTimeString();    //關餐時間(拆解字串顯示)
         $timer = $this->closeTimer();                   //關餐計時器
         $user = Auth::user();
-        $orderName = $user->name;
 
         $histOpenRest = DB::table('restaurant_open')
         ->select('rest_name', 'close_time')
         ->get();
 
         for ($i=0 ; $i<count($histOpenRest) ; $i++) {
-            $histRestName = $histOpenRest[$i]->rest_name;
-            $histCloseTime = $histOpenRest[$i]->close_time;
-
             $histOrderData[$i] = DB::table('menu_order')
                 ->join('menu', 'menu_order.kind', '=', 'menu.kind')
-                ->where('name', $orderName)
-                ->where('menu_order.rest_name', $histRestName)
-                ->where('close_time', $histCloseTime)
+                ->where('name', $user->name)
+                ->where('menu_order.rest_name', $histOpenRest[$i]->rest_name)
+                ->where('close_time', $histOpenRest[$i]->close_time)
                 ->orderBy('close_time', 'desc')
                 ->get();
 
             if ($histOrderData[$i] != NULL) {
                 $sumPrice[$i] = $histOrderData[$i][0]->price; //計算總額
 
-                $closeTimeString = preg_split('/ /', $histCloseTime);         //拆解字串
+                $closeTimeString = preg_split('/ /', $histOpenRest[$i]->close_time);         //拆解字串
                 $rowEvaStar = DB::table('rest_evaluation')    //餐廳評價
                     ->select('r_star')
-                    ->where('rest_name', $histRestName)
-                    ->where('name', $orderName)
+                    ->where('rest_name', $histOpenRest[$i]->rest_name)
+                    ->where('name', $user->name)
                     ->where('date', $closeTimeString[0])
                     ->get();
                 if($rowEvaStar != NULL) {
@@ -214,7 +203,7 @@ class orderC extends Controller
         }
         $histOrderRest = DB::table('restaurant_open')
             ->join('menu_order', 'restaurant_open.rest_name', '=', 'menu_order.rest_name')
-            ->where('name', $orderName)
+            ->where('name', $user->name)
             ->groupBy('restaurant_open.close_time')
             ->orderBy('restaurant_open.close_time', 'desc')
             ->get();
@@ -232,10 +221,9 @@ class orderC extends Controller
         if ($input['action'] != NULL && $input['action'] == 'insert')      //判斷值是否由欄位輸入
         {
             $user = Auth::user();
-            $orderName = $user->name;
             $last_price = DB::table('menu_order') //查詢之前訂購總額
             ->select('price')
-                ->where('name', $orderName)
+                ->where('name', $user->name)
                 ->Where('pay', '!=', 9)
                 ->get();
             if($last_price != NULL) {
@@ -247,14 +235,11 @@ class orderC extends Controller
             ->select('unit_price','kind','rest_name')
                 ->where('m_num',$input['num'])
                 ->get();
-            $orderRestName = $orderDate[0]->rest_name;
-            $orderKind = $orderDate[0]->kind;
-            $orderPrice = $orderDate[0]->unit_price;
 
             $checkOrder = DB::table('menu_order')        //查詢是否有同商品訂購紀錄
             ->select('kind','qty')
-                ->where('name', $orderName)
-                ->where('kind', $orderKind)
+                ->where('name', $user->name)
+                ->where('kind', $orderDate[0]->kind)
                 ->Where('pay','!=', 9)
                 ->get();
 
@@ -263,34 +248,34 @@ class orderC extends Controller
                 $orderTime = date("Y-m-d H:i:s");
                 $closeTime = $this->closeTime();            //關餐時間
                 DB::table('menu_order')->insert(array(
-                    array('name' => $orderName, 'rest_Name' => $orderRestName, 'kind' => $orderKind,
-                        'price' => $orderPrice, 'order_time' => $orderTime, 'close_time' => $closeTime)//新增至資料庫
+                    array('name' => $user->name, 'rest_Name' => $orderDate[0]->rest_name, 'kind' => $orderDate[0]->kind,
+                        'price' => $orderDate[0]->unit_price, 'order_time' => $orderTime, 'close_time' => $closeTime)//新增至資料庫
                 ));
             }else{
                 $qty = $checkOrder[0]->qty;
                 $upQty = $qty + 1;
                 DB::table('menu_order')
-                    ->where('name', $orderName)
-                    ->where('kind', $orderKind)
+                    ->where('name', $user->name)
+                    ->where('kind', $orderDate[0]->kind)
                     ->Where('pay', '!=', 9)
                     ->update(['qty' => $upQty]);
             }
-            $totalPrice = $lastPrice + $orderPrice; //加總新舊訂購總額
+            $totalPrice = $lastPrice + $orderDate[0]->unit_price; //加總新舊訂購總額
             DB::table('menu_order')
-                ->where('name', $orderName)
+                ->where('name', $user->name)
                 ->Where('pay', '!=', 9)
                 ->update(['price' => $totalPrice]);
 
             $m_Count = DB::table('menu')     //查詢之前訂購數量
             ->select('m_count')
-                ->where('kind', $orderKind)
+                ->where('kind', $orderDate[0]->kind)
                 ->get();
             $mCount = $m_Count[0]->m_count;
             $mCount++;
             DB::table('menu')          //更新該菜色訂購數量
-                ->where('kind', $orderKind)
+                ->where('kind', $orderDate[0]->kind)
                 ->update(['m_count' => $mCount]);
-            return $orderKind ;
+            return $orderDate[0]->kind ;
         }else{
             return false ;
         }
@@ -305,35 +290,30 @@ class orderC extends Controller
                 ->select('price','kind','name','qty')
                 ->where('num', $input['num'])
                 ->get();
-                $orderPrice = $order_price[0]->price;
-                $orderKind = $order_price[0]->kind;
-                $orderName = $order_price[0]->name;
-                $orderQty = $order_price[0]->qty;
 
             $last_price = DB::table('menu')
                 ->select('unit_price')
-                ->where('kind', $orderKind)
+                ->where('kind', $order_price[0]->kind)
                 ->get();
-                $unitPrice = $last_price[0]->unit_price;
 
-            $updatePrice = $orderPrice - $unitPrice * $orderQty;
+            $updatePrice = $order_price[0]->price - $last_price[0]->unit_price * $order_price[0]->qty;
 
             DB::table('menu_order')            //修改訂購金額
-                ->where('name', $orderName)
+                ->where('name', $order_price[0]->name)
                 ->update(['price' => $updatePrice]);
 
             $m_Count = DB::table('menu')     //查詢之前訂購數量
             ->select('m_count')
-                ->where('kind', $orderKind)
+                ->where('kind', $order_price[0]->kind)
                 ->get();
             $mCount = $m_Count[0]->m_count;
             $mCount--;
             DB::table('menu')          //更新該菜色訂購數量
-            ->where('kind', $orderKind)
+            ->where('kind', $order_price[0]->kind)
                 ->update(['m_count' => $mCount]);
 
             DB::table('menu_order')->where('num','=', $input['num'])->delete(); //刪除訂購項目
-            return $orderKind ;
+            return $order_price[0]->kind ;
         }else{
             return false;
         }
@@ -358,8 +338,6 @@ class orderC extends Controller
             ->where('rest_open', 1)
             ->orWhere('rest_open', 2)
             ->get();
-            $open_restName = $todayOpen[0]->rest_name;
-            $open_restTel = $todayOpen[0]->rest_tel;
 
         $orderData = DB::table('menu_order') //訂購名單&單價&是否繳費
             ->select('price','name','pay')
@@ -373,16 +351,15 @@ class orderC extends Controller
             ->get();
         $sumOrderCount = 0;
         for($i=0 ; $i<count($orderCount) ; $i++){
-            $qty = $orderCount[$i]->qty;
-            $sumOrderCount = $sumOrderCount + $qty;
+            $sumOrderCount = $sumOrderCount + $orderCount[$i]->qty;
         }
         $totalPrice = 0;
      foreach ($orderData as $value) //金額總計
      {
          $row_orderSum = $value->price;
-         $totalPrice = $totalPrice + $row_orderSum;
+         $totalPrice += $row_orderSum;
      }
-        return view('orderNameManageV',['open_restName' => $open_restName, 'open_restTel' => $open_restTel,
+        return view('orderNameManageV',['open_restName' => $todayOpen[0]->rest_name, 'open_restTel' => $todayOpen[0]->rest_tel,
             'orderData' => $orderData, 'sumOrderCount' => $sumOrderCount, 'totalPrice' => $totalPrice,
             'hours' => $echoCloseTime[0], 'minutes' => $echoCloseTime[1], 'timer' => $timer]);
     }
@@ -402,9 +379,8 @@ class orderC extends Controller
             ->groupBy('kind')
             ->get();
         if($order_menu != NULL){
-        $num = count($order_menu);
-        for($i=0 ; $i<$num ; $i++){
-            $v=$order_menu[$i];
+        for($i=0 ; $i<count($order_menu) ; $i++){
+            $v=count($order_menu);
             $save_data = DB::table('menu')  //菜單圖片&單價
             ->select('menu_picture','unit_price')
                 ->where('kind', $v->kind)

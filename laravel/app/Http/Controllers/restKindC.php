@@ -15,7 +15,6 @@ class restKindC extends Controller
     //餐廳分類管理頁面顯示
     public function restKindManageShow()
     {
-        $input = Input::all();
         $this->Authority(); //權限驗證
         $action = Input::get('action', '');
         if($action == 'insert'){

@@ -27,15 +27,13 @@ class menuC extends Controller
             ->select('kind','m_num','menu_picture','unit_price')
             ->where('rest_name',$input['restName'])
             ->get();
-        $restName=$input['restName'];
 
-        return view('menuV', [ 'restData' => $restData, 'restName' => $restName, 'action' => $action, 'kind' => $kind]);
+        return view('menuV', [ 'restData' => $restData, 'restName' => $input['restName'], 'action' => $action, 'kind' => $kind]);
     }
     //新增餐廳&菜單頁面顯示
     public function restMenuInsertShow()
     {
         $this->Authority(); //權限驗證
-        $input = Input::all();
         $result = Input::get('result', '');
         if($result == 1){
             $result = '餐廳&菜單資料已新增！';
@@ -61,20 +59,16 @@ class menuC extends Controller
             ->select('kind','m_num','menu_picture','unit_price')
             ->where('m_num',$input['num'])
             ->get();
-        $restName = $input['restName'];
 
-        return view('menuUpdateV', ['restData' => $restData, 'restName' => $restName]);
+        return view('menuUpdateV', ['restData' => $restData, 'restName' => $input['restName']]);
     }
     //餐廳&菜單資料新增
     public function restMenuInsert()
     {
         $input = Input::all();
-        $restKind = $input['restKind'];
         $kind = $input['kind'];
         $price = $input['price'];
         $mKind = $input['m_kind'];
-        $restTel = $input['restTel'];
-        $restName = $input['restName'];
 
         if ($input['action'] != NULL && $input['action'] == 'insert')         //判斷值是否由欄位輸入
         {
@@ -85,7 +79,7 @@ class menuC extends Controller
                 $destination_path = public_path() . '/userUpload/';               //定義儲存路徑
                 $upload_success = $file->move($destination_path, $file_name);     //移動至指定資料夾
                 DB::table('restaurant')->insert(array(                            //新增餐廳資料
-                    array('rest_name' => $restName, 'rest_kind' => $restKind, 'rest_tel' => $restTel,
+                    array('rest_name' => $input['restName'], 'rest_kind' => $input['restKind'], 'rest_tel' => $input['restTel'],
                         'rest_picture' => $file_name)
                 ));
             } else {
@@ -107,7 +101,7 @@ class menuC extends Controller
                     $destination_path2 = public_path() . '/userUpload/';
                     $upload_success2 = $file2->move($destination_path2, $file_name2);
                     DB::table('menu')->insert(array(                           //新增菜單資料
-                        array('rest_name' => $restName, 'kind' => $kind[$i], 'unit_price' => $price[$i],
+                        array('rest_name' => $input['restName'], 'kind' => $kind[$i], 'unit_price' => $price[$i],
                             'm_kind' => $mKind[$i], 'menu_picture'=> $file_name2)
                     ));
                 } else {
@@ -156,9 +150,8 @@ class menuC extends Controller
                 ->select('kind')
                 ->where('m_num', $input['num'])
                 ->get();
-            $kind = $rowKind[0]->kind;
             DB::table('menu')->where('m_num', '=', $input['num'])->delete();
-            return $kind;
+            return $rowKind[0]->kind;
         }else{
             return false;
         }

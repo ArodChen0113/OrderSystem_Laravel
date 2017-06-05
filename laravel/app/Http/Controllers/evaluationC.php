@@ -22,10 +22,9 @@ class evaluationC extends Controller
     public function userEvaluationShow()
     {
         $user = Auth::user();
-        $orderName = $user->name;
         $orderData = DB::table('menu_order') //今日訂購餐點
             ->join('menu', 'menu_order.kind', '=', 'menu.kind')
-            ->where('name', $orderName)
+            ->where('name', $user->name)
             ->Where('pay', '!=', 9)
             ->get();
         $todayOpen = DB::table('restaurant')
@@ -54,7 +53,6 @@ class evaluationC extends Controller
         if($starValue != NULL){
 
             $user = Auth::user();                        //使用者名稱
-            $orderName = $user->name;
             $starValue = explode(",", $input['value']);   //分割字串(評價值)
             $mNum = explode(",", $input['js_mNum']);      //分割字串(菜單編號)
 
@@ -62,20 +60,19 @@ class evaluationC extends Controller
             ->select('rest_name','r_star')
                 ->where('rest_open', 1)
                 ->get();
-            $openRestName = $todayOpen[0]->rest_name;
-            $openRestStar = $todayOpen[0]->r_star;
+
             date_default_timezone_set("Asia/Taipei");    //目前時間
             $date = date("Y-m-d H:i:s");
 
             $count = count($mNum);
-            for($i=0 ; $i<=$count-1 ; $i++) {
+            for($i=0 ; $i<$count ; $i++) {
                 $rowOrderKind = DB::table('menu')        //評價菜單
                 ->select('kind')
                     ->where('m_num', $mNum[$i])
                     ->get();
                 $orderKind = $rowOrderKind[0]->kind;
                 DB::table('menu_evaluation')->insert(array(
-                    array('name' => $orderName, 'rest_name' => $openRestName, 'kind' => $orderKind,
+                    array('name' => $user->name, 'rest_name' => $todayOpen[0]->rest_name, 'kind' => $orderKind,
                         'm_star' => $starValue[$i], 'date' => $date)//新增顧客評價
                 ));
 
@@ -94,18 +91,18 @@ class evaluationC extends Controller
                     ->update(['m_star' => $upMStar]);
             }
             DB::table('rest_evaluation')->insert(array(
-                array('name' => $orderName, 'rest_Name' => $openRestName, 'r_star' => $starValue[$count],
+                array('name' => $user->name, 'rest_Name' => $todayOpen[0]->rest_name, 'r_star' => $starValue[$count],
                     'date' => $date)//新增至資料庫
             ));
 
-            if($openRestStar != 0) {
-                $upRStar = ($openRestStar + $starValue[$count]) / 2;    //計算餐廳分數
+            if($todayOpen[0]->r_star != 0) {
+                $upRStar = ($todayOpen[0]->r_star + $starValue[$count]) / 2;    //計算餐廳分數
             }else{
                 $upRStar = $starValue[$count];
             }
 
             DB::table('restaurant')                        //更新餐廳分數
-            ->where('rest_name', $openRestName)
+            ->where('rest_name', $todayOpen[0]->rest_name)
                 ->update(['r_star' => $upRStar]);
 
             header("Location:purchaseManageV?action=evaInt");
