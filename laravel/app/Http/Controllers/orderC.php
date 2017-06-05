@@ -380,7 +380,7 @@ class orderC extends Controller
             ->get();
         if($order_menu != NULL){
         for($i=0 ; $i<count($order_menu) ; $i++){
-            $v=count($order_menu);
+            $v=$order_menu[$i];
             $save_data = DB::table('menu')  //菜單圖片&單價
             ->select('menu_picture','unit_price')
                 ->where('kind', $v->kind)
